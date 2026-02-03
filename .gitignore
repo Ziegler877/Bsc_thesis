@@ -1,0 +1,39 @@
+# --- Python / Environment ---
+venv/
+.env
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+
+# --- Large Datasets ---
+# Excludes the raw Reuter_50_50 and MiniDarkReddit files [cite: 53, 55]
+data/Reuter_50_50/
+data/MiniDarkReddit/
+*.csv
+*.json
+*.txt
+!README_data.md
+
+# --- Large Model Weights ---
+# Excludes Llama-2 7B and other foundational model checkpoints [cite: 46, 75]
+models/llama-2-7b/
+models/llama-maveric/
+*.bin
+*.pth
+*.ckpt
+*.h5
+
+# --- Local OS / IDE Files ---
+.DS_Store
+.vscode/
+.idea/
+.venv/
+
+
+
+
+# Results and Checkpoints
+results/
+checkpoints/
+*.safetensors
+*.pt
