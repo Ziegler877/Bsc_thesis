@@ -7,6 +7,7 @@ __pycache__/
 
 # --- Large Datasets ---
 # Excludes the raw Reuter_50_50 and MiniDarkReddit files [cite: 53, 55]
+data/
 data/Reuter_50_50/
 data/MiniDarkReddit/
 *.csv
