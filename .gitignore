@@ -8,6 +8,7 @@ __pycache__/
 # --- Large Datasets ---
 # Excludes the raw Reuter_50_50 and MiniDarkReddit files [cite: 53, 55]
 data/
+data/raw/
 data/Reuter_50_50/
 data/MiniDarkReddit/
 *.csv
@@ -17,6 +18,7 @@ data/MiniDarkReddit/
 
 # --- Large Model Weights ---
 # Excludes Llama-2 7B and other foundational model checkpoints [cite: 46, 75]
+models/
 models/llama-2-7b/
 models/llama-maveric/
 *.bin

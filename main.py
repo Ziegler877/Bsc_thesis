@@ -2,6 +2,7 @@ import sys
 import os
 import argparse
 import torch
+import wandb
 
 # --- IMPORTS ---
 import config
@@ -35,9 +36,6 @@ def main():
     parser.add_argument("--suffix", type=str, default="",
                         help="Optional string appended to the saved .pt filename")
 
-    # Flag for 4-bit loading (needed for Llama 4 on Cluster)
-    parser.add_argument("--load_in_4bit", action="store_true",
-                        help="Use 4-bit quantization (useful for Llama 4)")
 
     # Alias for compatibility with shell scripts
     parser.add_argument("--use_adapter", action="store_true", help="Alias for --lora")
@@ -47,6 +45,17 @@ def main():
     # ---------------------------------------------------------
     # 2. CONFIGURE BASED ON ARGUMENTS
     # ---------------------------------------------------------
+
+    wandb.init(
+        project="BSC Thesis",  # Name of your project on the website
+        name=f"EVAL-{args.model}-{args.dataset}",  # Name of this specific run
+        config={
+            "model": args.model,
+            "dataset": args.dataset,
+            "lora": args.lora
+        }
+    )
+
     model_alias = args.model
     dataset_alias = args.dataset
 
@@ -56,8 +65,6 @@ def main():
     job_name = f"{model_alias}_{dataset_alias}"
     if use_lora:
         job_name += " (LoRA)"
-    if args.load_in_4bit:
-        job_name += " (4-bit)"
 
     print(f"========================================")
     print(f"   STARTING JOB: {job_name}")
@@ -100,18 +107,12 @@ def main():
             "train_texts": train_txt,
             "test_texts": test_txt,
             "use_lora": use_lora,
-            "dataset_alias": dataset_alias,
+            "dataset_alias": dataset_alias
             # CHANGE 2: Explicitly pass 4-bit flag so Scout doesn't crash
-            "load_in_4bit": args.load_in_4bit
         }
 
         train_vecs, test_vecs = model_runner.run_pipeline(**runner_kwargs)
 
-    except TypeError:
-        # Fallback if model_runner.py is the old version that doesn't take load_in_4bit
-        # (This removes the 4bit arg and tries again)
-        del runner_kwargs["load_in_4bit"]
-        train_vecs, test_vecs = model_runner.run_pipeline(**runner_kwargs)
 
     except Exception as e:
         print(f"(!) Model Execution Failed: {e}")
@@ -147,7 +148,7 @@ def main():
     # ---------------------------
     # STEP 3: EVALUATE & LOG
     # ---------------------------
-    evaluation.run_evaluation(
+    metrics = evaluation.run_evaluation(
         train_vecs=train_vecs,
         test_vecs=test_vecs,
         train_labels=train_lbl,
@@ -158,10 +159,14 @@ def main():
         extra_info=f"LoRA: {use_lora} | Suffix: {args.suffix}"
     )
 
+    if metrics:
+        wandb.log(metrics)
+
     print("\n========================================")
     print(f"   JOB COMPLETE: {job_name}")
     print("==========================================")
 
+    wandb.finish()
 
 if __name__ == "__main__":
     main()

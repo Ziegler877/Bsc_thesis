@@ -10,6 +10,10 @@
 #SBATCH --output=results/logs/Scout_Pipeline_%j.out
 #SBATCH --error=results/logs/Scout_Pipeline_%j.err
 
+
+export WANDB_API_KEY=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
+export WANDB_PROJECT=BSC Thesis
+
 # 1. Load Modules (Ensure these match your Zen3 environment)
 module purge
 module load python/3.12.8-gcc-12.2.0-4y5tbpr
@@ -35,9 +39,9 @@ echo "=================================================="
 # ==============================================================================
 echo ""
 echo ">>> [1/5] Evaluating BASE Model (No LoRA)..."
-# We use --load_in_4bit to ensure the 17B model fits comfortably in memory
-python -u main.py --model $MODEL --dataset reuters --device cuda --suffix _base --load_in_4bit
-python -u main.py --model $MODEL --dataset darkreddit --device cuda --suffix _base --load_in_4bit
+# We use   to ensure the 17B model fits comfortably in memory
+python -u main.py --model $MODEL --dataset reuters --device cuda --suffix _base  
+python -u main.py --model $MODEL --dataset darkreddit --device cuda --suffix _base  
 
 # ==============================================================================
 # PHASE 2: TRAIN & EVAL 3 EPOCHS
@@ -57,8 +61,8 @@ cp -r ${ADAPTER_ROOT}/${MODEL}_reuters_3ep ${ADAPTER_ROOT}/${MODEL}_reuters
 cp -r ${ADAPTER_ROOT}/${MODEL}_darkreddit_3ep ${ADAPTER_ROOT}/${MODEL}_darkreddit
 
 echo ">>> [3/5] Evaluating LoRA (3 Epochs)..."
-python -u main.py --model $MODEL --dataset reuters --device cuda --use_adapter --suffix _3ep --load_in_4bit
-python -u main.py --model $MODEL --dataset darkreddit --device cuda --use_adapter --suffix _3ep --load_in_4bit
+python -u main.py --model $MODEL --dataset reuters --device cuda --use_adapter --suffix _3ep  
+python -u main.py --model $MODEL --dataset darkreddit --device cuda --use_adapter --suffix _3ep  
 
 # Cleanup
 rm -rf ${ADAPTER_ROOT}/${MODEL}_reuters
@@ -81,8 +85,8 @@ cp -r ${ADAPTER_ROOT}/${MODEL}_reuters_5ep ${ADAPTER_ROOT}/${MODEL}_reuters
 cp -r ${ADAPTER_ROOT}/${MODEL}_darkreddit_5ep ${ADAPTER_ROOT}/${MODEL}_darkreddit
 
 echo ">>> [5/5] Evaluating LoRA (5 Epochs)..."
-python -u main.py --model $MODEL --dataset reuters --device cuda --use_adapter --suffix _5ep --load_in_4bit
-python -u main.py --model $MODEL --dataset darkreddit --device cuda --use_adapter --suffix _5ep --load_in_4bit
+python -u main.py --model $MODEL --dataset reuters --device cuda --use_adapter --suffix _5ep  
+python -u main.py --model $MODEL --dataset darkreddit --device cuda --use_adapter --suffix _5ep  
 
 # Cleanup
 rm -rf ${ADAPTER_ROOT}/${MODEL}_reuters

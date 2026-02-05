@@ -8,6 +8,9 @@
 #SBATCH --output=results/logs/Llama2_Multi_%j.out
 #SBATCH --error=results/logs/Llama2_Multi_%j.err
 
+export WANDB_API_KEY=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
+export WANDB_PROJECT=BSC Thesis
+
 # 1. Load Modules
 module purge
 module load python/3.12.8-gcc-12.2.0-4y5tbpr

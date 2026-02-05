@@ -103,11 +103,12 @@ def run_lora_training(model_alias, dataset_alias, epochs=3, batch_size=4):
         per_device_train_batch_size=batch_size,
         num_train_epochs=epochs,
         learning_rate=2e-4,
-        fp16=True,  # Uses standard GPU acceleration
+        fp16=True,
         logging_steps=10,
         save_strategy="epoch",
         save_total_limit=1,
-        report_to="none"
+        report_to="wandb",  # <--- Change "none" to "wandb"
+        run_name=f"TRAIN-{model_alias}-{dataset_alias}",  # <--- Gives the run a nice name in the UI
     )
 
     trainer = Trainer(

@@ -1,6 +1,6 @@
 import torch
 import torch.nn as nn
-from transformers import AutoModel, AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
+from transformers import AutoModel, AutoModelForCausalLM, AutoTokenizer
 from tqdm import tqdm
 import os
 import sys
@@ -31,14 +31,9 @@ def load_adapter_safe(model, adapter_path, model_alias):
 
     try:
         # 1. Initialize the PEFT wrapper (this creates the layers with random weights)
-        #    We assume the architecture in 'adapter_config.json' is correct.
         model = PeftModel.from_pretrained(model, adapter_path)
 
         # 2. Check if we need to manually fix keys
-        #    We try to load the weights. If there's a mismatch, PeftModel usually
-        #    prints a warning and leaves weights random. We want to force it.
-
-        # Load the actual weights from file
         safe_path = os.path.join(adapter_path, "adapter_model.safetensors")
         bin_path = os.path.join(adapter_path, "adapter_model.bin")
 
@@ -68,10 +63,9 @@ def load_adapter_safe(model, adapter_path, model_alias):
             print(f"   [{model_alias}] [FIX] Renamed {fixed_count} keys (removed .bert prefix) to match model.")
 
         # 4. Load the fixed weights into the model
-        #    set_peft_model_state_dict is the safe way to inject weights
         result = set_peft_model_state_dict(model, new_state_dict)
 
-        # Check result (missing keys is fine if they are just classifier heads, but unexpected keys is bad)
+        # Check result
         if len(result.missing_keys) > 0:
             # Filter out non-lora missing keys to see if it's a real problem
             real_missing = [k for k in result.missing_keys if "lora" in k]
@@ -115,7 +109,7 @@ class E5Runner:
 
         self.model.eval()
 
-    def get_embeddings(self, text_list, batch_size=32):
+    def get_embeddings(self, text_list, batch_size=16):
         all_embeddings = []
 
         for i in tqdm(range(0, len(text_list), batch_size), desc=f"   [{self.model_alias}]"):
@@ -147,7 +141,7 @@ class E5Runner:
 #  CLASS 2: Llama Runner (The Decoder Specialist)
 # ==========================================
 class LlamaRunner:
-    def __init__(self, model_alias, adapter_path=None, load_in_4bit=False):
+    def __init__(self, model_alias, adapter_path=None):
         self.model_alias = model_alias
         self.device = config.DEVICE
 
@@ -164,21 +158,10 @@ class LlamaRunner:
         if self.tokenizer.pad_token is None:
             self.tokenizer.pad_token = self.tokenizer.eos_token
 
-        quant_config = None
-        if load_in_4bit:
-            print(f"   [{model_alias}] Enabling 4-bit Quantization...")
-            quant_config = BitsAndBytesConfig(
-                load_in_4bit=True,
-                bnb_4bit_compute_dtype=torch.float16,
-                bnb_4bit_quant_type="nf4",
-                bnb_4bit_use_double_quant=True,
-                llm_int8_enable_fp32_cpu_offload=True
-            )
-
+        # Standard FP16 loading (No 4-bit quantization)
         self.model = AutoModelForCausalLM.from_pretrained(
             self.model_id,
             device_map="auto",
-            quantization_config=quant_config,
             torch_dtype=torch.float16,
             trust_remote_code=True
         )
@@ -189,6 +172,7 @@ class LlamaRunner:
         self.model.eval()
 
     def get_embeddings(self, text_list, batch_size=4):
+        # Enforce small batch size for Scout if needed
         if "scout" in self.model_alias and batch_size > 4:
             batch_size = 4
 
@@ -207,6 +191,7 @@ class LlamaRunner:
             with torch.no_grad():
                 outputs = self.model(**inputs, output_hidden_states=True)
 
+            # Use the last hidden state
             hidden_states = outputs.hidden_states[-1]
             embeddings = self._mean_pooling(hidden_states, inputs['attention_mask'])
             all_embeddings.append(embeddings.cpu())
@@ -221,16 +206,17 @@ class LlamaRunner:
 # ==========================================
 #  MAIN ENTRY POINT
 # ==========================================
-def run_pipeline(model_alias, train_texts, test_texts, use_lora=False, dataset_alias="unknown", load_in_4bit=False):
+def run_pipeline(model_alias, train_texts, test_texts, use_lora=False, dataset_alias="unknown"):
     adapter_path = None
     if use_lora:
         adapter_path = os.path.join(config.ADAPTERS_DIR, f"{model_alias}_{dataset_alias}")
 
     if "e5" in model_alias:
         runner = E5Runner(model_alias, adapter_path=adapter_path)
-        batch_size = 32
+        batch_size = 16
     else:
-        runner = LlamaRunner(model_alias, adapter_path=adapter_path, load_in_4bit=load_in_4bit)
+        # Llama Runner no longer takes 'load_in_4bit' arg
+        runner = LlamaRunner(model_alias, adapter_path=adapter_path)
         batch_size = 4
 
     print("   [Pipeline] Generating Train Embeddings...")
