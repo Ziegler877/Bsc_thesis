@@ -32,11 +32,19 @@ models/llama-maveric/
 .idea/
 .venv/
 
+Token.txt
 
 
 
-# Results and Checkpoints
-results/
+
+# --- Results and Checkpoints ---
+
+# 1. Ignore everything inside the results folder...
+results/*
+
+# 2. ...BUT allow Git to look at the embeddings folder
+!results/embeddings/
+
+# 3. Ignore checkpoints everywhere
 checkpoints/
 *.safetensors
-*.pt

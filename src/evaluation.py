@@ -123,6 +123,8 @@ def run_evaluation(
     # Full Classification Report (Precision/Recall per author)
     report_str = classification_report(true_indices, pred_indices, target_names=unique_authors)
 
+    print(f"   [Eval] Results -> Acc: {acc_top1:.4f} | F1: {f1_macro:.4f}")
+
     # 3. Save Log File
     base_filename = f"{model_name}_{dataset_name}_{timestamp}"
     log_path = os.path.join(config.LOGS_DIR, f"{base_filename}_report.txt")
@@ -161,3 +163,12 @@ def run_evaluation(
 
     print(f"   [Eval] Plot saved: {plot_path}")
     print("------------------------------------------------")
+
+    # === CRITICAL ADDITION: Return Dictionary for WandB ===
+    return {
+        "test_accuracy": acc_top1,
+        "test_top3_accuracy": acc_top3,
+        "test_f1_macro": f1_macro,
+        "test_f1_weighted": f1_weighted,
+        "test_log_loss": ll
+    }
