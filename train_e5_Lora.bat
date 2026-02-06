@@ -9,7 +9,7 @@ set "WANDB_API_KEY=wandb_v1_GXdn86tvBMCL17HokldVud3Z7cY_TMHCvRfsKr1gdpK3QeLPfvPn
 set "WANDB_PROJECT=BSC Thesis"
 set "WANDB_WATCH=false"
 set "ADAPTER_ROOT=results\adapters"
-set "DATASET=reuters"
+set "DATASET=darkreddit"
 set "EPOCHS=3"
 
 echo ========================================================

@@ -7,9 +7,9 @@ setlocal
 :: ====================================================
 
 :: Generate a unique log filename with Timestamp
-set "TIMESTAMP=%date:~-4,4%-%date:~-7,2%-%date:~-10,2%_%time:~0,2%-%time:~3,2%-%time:~6,2%"
-set "TIMESTAMP=%TIMESTAMP: =0%"
-set "LOGFILE=results\logs\batch_run_%TIMESTAMP%.log"
+::set "TIMESTAMP=%date:~-4,4%-%date:~-7,2%-%date:~-10,2%_%time:~0,2%-%time:~3,2%-%time:~6,2%"
+::set "TIMESTAMP=%TIMESTAMP: =0%"
+::set "LOGFILE=results\logs\batch_run_%TIMESTAMP%.log"
 
 set "WANDB_API_KEY=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"
 set "WANDB_PROJECT=BSC Thesis"
@@ -27,7 +27,7 @@ echo ========================================================
 :: 1. E5 SMALL (Baselines)
 :: ====================================================
 
-set "ADAPTER_ROOT=results\adapters"
+::set "ADAPTER_ROOT=results\adapters"
 
 ::echo.
 ::echo [1/4] Running E5_SMALL on REUTERS (BASE - 0 Epochs)...
@@ -36,57 +36,17 @@ set "ADAPTER_ROOT=results\adapters"
 
 
 
+::echo.
+::echo [2/4] Running E5_SMALL on REUTERS (LoRA - 3 Epochs)...
+::if exist "%ADAPTER_ROOT%\e5_small_reuters_3ep" (
+::    move /Y "%ADAPTER_ROOT%\e5_small_reuters_3ep" "%ADAPTER_ROOT%\e5_small_reuters" > nul
+::)
 
-
-
-
-
-echo.
-echo [2/4] Running E5_SMALL on REUTERS (LoRA - 2 Epochs)...
-if exist "%ADAPTER_ROOT%\e5_small_reuters_2ep" (
-    move /Y "%ADAPTER_ROOT%\e5_small_reuters_2ep" "%ADAPTER_ROOT%\e5_small_reuters" > nul
-)
-
-powershell -Command "python main.py --model e5_small --dataset reuters --lora --epochs 2 --suffix _2ep | Tee-Object -FilePath '%LOGFILE%' -Append"
-if exist "%ADAPTER_ROOT%\e5_small_reuters" (
-    move /Y "%ADAPTER_ROOT%\e5_small_reuters" "%ADAPTER_ROOT%\e5_small_reuters_2ep" > nul
-)
-echo [2/4] FINISHED.
-
-
-
-
-echo.
-echo [4/4] Running E5_SMALL on DARKREDDIT (LoRA - 2 Epochs)...
-if exist "%ADAPTER_ROOT%\e5_small_darkreddit_2ep" (
-    move /Y "%ADAPTER_ROOT%\e5_small_darkreddit_2ep" "%ADAPTER_ROOT%\e5_small_darkreddit" > nul
-)
-powershell -Command "python main.py --model e5_small --dataset darkreddit --lora --epochs 2 --suffix _2ep | Tee-Object -FilePath '%LOGFILE%' -Append"
-if exist "%ADAPTER_ROOT%\e5_small_darkreddit" (
-    move /Y "%ADAPTER_ROOT%\e5_small_darkreddit" "%ADAPTER_ROOT%\e5_small_darkreddit_2ep" > nul
-)
-echo [4/4] FINISHED.
-
-
-
-
-
-
-
-
-
-
-echo.
-echo [2/4] Running E5_SMALL on REUTERS (LoRA - 3 Epochs)...
-if exist "%ADAPTER_ROOT%\e5_small_reuters_3ep" (
-    move /Y "%ADAPTER_ROOT%\e5_small_reuters_3ep" "%ADAPTER_ROOT%\e5_small_reuters" > nul
-)
-
-powershell -Command "python main.py --model e5_small --dataset reuters --lora --epochs 3 --suffix _3ep | Tee-Object -FilePath '%LOGFILE%' -Append"
-if exist "%ADAPTER_ROOT%\e5_small_reuters" (
-    move /Y "%ADAPTER_ROOT%\e5_small_reuters" "%ADAPTER_ROOT%\e5_small_reuters_3ep" > nul
-)
-echo [2/4] FINISHED.
+::powershell -Command "python main.py --model e5_small --dataset reuters --lora --epochs 3 --suffix _3ep | Tee-Object -FilePath '%LOGFILE%' -Append"
+::if exist "%ADAPTER_ROOT%\e5_small_reuters" (
+::    move /Y "%ADAPTER_ROOT%\e5_small_reuters" "%ADAPTER_ROOT%\e5_small_reuters_3ep" > nul
+::)
+::echo [2/4] FINISHED.
 
 
 ::echo.
@@ -94,16 +54,16 @@ echo [2/4] FINISHED.
 ::powershell -Command "python main.py --model e5_small --dataset darkreddit --epochs 0 --suffix _base | Tee-Object -FilePath '%LOGFILE%' -Append"
 ::echo [3/4] FINISHED.
 
-echo.
-echo [4/4] Running E5_SMALL on DARKREDDIT (LoRA - 3 Epochs)...
-if exist "%ADAPTER_ROOT%\e5_small_darkreddit_3ep" (
-    move /Y "%ADAPTER_ROOT%\e5_small_darkreddit_3ep" "%ADAPTER_ROOT%\e5_small_darkreddit" > nul
-)
-powershell -Command "python main.py --model e5_small --dataset darkreddit --lora --epochs 3 --suffix _3ep | Tee-Object -FilePath '%LOGFILE%' -Append"
-if exist "%ADAPTER_ROOT%\e5_small_darkreddit" (
-    move /Y "%ADAPTER_ROOT%\e5_small_darkreddit" "%ADAPTER_ROOT%\e5_small_darkreddit_3ep" > nul
-)
-echo [4/4] FINISHED.
+::echo.
+::echo [4/4] Running E5_SMALL on DARKREDDIT (LoRA - 3 Epochs)...
+::if exist "%ADAPTER_ROOT%\e5_small_darkreddit_3ep" (
+::    move /Y "%ADAPTER_ROOT%\e5_small_darkreddit_3ep" "%ADAPTER_ROOT%\e5_small_darkreddit" > nul
+::)
+::powershell -Command "python main.py --model e5_small --dataset darkreddit --lora --epochs 3 --suffix _3ep | Tee-Object -FilePath '%LOGFILE%' -Append"
+::if exist "%ADAPTER_ROOT%\e5_small_darkreddit" (
+::    move /Y "%ADAPTER_ROOT%\e5_small_darkreddit" "%ADAPTER_ROOT%\e5_small_darkreddit_3ep" > nul
+::)
+::echo [4/4] FINISHED.
 
 
 :: ====================================================
@@ -134,100 +94,122 @@ echo [4/4] FINISHED.
 :: FINISH
 :: ====================================================
 
+:: CRITICAL: This variable must be set!
+set "ADAPTER_ROOT=results\adapters"
+set "DATASET=darkreddit"
+set "EPOCHS=3"
 
+:: Generate Log File Name
+set "TIMESTAMP=%date:~-4,4%-%date:~-7,2%-%date:~-10,2%_%time:~0,2%-%time:~3,2%"
+set "TIMESTAMP=%TIMESTAMP: =0%"
+set "LOGFILE=results\logs\eval_battle_%TIMESTAMP%.log"
+
+echo ========================================================
+echo   STARTING EVALUATION BATTLE (Base vs A, B, C, D)
+echo   Dataset: %DATASET%
+echo   Logs: %LOGFILE%
+echo ========================================================
+
+:: ========================================================
+:: 2. BASE MODEL (Zero-Shot)
+:: ========================================================
 echo.
-echo [2/4] Running E5_SMALL on REUTERS (LoRA - 4 Epochs)...
-if exist "%ADAPTER_ROOT%\e5_small_reuters_4ep" (
-    move /Y "%ADAPTER_ROOT%\e5_small_reuters_4ep" "%ADAPTER_ROOT%\e5_small_reuters" > nul
-)
+echo [1/5] Evaluating BASE MODEL (No LoRA)...
+powershell -Command "python main.py --model e5_small --dataset %DATASET% --epochs 0 --suffix _BASE | Tee-Object -FilePath '%LOGFILE%' -Append"
+echo [1/5] DONE.
 
-powershell -Command "python main.py --model e5_small --dataset reuters --lora --epochs 4 --suffix _4ep | Tee-Object -FilePath '%LOGFILE%' -Append"
-if exist "%ADAPTER_ROOT%\e5_small_reuters" (
-    move /Y "%ADAPTER_ROOT%\e5_small_reuters" "%ADAPTER_ROOT%\e5_small_reuters_4ep" > nul
-)
-echo [2/4] FINISHED.
-
-
-
-
+:: ========================================================
+:: 3. EXPERIMENT A (DoRA + Cosine)
+:: ========================================================
 echo.
-echo [4/4] Running E5_SMALL on DARKREDDIT (LoRA - 4 Epochs)...
-if exist "%ADAPTER_ROOT%\e5_small_darkreddit_4ep" (
-    move /Y "%ADAPTER_ROOT%\e5_small_darkreddit_4ep" "%ADAPTER_ROOT%\e5_small_darkreddit" > nul
+echo [2/5] Evaluating EXP A...
+
+:: Check if folder exists using the variable
+if exist "%ADAPTER_ROOT%\e5_small_%DATASET%_expA" (
+    echo    Found folder: e5_small_%DATASET%_expA
+    :: Move folder so main.py can find it
+    move /Y "%ADAPTER_ROOT%\e5_small_%DATASET%_expA" "%ADAPTER_ROOT%\e5_small_%DATASET%" > nul
+) else (
+    echo [ERROR] Folder e5_small_%DATASET%_expA not found! Skipping.
+    goto :SKIP_A
 )
-powershell -Command "python main.py --model e5_small --dataset darkreddit --lora --epochs 4 --suffix _4ep | Tee-Object -FilePath '%LOGFILE%' -Append"
-if exist "%ADAPTER_ROOT%\e5_small_darkreddit" (
-    move /Y "%ADAPTER_ROOT%\e5_small_darkreddit" "%ADAPTER_ROOT%\e5_small_darkreddit_4ep" > nul
-)
-echo [4/4] FINISHED.
 
+:: Run Evaluation
+powershell -Command "python main.py --model e5_small --dataset %DATASET% --lora --epochs %EPOCHS% --suffix _expA | Tee-Object -FilePath '%LOGFILE%' -Append"
 
+:: Move folder back to safe storage
+move /Y "%ADAPTER_ROOT%\e5_small_%DATASET%" "%ADAPTER_ROOT%\e5_small_%DATASET%_expA" > nul
 
+:SKIP_A
+echo [2/5] DONE.
 
-
-
-
-
-
+:: ========================================================
+:: 4. EXPERIMENT B (Dropout + Rank 16)
+:: ========================================================
 echo.
-echo [2/4] Running E5_SMALL on REUTERS (LoRA - 5 Epochs)...
-if exist "%ADAPTER_ROOT%\e5_small_reuters_5ep" (
-    move /Y "%ADAPTER_ROOT%\e5_small_reuters_5ep" "%ADAPTER_ROOT%\e5_small_reuters" > nul
+echo [3/5] Evaluating EXP B...
+
+if exist "%ADAPTER_ROOT%\e5_small_%DATASET%_expB" (
+    echo    Found folder: e5_small_%DATASET%_expB
+    move /Y "%ADAPTER_ROOT%\e5_small_%DATASET%_expB" "%ADAPTER_ROOT%\e5_small_%DATASET%" > nul
+) else (
+    echo [ERROR] Folder e5_small_%DATASET%_expB not found! Skipping.
+    goto :SKIP_B
 )
 
-powershell -Command "python main.py --model e5_small --dataset reuters --lora --epochs 5 --suffix _5ep | Tee-Object -FilePath '%LOGFILE%' -Append"
-if exist "%ADAPTER_ROOT%\e5_small_reuters" (
-    move /Y "%ADAPTER_ROOT%\e5_small_reuters" "%ADAPTER_ROOT%\e5_small_reuters_5ep" > nul
-)
-echo [2/4] FINISHED.
+powershell -Command "python main.py --model e5_small --dataset %DATASET% --lora --epochs %EPOCHS% --suffix _expB | Tee-Object -FilePath '%LOGFILE%' -Append"
 
+move /Y "%ADAPTER_ROOT%\e5_small_%DATASET%" "%ADAPTER_ROOT%\e5_small_%DATASET%_expB" > nul
 
+:SKIP_B
+echo [3/5] DONE.
 
-
+:: ========================================================
+:: 5. EXPERIMENT C (Bias Tuning)
+:: ========================================================
 echo.
-echo [4/4] Running E5_SMALL on DARKREDDIT (LoRA - 5 Epochs)...
-if exist "%ADAPTER_ROOT%\e5_small_darkreddit_5ep" (
-    move /Y "%ADAPTER_ROOT%\e5_small_darkreddit_5ep" "%ADAPTER_ROOT%\e5_small_darkreddit" > nul
+echo [4/5] Evaluating EXP C...
+
+if exist "%ADAPTER_ROOT%\e5_small_%DATASET%_expC" (
+    echo    Found folder: e5_small_%DATASET%_expC
+    move /Y "%ADAPTER_ROOT%\e5_small_%DATASET%_expC" "%ADAPTER_ROOT%\e5_small_%DATASET%" > nul
+) else (
+    echo [ERROR] Folder e5_small_%DATASET%_expC not found! Skipping.
+    goto :SKIP_C
 )
-powershell -Command "python main.py --model e5_small --dataset darkreddit --lora --epochs 5 --suffix _5ep | Tee-Object -FilePath '%LOGFILE%' -Append"
-if exist "%ADAPTER_ROOT%\e5_small_darkreddit" (
-    move /Y "%ADAPTER_ROOT%\e5_small_darkreddit" "%ADAPTER_ROOT%\e5_small_darkreddit_5ep" > nul
-)
-echo [4/4] FINISHED.
 
+powershell -Command "python main.py --model e5_small --dataset %DATASET% --lora --epochs %EPOCHS% --suffix _expC | Tee-Object -FilePath '%LOGFILE%' -Append"
 
+move /Y "%ADAPTER_ROOT%\e5_small_%DATASET%" "%ADAPTER_ROOT%\e5_small_%DATASET%_expC" > nul
 
+:SKIP_C
+echo [4/5] DONE.
 
-
+:: ========================================================
+:: 6. EXPERIMENT D (Combo)
+:: ========================================================
 echo.
-echo [2/4] Running E5_SMALL on REUTERS (LoRA - 6 Epochs)...
-if exist "%ADAPTER_ROOT%\e5_small_reuters_6ep" (
-    move /Y "%ADAPTER_ROOT%\e5_small_reuters_6ep" "%ADAPTER_ROOT%\e5_small_reuters" > nul
+echo [5/5] Evaluating EXP D...
+
+if exist "%ADAPTER_ROOT%\e5_small_%DATASET%_expD" (
+    echo    Found folder: e5_small_%DATASET%_expD
+    move /Y "%ADAPTER_ROOT%\e5_small_%DATASET%_expD" "%ADAPTER_ROOT%\e5_small_%DATASET%" > nul
+) else (
+    echo [ERROR] Folder e5_small_%DATASET%_expD not found! Skipping.
+    goto :SKIP_D
 )
 
-powershell -Command "python main.py --model e5_small --dataset reuters --lora --epochs 6 --suffix _6ep | Tee-Object -FilePath '%LOGFILE%' -Append"
-if exist "%ADAPTER_ROOT%\e5_small_reuters" (
-    move /Y "%ADAPTER_ROOT%\e5_small_reuters" "%ADAPTER_ROOT%\e5_small_reuters_6ep" > nul
-)
-echo [2/4] FINISHED.
+powershell -Command "python main.py --model e5_small --dataset %DATASET% --lora --epochs %EPOCHS% --suffix _expD | Tee-Object -FilePath '%LOGFILE%' -Append"
 
+move /Y "%ADAPTER_ROOT%\e5_small_%DATASET%" "%ADAPTER_ROOT%\e5_small_%DATASET%_expD" > nul
 
+:SKIP_D
+echo [5/5] DONE.
 
-
-echo.
-echo [4/4] Running E5_SMALL on DARKREDDIT (LoRA - 6 Epochs)...
-if exist "%ADAPTER_ROOT%\e5_small_darkreddit_6ep" (
-    move /Y "%ADAPTER_ROOT%\e5_small_darkreddit_6ep" "%ADAPTER_ROOT%\e5_small_darkreddit" > nul
-)
-powershell -Command "python main.py --model e5_small --dataset darkreddit --lora --epochs 6 --suffix _6ep | Tee-Object -FilePath '%LOGFILE%' -Append"
-if exist "%ADAPTER_ROOT%\e5_small_darkreddit" (
-    move /Y "%ADAPTER_ROOT%\e5_small_darkreddit" "%ADAPTER_ROOT%\e5_small_darkreddit_6ep" > nul
-)
-echo [4/4] FINISHED.
 
 echo.
 echo ========================================================
-echo   ALL EXPERIMENTS COMPLETED.
+echo   ALL EXPERIMENTS COMPLETED FOR %DATASET%
 echo   Full log available at: %LOGFILE%
 echo ========================================================
 pause
