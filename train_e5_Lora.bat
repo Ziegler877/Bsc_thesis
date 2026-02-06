@@ -2,100 +2,100 @@
 chcp 65001 > nul
 setlocal
 
-:: WANDB SETUP
+:: ========================================================
+:: CONFIGURATION
+:: ========================================================
 set "WANDB_API_KEY=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"
 set "WANDB_PROJECT=BSC Thesis"
 set "WANDB_WATCH=false"
 set "ADAPTER_ROOT=results\adapters"
 set "DATASET=reuters"
-
-:: We focus on REUTERS first to find the best recipe quickly.
+set "EPOCHS=3"
 
 echo ========================================================
-echo   STARTING 4-WAY HYPERPARAMETER BATTLE
+echo   STARTING 4-WAY TRAINING BATTLE (3 Epochs)
+echo   Script will ONLY TRAIN. No Evaluation.
 echo ========================================================
 
 :: ----------------------------------------------------------
-:: EXP 1: DoRA + Cosine Scheduler (The "Modern" Approach)
+:: EXP A: DoRA + Cosine Scheduler
 :: ----------------------------------------------------------
 echo.
-echo [1/4] Running Experiment A: DoRA + Cosine...
-python src/train_lora.py --model e5_small --dataset %DATASET% --epochs 4 --batch_size 16 ^
-  --use_dora --lr_scheduler cosine --suffix _expA
+echo [1/4] Training Experiment A: DoRA + Cosine...
+python src/train_lora.py --model e5_small --dataset %DATASET% --epochs %EPOCHS% --batch_size 16 ^
+  --use_dora --lr_scheduler cosine
 
-:: Rename folder
+:: Rename Folder to _expA
 if exist "%ADAPTER_ROOT%\e5_small_%DATASET%" (
+    echo    Renaming folder to ..._expA
     if exist "%ADAPTER_ROOT%\e5_small_%DATASET%_expA" rmdir /S /Q "%ADAPTER_ROOT%\e5_small_%DATASET%_expA"
-    move /Y "%ADAPTER_ROOT%\e5_small_%DATASET%" "%ADAPTER_ROOT%\e5_small_%DATASET%_expA"
+    move /Y "%ADAPTER_ROOT%\e5_small_%DATASET%" "%ADAPTER_ROOT%\e5_small_%DATASET%_expA" > nul
+) else (
+    echo [ERROR] Training A failed. No folder found.
 )
-
-:: Run Eval immediately to see result
-echo [1/4] Evaluating Exp A...
-python main.py --model e5_small --dataset %DATASET% --lora --suffix _expA --epochs 4
 echo [1/4] DONE.
 
 
 :: ----------------------------------------------------------
-:: EXP 2: High Dropout + Low Rank (The "Anti-Overfit" Approach)
+:: EXP B: High Dropout + Low Rank
 :: ----------------------------------------------------------
 echo.
-echo [2/4] Running Experiment B: High Dropout (0.3) + Rank 16...
-python src/train_lora.py --model e5_small --dataset %DATASET% --epochs 4 --batch_size 16 ^
-  --lora_dropout 0.3 --r 16 --lora_alpha 32 --suffix _expB
+echo [2/4] Training Experiment B: Dropout 0.3 + Rank 16...
+python src/train_lora.py --model e5_small --dataset %DATASET% --epochs %EPOCHS% --batch_size 16 ^
+  --lora_dropout 0.3 --r 16 --lora_alpha 32
 
-:: Rename folder
+:: Rename Folder to _expB
 if exist "%ADAPTER_ROOT%\e5_small_%DATASET%" (
+    echo    Renaming folder to ..._expB
     if exist "%ADAPTER_ROOT%\e5_small_%DATASET%_expB" rmdir /S /Q "%ADAPTER_ROOT%\e5_small_%DATASET%_expB"
-    move /Y "%ADAPTER_ROOT%\e5_small_%DATASET%" "%ADAPTER_ROOT%\e5_small_%DATASET%_expB"
+    move /Y "%ADAPTER_ROOT%\e5_small_%DATASET%" "%ADAPTER_ROOT%\e5_small_%DATASET%_expB" > nul
+) else (
+    echo [ERROR] Training B failed. No folder found.
 )
-
-:: Run Eval
-echo [2/4] Evaluating Exp B...
-python main.py --model e5_small --dataset %DATASET% --lora --suffix _expB --epochs 4
 echo [2/4] DONE.
 
 
 :: ----------------------------------------------------------
-:: EXP 3: Bias Tuning (The "Subtle Style" Approach)
+:: EXP C: Bias Tuning
 :: ----------------------------------------------------------
 echo.
-echo [3/4] Running Experiment C: Bias Tuning (lora_only)...
-python src/train_lora.py --model e5_small --dataset %DATASET% --epochs 4 --batch_size 16 ^
-  --bias lora_only --suffix _expC
+echo [3/4] Training Experiment C: Bias Tuning (lora_only)...
+python src/train_lora.py --model e5_small --dataset %DATASET% --epochs %EPOCHS% --batch_size 16 ^
+  --bias lora_only
 
-:: Rename folder
+:: Rename Folder to _expC
 if exist "%ADAPTER_ROOT%\e5_small_%DATASET%" (
+    echo    Renaming folder to ..._expC
     if exist "%ADAPTER_ROOT%\e5_small_%DATASET%_expC" rmdir /S /Q "%ADAPTER_ROOT%\e5_small_%DATASET%_expC"
-    move /Y "%ADAPTER_ROOT%\e5_small_%DATASET%" "%ADAPTER_ROOT%\e5_small_%DATASET%_expC"
+    move /Y "%ADAPTER_ROOT%\e5_small_%DATASET%" "%ADAPTER_ROOT%\e5_small_%DATASET%_expC" > nul
+) else (
+    echo [ERROR] Training C failed. No folder found.
 )
-
-:: Run Eval
-echo [3/4] Evaluating Exp C...
-python main.py --model e5_small --dataset %DATASET% --lora --suffix _expC --epochs 4
 echo [3/4] DONE.
 
 
 :: ----------------------------------------------------------
-:: EXP 4: "The Kitchen Sink" (Combine A + B + C)
+:: EXP D: The Kitchen Sink (Combo)
 :: ----------------------------------------------------------
 echo.
-echo [4/4] Running Experiment D: DoRA + Dropout 0.3 + Bias + Cosine...
-python src/train_lora.py --model e5_small --dataset %DATASET% --epochs 4 --batch_size 16 ^
-  --use_dora --lora_dropout 0.3 --bias lora_only --lr_scheduler cosine --suffix _expD
+echo [4/4] Training Experiment D: DoRA + Dropout 0.3 + Bias + Cosine...
+python src/train_lora.py --model e5_small --dataset %DATASET% --epochs %EPOCHS% --batch_size 16 ^
+  --use_dora --lora_dropout 0.3 --bias lora_only --lr_scheduler cosine
 
-:: Rename folder
+:: Rename Folder to _expD
 if exist "%ADAPTER_ROOT%\e5_small_%DATASET%" (
+    echo    Renaming folder to ..._expD
     if exist "%ADAPTER_ROOT%\e5_small_%DATASET%_expD" rmdir /S /Q "%ADAPTER_ROOT%\e5_small_%DATASET%_expD"
-    move /Y "%ADAPTER_ROOT%\e5_small_%DATASET%" "%ADAPTER_ROOT%\e5_small_%DATASET%_expD"
+    move /Y "%ADAPTER_ROOT%\e5_small_%DATASET%" "%ADAPTER_ROOT%\e5_small_%DATASET%_expD" > nul
+) else (
+    echo [ERROR] Training D failed. No folder found.
 )
-
-:: Run Eval
-echo [4/4] Evaluating Exp D...
-python main.py --model e5_small --dataset %DATASET% --lora --suffix _expD --epochs 4
 echo [4/4] DONE.
+
 
 echo.
 echo ========================================================
-echo   ALL EXPERIMENTS COMPLETE. CHECK WANDB FOR THE WINNER.
+echo   ALL TRAININGS COMPLETE.
+echo   Check results/adapters for folders ending in expA-D
 echo ========================================================
 pause
