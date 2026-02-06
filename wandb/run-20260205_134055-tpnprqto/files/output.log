@@ -1,0 +1,23 @@
+ 33%|████████████████████████████████████                                                                        | 40/120 [00:57<01:20,  1.01s/it]C:\Users\maxid\Universität\12._Semester\BSC\Programm\.venv\Lib\site-packages\peft\utils\other.py:1394: UserWarning: Unable to fetch remote file due to the following error The read operation timed out - silently ignoring the lookup for the file config.json in intfloat/e5-small-v2.
+{'loss': '42.35', 'grad_norm': '32.17', 'learning_rate': '9.655e-05', 'epoch': '0.2548'}
+{'loss': '33.84', 'grad_norm': '13.78', 'learning_rate': '8.793e-05', 'epoch': '0.5096'}
+{'loss': '30.64', 'grad_norm': '7.759', 'learning_rate': '7.931e-05', 'epoch': '0.7643'}
+{'loss': '27.44', 'grad_norm': '2.977', 'learning_rate': '7.069e-05', 'epoch': '1'}
+  warnings.warn(
+C:\Users\maxid\Universität\12._Semester\BSC\Programm\.venv\Lib\site-packages\peft\utils\save_and_load.py:295: UserWarning: Could not find a config file in intfloat/e5-small-v2 - will assume that the vocabulary was not modified.
+  warnings.warn(
+100%|███████████████████████████████████████████████████████████████████████████████████████████████████████████| 120/120 [03:35<00:00,  1.74s/it]C:\Users\maxid\Universität\12._Semester\BSC\Programm\.venv\Lib\site-packages\peft\utils\other.py:1394: UserWarning: Unable to fetch remote file due to the following error The read operation timed out - silently ignoring the lookup for the file config.json in intfloat/e5-small-v2.
+{'loss': '29.17', 'grad_norm': '4.67', 'learning_rate': '6.207e-05', 'epoch': '1.255'}
+{'loss': '28.94', 'grad_norm': '4.44', 'learning_rate': '5.345e-05', 'epoch': '1.51'}
+{'loss': '28.82', 'grad_norm': '3.947', 'learning_rate': '4.483e-05', 'epoch': '1.764'}
+{'loss': '26.56', 'grad_norm': '3.626', 'learning_rate': '3.621e-05', 'epoch': '2'}
+{'loss': '28.67', 'grad_norm': '4.036', 'learning_rate': '2.759e-05', 'epoch': '2.255'}
+{'loss': '28.51', 'grad_norm': '3.899', 'learning_rate': '1.897e-05', 'epoch': '2.51'}
+{'loss': '28.53', 'grad_norm': '4.82', 'learning_rate': '1.034e-05', 'epoch': '2.764'}
+{'loss': '26.34', 'grad_norm': '4.36', 'learning_rate': '1.724e-06', 'epoch': '3'}
+  warnings.warn(
+C:\Users\maxid\Universität\12._Semester\BSC\Programm\.venv\Lib\site-packages\peft\utils\save_and_load.py:295: UserWarning: Could not find a config file in intfloat/e5-small-v2 - will assume that the vocabulary was not modified.
+  warnings.warn(
+100%|███████████████████████████████████████████████████████████████████████████████████████████████████████████| 120/120 [03:45<00:00,  1.88s/it]
+{'train_runtime': '230', 'train_samples_per_second': '32.61', 'train_steps_per_second': '0.522', 'train_loss': '29.98', 'epoch': '3'}
+   [Save] Saving adapter to C:\Users\maxid\Universität\12._Semester\BSC\Programm\results\adapters\e5_small_reuters

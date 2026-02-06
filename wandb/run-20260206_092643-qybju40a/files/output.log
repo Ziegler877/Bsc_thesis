@@ -1,0 +1,19 @@
+ 67%|████████████████████████████████████████████████████████████████████████                                    | 80/120 [01:50<00:40,  1.02s/it]C:\Users\maxid\Universität\12._Semester\BSC\Programm\.venv\Lib\site-packages\peft\utils\other.py:1394: UserWarning: Unable to fetch remote file due to the following error [Errno 11001] getaddrinfo failed - silently ignoring the lookup for the file config.json in intfloat/e5-small-v2.
+{'loss': '45.36', 'grad_norm': '12.52', 'learning_rate': '1.167e-05', 'epoch': '0.2548'}
+{'loss': '44.99', 'grad_norm': '14.33', 'learning_rate': '1.907e-05', 'epoch': '0.5096'}
+{'loss': '44', 'grad_norm': '16.85', 'learning_rate': '1.722e-05', 'epoch': '0.7643'}
+{'loss': '39.75', 'grad_norm': '5.6', 'learning_rate': '1.537e-05', 'epoch': '1'}
+{'loss': '41.67', 'grad_norm': '23.53', 'learning_rate': '1.352e-05', 'epoch': '1.255'}
+{'loss': '40.32', 'grad_norm': '25.95', 'learning_rate': '1.185e-05', 'epoch': '1.51'}
+{'loss': '39.03', 'grad_norm': '27.91', 'learning_rate': '1e-05', 'epoch': '1.764'}
+{'loss': '34.96', 'grad_norm': '7.484', 'learning_rate': '8.148e-06', 'epoch': '2'}
+  warnings.warn(
+C:\Users\maxid\Universität\12._Semester\BSC\Programm\.venv\Lib\site-packages\peft\utils\save_and_load.py:295: UserWarning: Could not find a config file in intfloat/e5-small-v2 - will assume that the vocabulary was not modified.
+  warnings.warn(
+100%|███████████████████████████████████████████████████████████████████████████████████████████████████████████| 120/120 [03:24<00:00,  1.71s/it]
+{'loss': '36.76', 'grad_norm': '26.82', 'learning_rate': '6.296e-06', 'epoch': '2.255'}
+{'loss': '35.9', 'grad_norm': '26.7', 'learning_rate': '4.444e-06', 'epoch': '2.51'}
+{'loss': '35.52', 'grad_norm': '24.54', 'learning_rate': '2.593e-06', 'epoch': '2.764'}
+{'loss': '32.55', 'grad_norm': '6.448', 'learning_rate': '7.407e-07', 'epoch': '3'}
+{'train_runtime': '209', 'train_samples_per_second': '35.89', 'train_steps_per_second': '0.574', 'train_loss': '39.23', 'epoch': '3'}
+   [Save] Saving adapter to C:\Users\maxid\Universität\12._Semester\BSC\Programm\results\adapters\e5_small_reuters

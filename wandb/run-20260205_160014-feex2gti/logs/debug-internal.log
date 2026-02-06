@@ -1,0 +1,12 @@
+{"time":"2026-02-05T16:00:17.0105427+01:00","level":"INFO","msg":"stream: starting","core version":"0.24.1"}
+{"time":"2026-02-05T16:00:17.3462947+01:00","level":"INFO","msg":"stream: created new stream","id":"feex2gti"}
+{"time":"2026-02-05T16:00:17.3468014+01:00","level":"INFO","msg":"handler: started","stream_id":"feex2gti"}
+{"time":"2026-02-05T16:00:17.3468014+01:00","level":"INFO","msg":"stream: started","id":"feex2gti"}
+{"time":"2026-02-05T16:00:17.3468014+01:00","level":"INFO","msg":"writer: started","stream_id":"feex2gti"}
+{"time":"2026-02-05T16:00:17.3468014+01:00","level":"INFO","msg":"sender: started","stream_id":"feex2gti"}
+{"time":"2026-02-05T16:01:13.6929851+01:00","level":"INFO","msg":"fileTransfer: Close: file transfer manager closed"}
+{"time":"2026-02-05T16:01:13.9205566+01:00","level":"INFO","msg":"handler: operation stats","stats":{}}
+{"time":"2026-02-05T16:01:13.9258609+01:00","level":"INFO","msg":"stream: closing","id":"feex2gti"}
+{"time":"2026-02-05T16:01:13.9258609+01:00","level":"INFO","msg":"handler: closed","stream_id":"feex2gti"}
+{"time":"2026-02-05T16:01:13.9258609+01:00","level":"INFO","msg":"sender: closed","stream_id":"feex2gti"}
+{"time":"2026-02-05T16:01:13.9258609+01:00","level":"INFO","msg":"stream: closed","id":"feex2gti"}

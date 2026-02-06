@@ -1,0 +1,4 @@
+2026-02-05 14:38:35,941 INFO    MainThread:27768 [wandb_setup.py:_flush():81] Current SDK version is 0.24.1
+2026-02-05 14:38:35,941 INFO    MainThread:27768 [wandb_setup.py:_flush():81] Configure stats pid to 27768
+2026-02-05 14:38:35,941 INFO    MainThread:27768 [wandb_setup.py:_flush():81] Loading settings from environment variables
+2026-02-05 14:38:35,941 INFO    MainThread:27768 [wandb_init.py:setup_run_log_directory():717] Logging user logs to C:\Users\maxid\Universität\12._Semester\BSC\Programm\wandb\run-20260205_143835-prsesdz7\logs\debug.log

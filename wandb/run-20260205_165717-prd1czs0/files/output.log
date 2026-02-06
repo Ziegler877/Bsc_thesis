@@ -1,0 +1,57 @@
+                                                                                                                                                  
+{'loss': '44.48', 'grad_norm': '33.67', 'learning_rate': '2.963e-06', 'epoch': '0.09368'}
+{'loss': '44.06', 'grad_norm': '35.01', 'learning_rate': '6.667e-06', 'epoch': '0.1874'}
+{'loss': '43.28', 'grad_norm': '37.46', 'learning_rate': '1e-05', 'epoch': '0.281'}
+{'loss': '41.51', 'grad_norm': '43.95', 'learning_rate': '1.37e-05', 'epoch': '0.3747'}
+{'loss': '38.39', 'grad_norm': '49.3', 'learning_rate': '1.741e-05', 'epoch': '0.4684'}
+{'loss': '34.11', 'grad_norm': '24.6', 'learning_rate': '1.988e-05', 'epoch': '0.5621'}
+{'loss': '31.33', 'grad_norm': '20.19', 'learning_rate': '1.946e-05', 'epoch': '0.6557'}
+{'loss': '29.95', 'grad_norm': '17.52', 'learning_rate': '1.904e-05', 'epoch': '0.7494'}
+{'loss': '28.9', 'grad_norm': '10.92', 'learning_rate': '1.863e-05', 'epoch': '0.8431'}
+{'loss': '28.54', 'grad_norm': '10.88', 'learning_rate': '1.821e-05', 'epoch': '0.9368'}
+{'loss': '27.18', 'grad_norm': '9.119', 'learning_rate': '1.78e-05', 'epoch': '1.028'}
+{'loss': '27.85', 'grad_norm': '8.902', 'learning_rate': '1.738e-05', 'epoch': '1.122'}
+{'loss': '27.85', 'grad_norm': '7.675', 'learning_rate': '1.696e-05', 'epoch': '1.215'}
+{'loss': '27.6', 'grad_norm': '8.717', 'learning_rate': '1.655e-05', 'epoch': '1.309'}
+{'loss': '27.6', 'grad_norm': '8.725', 'learning_rate': '1.613e-05', 'epoch': '1.403'}
+{'loss': '27.46', 'grad_norm': '9.044', 'learning_rate': '1.572e-05', 'epoch': '1.496'}
+{'loss': '27.43', 'grad_norm': '8.531', 'learning_rate': '1.53e-05', 'epoch': '1.59'}
+{'loss': '27.47', 'grad_norm': '9.489', 'learning_rate': '1.489e-05', 'epoch': '1.684'}
+{'loss': '27.34', 'grad_norm': '10.83', 'learning_rate': '1.447e-05', 'epoch': '1.778'}
+{'loss': '27.28', 'grad_norm': '8.898', 'learning_rate': '1.405e-05', 'epoch': '1.871'}
+{'loss': '27.44', 'grad_norm': '10.03', 'learning_rate': '1.364e-05', 'epoch': '1.965'}
+{'loss': '26.83', 'grad_norm': '7.808', 'learning_rate': '1.322e-05', 'epoch': '2.056'}
+{'loss': '27.15', 'grad_norm': '8.685', 'learning_rate': '1.281e-05', 'epoch': '2.15'}
+{'loss': '27.2', 'grad_norm': '11.62', 'learning_rate': '1.239e-05', 'epoch': '2.244'}
+{'loss': '27.19', 'grad_norm': '9.483', 'learning_rate': '1.198e-05', 'epoch': '2.337'}
+{'loss': '26.99', 'grad_norm': '7.481', 'learning_rate': '1.156e-05', 'epoch': '2.431'}
+{'loss': '27.02', 'grad_norm': '8.108', 'learning_rate': '1.114e-05', 'epoch': '2.525'}
+{'loss': '27.12', 'grad_norm': '10.83', 'learning_rate': '1.073e-05', 'epoch': '2.618'}
+{'loss': '26.81', 'grad_norm': '8.11', 'learning_rate': '1.031e-05', 'epoch': '2.712'}
+{'loss': '27.17', 'grad_norm': '7.949', 'learning_rate': '9.896e-06', 'epoch': '2.806'}
+{'loss': '26.99', 'grad_norm': '8.172', 'learning_rate': '9.48e-06', 'epoch': '2.899'}
+{'loss': '26.86', 'grad_norm': '9.898', 'learning_rate': '9.064e-06', 'epoch': '2.993'}
+{'loss': '25.99', 'grad_norm': '7.546', 'learning_rate': '8.649e-06', 'epoch': '3.084'}
+{'loss': '26.74', 'grad_norm': '11.41', 'learning_rate': '8.233e-06', 'epoch': '3.178'}
+{'loss': '26.71', 'grad_norm': '9.937', 'learning_rate': '7.817e-06', 'epoch': '3.272'}
+{'loss': '26.74', 'grad_norm': '9.756', 'learning_rate': '7.401e-06', 'epoch': '3.365'}
+{'loss': '26.67', 'grad_norm': '9.043', 'learning_rate': '6.985e-06', 'epoch': '3.459'}
+{'loss': '26.62', 'grad_norm': '12.46', 'learning_rate': '6.57e-06', 'epoch': '3.553'}
+{'loss': '26.82', 'grad_norm': '9.236', 'learning_rate': '6.154e-06', 'epoch': '3.646'}
+{'loss': '26.6', 'grad_norm': '8.869', 'learning_rate': '5.738e-06', 'epoch': '3.74'}
+{'loss': '26.69', 'grad_norm': '9.638', 'learning_rate': '5.322e-06', 'epoch': '3.834'}
+{'loss': '26.77', 'grad_norm': '9.649', 'learning_rate': '4.906e-06', 'epoch': '3.927'}
+100%|███████████████████████████████████████████████████████████████████████████████████████████████████████████| 535/535 [12:28<00:00,  1.40s/it]
+{'loss': '25.69', 'grad_norm': '8.6', 'learning_rate': '4.491e-06', 'epoch': '4.019'}
+{'loss': '26.54', 'grad_norm': '8.795', 'learning_rate': '4.075e-06', 'epoch': '4.112'}
+{'loss': '26.33', 'grad_norm': '8.963', 'learning_rate': '3.659e-06', 'epoch': '4.206'}
+{'loss': '26.53', 'grad_norm': '8.189', 'learning_rate': '3.243e-06', 'epoch': '4.3'}
+{'loss': '26.45', 'grad_norm': '9.325', 'learning_rate': '2.827e-06', 'epoch': '4.393'}
+{'loss': '26.47', 'grad_norm': '10.44', 'learning_rate': '2.412e-06', 'epoch': '4.487'}
+{'loss': '26.64', 'grad_norm': '11.56', 'learning_rate': '1.996e-06', 'epoch': '4.581'}
+{'loss': '26.55', 'grad_norm': '8.152', 'learning_rate': '1.58e-06', 'epoch': '4.674'}
+{'loss': '26.39', 'grad_norm': '8.957', 'learning_rate': '1.164e-06', 'epoch': '4.768'}
+{'loss': '26.6', 'grad_norm': '10.13', 'learning_rate': '7.484e-07', 'epoch': '4.862'}
+{'loss': '26.57', 'grad_norm': '8.249', 'learning_rate': '3.326e-07', 'epoch': '4.956'}
+{'train_runtime': '754.1', 'train_samples_per_second': '45.2', 'train_steps_per_second': '0.709', 'train_loss': '28.67', 'epoch': '5'}
+   [Save] Saving adapter to C:\Users\maxid\Universität\12._Semester\BSC\Programm\results\adapters\e5_small_darkreddit

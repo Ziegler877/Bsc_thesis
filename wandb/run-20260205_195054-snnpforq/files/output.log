@@ -1,0 +1,35 @@
+========================================
+   STARTING JOB: e5_small_darkreddit
+   Device: cuda
+   Epochs: 0
+========================================
+   [Data] Loading DarkReddit (darkreddit_authorship_attribution_train_anon.jsonl)...
+   [Info] Detected keys - Text: 'comment', Author: 'author'
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+   [Data] Loading DarkReddit (darkreddit_authorship_attribution_test_anon.jsonl)...
+   [Info] Detected keys - Text: 'comment', Author: 'author'
+   [Data] Final Test Size: 2276 samples
+   [e5_small] Loading E5 (Encoder) from: intfloat/e5-small-v2
+Loading weights: 100%|████████████████████████████████████████████████| 199/199 [00:00<00:00, 881.76it/s, Materializing param=pooler.dense.weight]
+BertModel LOAD REPORT from: intfloat/e5-small-v2
+Key                     | Status     |  |
+------------------------+------------+--+-
+embeddings.position_ids | UNEXPECTED |  |
+
+Notes:
+- UNEXPECTED	:can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+   [e5_small] Info: No adapter requested. Running BASE model.
+   [Pipeline] Generating Train Embeddings...
+   [e5_small]: 100%|████████████████████████████████████████████████████████████████████████████████████████████| 427/427 [00:46<00:00,  9.11it/s]
+   [Pipeline] Generating Test Embeddings...
+   [e5_small]: 100%|████████████████████████████████████████████████████████████████████████████████████████████| 143/143 [00:15<00:00,  9.09it/s]
+   [Save] Saving embeddings to: C:\Users\maxid\Universität\12._Semester\BSC\Programm\results\embeddings\e5_small_darkreddit_base.pt
+   [Eval] Calculating metrics for e5_small on darkreddit...
+   [Eval] Results -> Acc: 0.4991 | F1: 0.4963
+   [Eval] Report saved: C:\Users\maxid\Universität\12._Semester\BSC\Programm\results\logs\e5_small_darkreddit_2026-02-05_19-52-02_report.txt
+   [Eval] Plot saved: C:\Users\maxid\Universität\12._Semester\BSC\Programm\results\plots\e5_small_darkreddit_2026-02-05_19-52-02_matrix.png
+------------------------------------------------
+
+========================================
+   JOB COMPLETE: e5_small_darkreddit
+==========================================

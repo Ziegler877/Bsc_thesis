@@ -1,0 +1,7 @@
+Traceback (most recent call last):
+  File "C:\Users\maxid\Universität\12._Semester\BSC\Programm\main.py", line 180, in <module>
+    main()
+  File "C:\Users\maxid\Universität\12._Semester\BSC\Programm\main.py", line 68, in main
+    if args.load_in_4bit:
+       ^^^^^^^^^^^^^^^^^
+AttributeError: 'Namespace' object has no attribute 'load_in_4bit'

@@ -1,0 +1,45 @@
+                                                                                                                                                  
+{'loss': '46.43', 'grad_norm': '32.26', 'learning_rate': '3.721e-06', 'epoch': '0.09368'}
+{'loss': '45.77', 'grad_norm': '33.82', 'learning_rate': '8.372e-06', 'epoch': '0.1874'}
+{'loss': '44.5', 'grad_norm': '37.33', 'learning_rate': '1.302e-05', 'epoch': '0.281'}
+{'loss': '42.3', 'grad_norm': '42.96', 'learning_rate': '1.767e-05', 'epoch': '0.3747'}
+{'loss': '38.16', 'grad_norm': '47.19', 'learning_rate': '1.979e-05', 'epoch': '0.4684'}
+{'loss': '33.7', 'grad_norm': '24.29', 'learning_rate': '1.927e-05', 'epoch': '0.5621'}
+{'loss': '31.07', 'grad_norm': '18', 'learning_rate': '1.875e-05', 'epoch': '0.6557'}
+{'loss': '29.6', 'grad_norm': '11.02', 'learning_rate': '1.823e-05', 'epoch': '0.7494'}
+{'loss': '28.74', 'grad_norm': '9.613', 'learning_rate': '1.771e-05', 'epoch': '0.8431'}
+{'loss': '28.5', 'grad_norm': '7.952', 'learning_rate': '1.719e-05', 'epoch': '0.9368'}
+{'loss': '27.19', 'grad_norm': '9.463', 'learning_rate': '1.668e-05', 'epoch': '1.028'}
+{'loss': '27.93', 'grad_norm': '9.697', 'learning_rate': '1.616e-05', 'epoch': '1.122'}
+{'loss': '27.9', 'grad_norm': '7.469', 'learning_rate': '1.564e-05', 'epoch': '1.215'}
+{'loss': '27.63', 'grad_norm': '8.27', 'learning_rate': '1.512e-05', 'epoch': '1.309'}
+{'loss': '27.62', 'grad_norm': '9.316', 'learning_rate': '1.46e-05', 'epoch': '1.403'}
+{'loss': '27.51', 'grad_norm': '8.248', 'learning_rate': '1.408e-05', 'epoch': '1.496'}
+{'loss': '27.52', 'grad_norm': '8.151', 'learning_rate': '1.356e-05', 'epoch': '1.59'}
+{'loss': '27.54', 'grad_norm': '8.724', 'learning_rate': '1.304e-05', 'epoch': '1.684'}
+{'loss': '27.41', 'grad_norm': '13.13', 'learning_rate': '1.252e-05', 'epoch': '1.778'}
+{'loss': '27.34', 'grad_norm': '8.538', 'learning_rate': '1.2e-05', 'epoch': '1.871'}
+{'loss': '27.5', 'grad_norm': '8.452', 'learning_rate': '1.148e-05', 'epoch': '1.965'}
+{'loss': '26.94', 'grad_norm': '8.238', 'learning_rate': '1.096e-05', 'epoch': '2.056'}
+{'loss': '27.28', 'grad_norm': '8.597', 'learning_rate': '1.044e-05', 'epoch': '2.15'}
+{'loss': '27.31', 'grad_norm': '12.31', 'learning_rate': '9.922e-06', 'epoch': '2.244'}
+{'loss': '27.31', 'grad_norm': '8.871', 'learning_rate': '9.403e-06', 'epoch': '2.337'}
+{'loss': '27.14', 'grad_norm': '7.618', 'learning_rate': '8.883e-06', 'epoch': '2.431'}
+{'loss': '27.18', 'grad_norm': '8.577', 'learning_rate': '8.364e-06', 'epoch': '2.525'}
+{'loss': '27.27', 'grad_norm': '11.7', 'learning_rate': '7.844e-06', 'epoch': '2.618'}
+{'loss': '26.98', 'grad_norm': '8.429', 'learning_rate': '7.325e-06', 'epoch': '2.712'}
+{'loss': '27.35', 'grad_norm': '8.616', 'learning_rate': '6.805e-06', 'epoch': '2.806'}
+{'loss': '27.13', 'grad_norm': '8.517', 'learning_rate': '6.286e-06', 'epoch': '2.899'}
+{'loss': '27.02', 'grad_norm': '8.247', 'learning_rate': '5.766e-06', 'epoch': '2.993'}
+{'loss': '26.2', 'grad_norm': '7.574', 'learning_rate': '5.247e-06', 'epoch': '3.084'}
+{'loss': '26.93', 'grad_norm': '7.964', 'learning_rate': '4.727e-06', 'epoch': '3.178'}
+{'loss': '26.9', 'grad_norm': '9.977', 'learning_rate': '4.208e-06', 'epoch': '3.272'}
+{'loss': '26.94', 'grad_norm': '10.16', 'learning_rate': '3.688e-06', 'epoch': '3.365'}
+{'loss': '26.84', 'grad_norm': '8.974', 'learning_rate': '3.169e-06', 'epoch': '3.459'}
+{'loss': '26.84', 'grad_norm': '9.785', 'learning_rate': '2.649e-06', 'epoch': '3.553'}
+{'loss': '27.05', 'grad_norm': '9.3', 'learning_rate': '2.13e-06', 'epoch': '3.646'}
+{'loss': '26.87', 'grad_norm': '8.588', 'learning_rate': '1.61e-06', 'epoch': '3.74'}
+{'loss': '26.96', 'grad_norm': '8.33', 'learning_rate': '1.091e-06', 'epoch': '3.834'}
+{'loss': '27.03', 'grad_norm': '11.18', 'learning_rate': '5.714e-07', 'epoch': '3.927'}
+{'train_runtime': '602.6', 'train_samples_per_second': '45.25', 'train_steps_per_second': '0.71', 'train_loss': '29.44', 'epoch': '4'}
+   [Save] Saving adapter to C:\Users\maxid\Universität\12._Semester\BSC\Programm\results\adapters\e5_small_darkreddit

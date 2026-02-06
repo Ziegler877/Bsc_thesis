@@ -1,0 +1,16 @@
+ 33%|████████████████████████████████████                                                                        | 40/120 [00:55<01:20,  1.00s/it]Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+{'loss': '43.66', 'grad_norm': '34.44', 'learning_rate': '1e-05', 'epoch': '0.2548'}
+{'loss': '41.98', 'grad_norm': '39.2', 'learning_rate': '1.926e-05', 'epoch': '0.5096'}
+{'loss': '38.28', 'grad_norm': '38.32', 'learning_rate': '1.741e-05', 'epoch': '0.7643'}
+{'loss': '32.38', 'grad_norm': '5.962', 'learning_rate': '1.556e-05', 'epoch': '1'}
+100%|███████████████████████████████████████████████████████████████████████████████████████████████████████████| 120/120 [02:46<00:00,  1.39s/it]
+{'loss': '33.06', 'grad_norm': '14.57', 'learning_rate': '1.37e-05', 'epoch': '1.255'}
+{'loss': '32', 'grad_norm': '12.89', 'learning_rate': '1.185e-05', 'epoch': '1.51'}
+{'loss': '31.22', 'grad_norm': '9.619', 'learning_rate': '1e-05', 'epoch': '1.764'}
+{'loss': '28.39', 'grad_norm': '4.001', 'learning_rate': '8.148e-06', 'epoch': '2'}
+{'loss': '30.34', 'grad_norm': '8.325', 'learning_rate': '6.296e-06', 'epoch': '2.255'}
+{'loss': '30', 'grad_norm': '7.618', 'learning_rate': '4.444e-06', 'epoch': '2.51'}
+{'loss': '29.92', 'grad_norm': '7.198', 'learning_rate': '2.593e-06', 'epoch': '2.764'}
+{'loss': '27.59', 'grad_norm': '4.105', 'learning_rate': '7.407e-07', 'epoch': '3'}
+{'train_runtime': '170.9', 'train_samples_per_second': '43.88', 'train_steps_per_second': '0.702', 'train_loss': '33.23', 'epoch': '3'}
+   [Save] Saving adapter to C:\Users\maxid\Universität\12._Semester\BSC\Programm\results\adapters\e5_small_reuters

@@ -1,0 +1,15 @@
+100%|███████████████████████████████████████████████████████████████████████████████████████████████████████████| 120/120 [05:37<00:00,  2.81s/it]
+{'loss': '45.31', 'grad_norm': '34.81', 'learning_rate': '1.167e-05', 'epoch': '0.2548'}
+{'loss': '43.28', 'grad_norm': '42.44', 'learning_rate': '1.907e-05', 'epoch': '0.5096'}
+{'loss': '39.15', 'grad_norm': '45.74', 'learning_rate': '1.722e-05', 'epoch': '0.7643'}
+{'loss': '32.48', 'grad_norm': '6.668', 'learning_rate': '1.537e-05', 'epoch': '1'}
+{'loss': '33.18', 'grad_norm': '17.12', 'learning_rate': '1.352e-05', 'epoch': '1.255'}
+{'loss': '32.05', 'grad_norm': '16.26', 'learning_rate': '1.167e-05', 'epoch': '1.51'}
+{'loss': '31.36', 'grad_norm': '12.17', 'learning_rate': '9.815e-06', 'epoch': '1.764'}
+{'loss': '28.45', 'grad_norm': '4.716', 'learning_rate': '7.963e-06', 'epoch': '2'}
+{'loss': '30.43', 'grad_norm': '9.572', 'learning_rate': '6.111e-06', 'epoch': '2.255'}
+{'loss': '30.05', 'grad_norm': '9.2', 'learning_rate': '4.259e-06', 'epoch': '2.51'}
+{'loss': '29.97', 'grad_norm': '8.334', 'learning_rate': '2.407e-06', 'epoch': '2.764'}
+{'loss': '27.61', 'grad_norm': '4.554', 'learning_rate': '5.556e-07', 'epoch': '3'}
+{'train_runtime': '341.8', 'train_samples_per_second': '21.95', 'train_steps_per_second': '0.351', 'train_loss': '33.61', 'epoch': '3'}
+   [Save] Saving adapter to C:\Users\maxid\Universität\12._Semester\BSC\Programm\results\adapters\e5_small_reuters

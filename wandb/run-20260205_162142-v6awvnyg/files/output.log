@@ -1,0 +1,24 @@
+100%|███████████████████████████████████████████████████████████████████████████████████████████████████████████| 214/214 [04:58<00:00,  1.40s/it]
+{'loss': '42.57', 'grad_norm': '36.33', 'learning_rate': '7.273e-06', 'epoch': '0.09368'}
+{'loss': '41.57', 'grad_norm': '39.09', 'learning_rate': '1.545e-05', 'epoch': '0.1874'}
+{'loss': '38.87', 'grad_norm': '41.64', 'learning_rate': '1.948e-05', 'epoch': '0.281'}
+{'loss': '35.04', 'grad_norm': '31.91', 'learning_rate': '1.844e-05', 'epoch': '0.3747'}
+{'loss': '32.38', 'grad_norm': '21.52', 'learning_rate': '1.74e-05', 'epoch': '0.4684'}
+{'loss': '30.72', 'grad_norm': '14.44', 'learning_rate': '1.635e-05', 'epoch': '0.5621'}
+{'loss': '29.54', 'grad_norm': '11.92', 'learning_rate': '1.542e-05', 'epoch': '0.6557'}
+{'loss': '28.97', 'grad_norm': '8.463', 'learning_rate': '1.438e-05', 'epoch': '0.7494'}
+{'loss': '28.39', 'grad_norm': '8.636', 'learning_rate': '1.333e-05', 'epoch': '0.8431'}
+{'loss': '28.39', 'grad_norm': '8.386', 'learning_rate': '1.229e-05', 'epoch': '0.9368'}
+{'loss': '27.18', 'grad_norm': '8.201', 'learning_rate': '1.125e-05', 'epoch': '1.028'}
+{'loss': '27.94', 'grad_norm': '8.45', 'learning_rate': '1.021e-05', 'epoch': '1.122'}
+{'loss': '28.04', 'grad_norm': '7.044', 'learning_rate': '9.167e-06', 'epoch': '1.215'}
+{'loss': '27.79', 'grad_norm': '7.06', 'learning_rate': '8.125e-06', 'epoch': '1.309'}
+{'loss': '27.8', 'grad_norm': '7.631', 'learning_rate': '7.083e-06', 'epoch': '1.403'}
+{'loss': '27.68', 'grad_norm': '6.81', 'learning_rate': '6.042e-06', 'epoch': '1.496'}
+{'loss': '27.64', 'grad_norm': '7.735', 'learning_rate': '5e-06', 'epoch': '1.59'}
+{'loss': '27.73', 'grad_norm': '8.3', 'learning_rate': '3.958e-06', 'epoch': '1.684'}
+{'loss': '27.6', 'grad_norm': '10.87', 'learning_rate': '2.917e-06', 'epoch': '1.778'}
+{'loss': '27.53', 'grad_norm': '7.247', 'learning_rate': '1.875e-06', 'epoch': '1.871'}
+{'loss': '27.74', 'grad_norm': '7.698', 'learning_rate': '8.333e-07', 'epoch': '1.965'}
+{'train_runtime': '303', 'train_samples_per_second': '44.99', 'train_steps_per_second': '0.706', 'train_loss': '30.45', 'epoch': '2'}
+   [Save] Saving adapter to C:\Users\maxid\Universität\12._Semester\BSC\Programm\results\adapters\e5_small_darkreddit

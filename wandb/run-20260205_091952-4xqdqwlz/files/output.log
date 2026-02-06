@@ -1,0 +1,13 @@
+========================================
+   STARTING JOB: e5_small_reuters
+   Device: cuda
+========================================
+   [Data] Loading Reuters (C50train)...
+Traceback (most recent call last):                                                                                                                
+   [Data] Loading Reuters (C50test)...
+   [Data] Final Test Size: 2500 samples
+(!) Model Execution Failed: 'Namespace' object has no attribute 'load_in_4bit'
+  File "C:\Users\maxid\Universität\12._Semester\BSC\Programm\main.py", line 112, in main
+    "load_in_4bit": args.load_in_4bit
+                    ^^^^^^^^^^^^^^^^^
+AttributeError: 'Namespace' object has no attribute 'load_in_4bit'

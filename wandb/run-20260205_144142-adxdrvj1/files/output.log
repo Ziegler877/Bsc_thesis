@@ -1,0 +1,32 @@
+========================================
+   STARTING JOB: e5_small_reuters
+   Device: cuda
+   Epochs: 0
+========================================
+   [Data] Loading Reuters (C50train)...
+Loading weights: 100%|████████████████████████████████████████████████| 199/199 [00:00<00:00, 591.42it/s, Materializing param=pooler.dense.weight]
+   [Data] Loading Reuters (C50test)...
+   [Data] Final Test Size: 2500 samples
+   [e5_small] Loading E5 (Encoder) from: intfloat/e5-small-v2
+BertModel LOAD REPORT from: intfloat/e5-small-v2
+Key                     | Status     |  |
+------------------------+------------+--+-
+embeddings.position_ids | UNEXPECTED |  |
+
+Notes:
+- UNEXPECTED	:can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+   [e5_small] Info: No adapter requested. Running BASE model.
+   [Pipeline] Generating Train Embeddings...
+   [e5_small]: 100%|████████████████████████████████████████████████████████████████████████████████████████████| 157/157 [00:27<00:00,  5.74it/s]
+   [Pipeline] Generating Test Embeddings...
+   [e5_small]: 100%|████████████████████████████████████████████████████████████████████████████████████████████| 157/157 [00:27<00:00,  5.66it/s]
+   [Save] Saving embeddings to: C:\Users\maxid\Universität\12._Semester\BSC\Programm\results\embeddings\e5_small_reuters.pt
+   [Eval] Calculating metrics for e5_small on reuters...
+   [Eval] Results -> Acc: 0.5988 | F1: 0.5942
+   [Eval] Report saved: C:\Users\maxid\Universität\12._Semester\BSC\Programm\results\logs\e5_small_reuters_2026-02-05_14-42-45_report.txt
+   [Eval] Plot saved: C:\Users\maxid\Universität\12._Semester\BSC\Programm\results\plots\e5_small_reuters_2026-02-05_14-42-45_matrix.png
+------------------------------------------------
+
+========================================
+   JOB COMPLETE: e5_small_reuters
+==========================================

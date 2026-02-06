@@ -1,0 +1,79 @@
+_wandb:
+    value:
+        cli_version: 0.24.1
+        e:
+            9hc5mf35zk2k808g8oq6c4d1scffvqvw:
+                args:
+                    - --model
+                    - e5_small
+                    - --dataset
+                    - reuters
+                codePath: main.py
+                codePathLocal: main.py
+                cpu_count: 6
+                cpu_count_logical: 12
+                cudaVersion: "12.8"
+                disk:
+                    /:
+                        total: "1022840082432"
+                        used: "1000113934336"
+                email: e11909868@student.tuwien.ac.at
+                executable: C:\Users\maxid\Universität\12._Semester\BSC\Programm\.venv\Scripts\python.exe
+                git:
+                    commit: 230bc886e8c525a0b5deccc5eda1e6a3fcdf2a28
+                    remote: https://github.com/Ziegler877/Bsc_thesis.git
+                gpu: Quadro RTX 3000 with Max-Q Design
+                gpu_count: 1
+                gpu_nvidia:
+                    - architecture: Turing
+                      cudaCores: 1920
+                      memoryTotal: "6442450944"
+                      name: Quadro RTX 3000 with Max-Q Design
+                      uuid: GPU-634ebd42-7fef-f877-3190-5c0b2d3c4e1f
+                host: LAPTOP-NJ2HBNHF
+                memory:
+                    total: "68558745600"
+                os: Windows-11-10.0.26200-SP0
+                program: C:\Users\maxid\Universität\12._Semester\BSC\Programm\main.py
+                python: CPython 3.12.6
+                root: C:\Users\maxid\Universität\12._Semester\BSC\Programm
+                startedAt: "2026-02-05T08:52:46.574611Z"
+                writerId: 9hc5mf35zk2k808g8oq6c4d1scffvqvw
+        m: []
+        python_version: 3.12.6
+        t:
+            "1":
+                - 1
+                - 5
+                - 11
+                - 41
+                - 49
+                - 53
+                - 71
+                - 98
+            "2":
+                - 1
+                - 5
+                - 11
+                - 41
+                - 49
+                - 53
+                - 71
+                - 98
+            "3":
+                - 2
+                - 13
+                - 16
+            "4": 3.12.6
+            "5": 0.24.1
+            "6": 5.0.0
+            "8":
+                - 3
+            "12": 0.24.1
+            "13": windows-amd64
+dataset:
+    value: reuters
+lora:
+    value: false
+model:
+    value: e5_small

@@ -1,0 +1,36 @@
+ 33%|███████████████████████████████████▋                                                                       | 107/321 [02:25<04:14,  1.19s/it]Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+{'loss': '45.18', 'grad_norm': '16.34', 'learning_rate': '5.455e-06', 'epoch': '0.09368'}
+{'loss': '45.01', 'grad_norm': '17.39', 'learning_rate': '1.152e-05', 'epoch': '0.1874'}
+{'loss': '44.59', 'grad_norm': '18.55', 'learning_rate': '1.697e-05', 'epoch': '0.281'}
+{'loss': '43.85', 'grad_norm': '20.48', 'learning_rate': '1.965e-05', 'epoch': '0.3747'}
+{'loss': '42.67', 'grad_norm': '24.25', 'learning_rate': '1.896e-05', 'epoch': '0.4684'}
+{'loss': '41.15', 'grad_norm': '25.9', 'learning_rate': '1.826e-05', 'epoch': '0.5621'}
+{'loss': '39.48', 'grad_norm': '29.27', 'learning_rate': '1.764e-05', 'epoch': '0.6557'}
+{'loss': '37.71', 'grad_norm': '31.71', 'learning_rate': '1.694e-05', 'epoch': '0.7494'}
+{'loss': '35.67', 'grad_norm': '31.82', 'learning_rate': '1.625e-05', 'epoch': '0.8431'}
+{'loss': '33.9', 'grad_norm': '29.18', 'learning_rate': '1.556e-05', 'epoch': '0.9368'}
+100%|███████████████████████████████████████████████████████████████████████████████████████████████████████████| 321/321 [07:16<00:00,  1.36s/it]
+{'loss': '31.26', 'grad_norm': '23.14', 'learning_rate': '1.493e-05', 'epoch': '1.028'}
+{'loss': '31.27', 'grad_norm': '16.09', 'learning_rate': '1.424e-05', 'epoch': '1.122'}
+{'loss': '30.79', 'grad_norm': '13.26', 'learning_rate': '1.354e-05', 'epoch': '1.215'}
+{'loss': '30.05', 'grad_norm': '11.93', 'learning_rate': '1.285e-05', 'epoch': '1.309'}
+{'loss': '29.73', 'grad_norm': '11.58', 'learning_rate': '1.215e-05', 'epoch': '1.403'}
+{'loss': '29.4', 'grad_norm': '10.3', 'learning_rate': '1.146e-05', 'epoch': '1.496'}
+{'loss': '29.11', 'grad_norm': '8.597', 'learning_rate': '1.076e-05', 'epoch': '1.59'}
+{'loss': '29.02', 'grad_norm': '9.786', 'learning_rate': '1.007e-05', 'epoch': '1.684'}
+{'loss': '28.79', 'grad_norm': '11.17', 'learning_rate': '9.375e-06', 'epoch': '1.778'}
+{'loss': '28.58', 'grad_norm': '7.911', 'learning_rate': '8.681e-06', 'epoch': '1.871'}
+{'loss': '28.65', 'grad_norm': '7.884', 'learning_rate': '7.986e-06', 'epoch': '1.965'}
+{'loss': '27.94', 'grad_norm': '7.143', 'learning_rate': '7.292e-06', 'epoch': '2.056'}
+{'loss': '28.27', 'grad_norm': '7.229', 'learning_rate': '6.597e-06', 'epoch': '2.15'}
+{'loss': '28.3', 'grad_norm': '8.851', 'learning_rate': '5.903e-06', 'epoch': '2.244'}
+{'loss': '28.26', 'grad_norm': '7.661', 'learning_rate': '5.208e-06', 'epoch': '2.337'}
+{'loss': '28.12', 'grad_norm': '6.829', 'learning_rate': '4.514e-06', 'epoch': '2.431'}
+{'loss': '28.13', 'grad_norm': '7.272', 'learning_rate': '3.819e-06', 'epoch': '2.525'}
+{'loss': '28.21', 'grad_norm': '9.802', 'learning_rate': '3.125e-06', 'epoch': '2.618'}
+{'loss': '27.93', 'grad_norm': '7.262', 'learning_rate': '2.431e-06', 'epoch': '2.712'}
+{'loss': '28.33', 'grad_norm': '6.746', 'learning_rate': '1.736e-06', 'epoch': '2.806'}
+{'loss': '28.17', 'grad_norm': '7.56', 'learning_rate': '1.042e-06', 'epoch': '2.899'}
+{'loss': '28', 'grad_norm': '7.013', 'learning_rate': '3.472e-07', 'epoch': '2.993'}
+{'train_runtime': '441', 'train_samples_per_second': '46.37', 'train_steps_per_second': '0.728', 'train_loss': '32.63', 'epoch': '3'}
+   [Save] Saving adapter to C:\Users\maxid\Universität\12._Semester\BSC\Programm\results\adapters\e5_small_darkreddit
