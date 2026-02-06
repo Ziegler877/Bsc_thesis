@@ -67,67 +67,67 @@ def run_lora_training(model_alias, dataset_alias, epochs=3, batch_size=4):
 
     # 4. Load Model & Configure LoRA
     if is_decoder:
-        # --- DECODER (LLAMA) SETUP ---
+        if is_decoder:
+            # --- DECODER (LLAMA) SETUP ---
+            print("   [Config] Detected DECODER architecture (Llama).")
 
-        # Enable QLoRA (4-bit) if you are on the 17B model to save memory,
-        # or use standard loading if you have massive GPUs.
-        # Assuming you want to be safe with memory:
-        bnb_config = BitsAndBytesConfig(
-            load_in_4bit=True,
-            bnb_4bit_use_double_quant=True,
-            bnb_4bit_quant_type="nf4",
-            bnb_4bit_compute_dtype=torch.float16
-        )
+            # Enable QLoRA (4-bit) for memory safety
+            bnb_config = BitsAndBytesConfig(
+                load_in_4bit=True,
+                bnb_4bit_use_double_quant=True,
+                bnb_4bit_quant_type="nf4",
+                bnb_4bit_compute_dtype=torch.float16
+            )
 
-        model = AutoModelForCausalLM.from_pretrained(
-            model_id,
-            quantization_config=bnb_config,
-            device_map="auto",
-            trust_remote_code=True
-        )
-        model = prepare_model_for_kbit_training(model)
+            model = AutoModelForCausalLM.from_pretrained(
+                model_id,
+                quantization_config=bnb_config,
+                device_map="auto",
+                trust_remote_code=True
+            )
+            model = prepare_model_for_kbit_training(model)
 
-        # CRITICAL FIX: Target ALL linear layers, not just q/v.
-        # This allows the model to adapt its internal logic (MLP), not just attention.
-        target_modules = [
-            "q_proj", "k_proj", "v_proj", "o_proj",
-            "gate_proj", "up_proj", "down_proj"
-        ]
+            # Target ALL linear layers for Llama
+            target_modules = [
+                "q_proj", "k_proj", "v_proj", "o_proj",
+                "gate_proj", "up_proj", "down_proj"
+            ]
 
-        peft_config = LoraConfig(
-            task_type=TaskType.CAUSAL_LM,
-            inference_mode=False,
-            r=32,  # Increased from 8 -> 32 (Better capacity for style)
-            lora_alpha=64,  # 2x Rank
-            lora_dropout=0.1,  # Increased from 0.05 (Prevents keyword overfitting)
-            target_modules=target_modules,
-            bias="none"
-        )
+            peft_config = LoraConfig(
+                task_type=TaskType.CAUSAL_LM,
+                inference_mode=False,
+                r=args.r,  # Controlled by Arg
+                lora_alpha=args.lora_alpha,  # Controlled by Arg
+                lora_dropout=args.lora_dropout,  # Controlled by Arg
+                target_modules=target_modules,
+                bias=args.bias,  # Controlled by Arg
+                use_dora=args.use_dora,  # Controlled by Arg
+            )
 
-        def tokenize_function(examples):
-            # Llama doesn't need "max_length" padding for training usually,
-            # but for safety/consistency we keep it.
-            return tokenizer(examples["text"], truncation=True, padding="max_length", max_length=512)
+            def tokenize_function(examples):
+                return tokenizer(examples["text"], truncation=True, padding="max_length", max_length=512)
 
     else:
         # --- ENCODER (E5/BERT) SETUP ---
+        print("   [Config] Detected ENCODER architecture (E5/BERT).")
         model = AutoModelForMaskedLM.from_pretrained(model_id, device_map="auto")
 
-        # Target all linear layers for BERT-like models too
+        # Target all linear layers for BERT/E5
         target_modules = ["query", "key", "value", "dense"]
 
         peft_config = LoraConfig(
             task_type=TaskType.FEATURE_EXTRACTION,
             inference_mode=False,
-            r=32,  # Higher rank
-            lora_alpha=64,
-            lora_dropout=0.1,
-            target_modules=target_modules
+            r=args.r,  # Controlled by Arg
+            lora_alpha=args.lora_alpha,  # Controlled by Arg
+            lora_dropout=args.lora_dropout,  # Controlled by Arg
+            target_modules=["query", "key", "value", "dense"],
+            bias=args.bias,  # Controlled by Arg
+            use_dora=args.use_dora,  # Controlled by Arg
         )
 
         def tokenize_function(examples):
             return tokenizer(examples["text"], truncation=True, padding="max_length", max_length=512)
-
     # 5. Apply LoRA
     model = get_peft_model(model, peft_config)
     print("\n   [LoRA Config] Trainable Parameters:")
@@ -140,17 +140,20 @@ def run_lora_training(model_alias, dataset_alias, epochs=3, batch_size=4):
     training_args = TrainingArguments(
         output_dir=adapter_dir,
         per_device_train_batch_size=batch_size,
-        gradient_accumulation_steps=4,  # Simulates larger batch size (more stable gradients)
+        gradient_accumulation_steps=4,
         num_train_epochs=epochs,
-        learning_rate=1e-4,  # Lowered from 2e-4 (More gentle updates)
+        learning_rate=2e-5,
+        warmup_ratio=0.1,
+        weight_decay=0.01,
         fp16=True,
         logging_steps=10,
         save_strategy="epoch",
         save_total_limit=1,
         report_to="wandb",
         run_name=f"TRAIN-{model_alias}-{dataset_alias}",
-        warmup_ratio=0.03,  # Small warmup helps stability
-        weight_decay=0.01  # regularization
+        remove_unused_columns=False,
+        lr_scheduler_type=args.lr_scheduler,  # Allows switching between 'linear' and 'cosine'
+        neftune_noise_alpha=args.neftune_noise_alpha if args.neftune_noise_alpha > 0 else None
     )
 
     trainer = Trainer(
@@ -173,6 +176,14 @@ if __name__ == "__main__":
     parser.add_argument("--dataset", type=str, required=True)
     parser.add_argument("--epochs", type=int, default=3)
     parser.add_argument("--batch_size", type=int, default=2)  # Keep low for 17B
+
+    parser.add_argument("--r", type=int, default=64, help="LoRA Rank")
+    parser.add_argument("--lora_alpha", type=int, default=128, help="LoRA Alpha")
+    parser.add_argument("--lora_dropout", type=float, default=0.1, help="Dropout rate")
+    parser.add_argument("--use_dora", action="store_true", help="Use DoRA instead of LoRA")
+    parser.add_argument("--bias", type=str, default="none", choices=["none", "all", "lora_only"], help="Bias tuning")
+    parser.add_argument("--lr_scheduler", type=str, default="linear", help="Scheduler type (linear, cosine, constant)")
+    parser.add_argument("--neftune_noise_alpha", type=float, default=0.0, help="NEFTune noise alpha (try 5.0)")
     args = parser.parse_args()
 
     run_lora_training(args.model, args.dataset, args.epochs, args.batch_size)
