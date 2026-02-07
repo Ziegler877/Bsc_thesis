@@ -61,9 +61,13 @@ def load_adapter_safe(model, adapter_path, model_alias):
 
         if fixed_count > 0:
             print(f"   [{model_alias}] [FIX] Renamed {fixed_count} keys (removed .bert prefix) to match model.")
-
-        # 4. Load the fixed weights into the model
-        result = set_peft_model_state_dict(model, new_state_dict)
+            # 4. Load the fixed weights into the model
+            result = set_peft_model_state_dict(model, new_state_dict)
+        else:
+            # If no keys needed fixing, the initial from_pretrained load likely worked,
+            # but usually PeftModel.from_pretrained handles loading too.
+            # We explicitly set dict here just to be safe if keys match perfectly.
+            result = set_peft_model_state_dict(model, state_dict)
 
         # Check result
         if len(result.missing_keys) > 0:
@@ -90,11 +94,11 @@ class E5Runner:
         self.model_alias = model_alias
         self.device = config.DEVICE
 
-        # 1. Determine ID
+        # 1. Determine ID from Config
         if "small" in model_alias:
-            self.model_id = "intfloat/e5-small-v2"
+            self.model_id = config.E5_SMALL_ID
         else:
-            self.model_id = "intfloat/e5-large-v2"
+            self.model_id = config.E5_LARGE_ID
 
         print(f"   [{model_alias}] Loading E5 (Encoder) from: {self.model_id}")
 
@@ -127,6 +131,7 @@ class E5Runner:
                 outputs = self.model(**inputs)
 
             last_hidden = outputs.last_hidden_state
+            # Create embedding via mean pooling
             embeddings = self._mean_pooling(last_hidden, inputs['attention_mask'])
             all_embeddings.append(embeddings.cpu())
 
@@ -206,19 +211,34 @@ class LlamaRunner:
 # ==========================================
 #  MAIN ENTRY POINT
 # ==========================================
-def run_pipeline(model_alias, train_texts, test_texts, use_lora=False, dataset_alias="unknown"):
+def run_pipeline(model_alias, train_texts, test_texts, use_lora=False, dataset_alias="unknown", suffix=""):
+    """
+    Main function to load models and generate embeddings.
+    Suffix allows finding specific LoRA folders like 'e5_small_darkreddit_expA_3ep'
+    """
+
+    # 1. Determine Adapter Path
     adapter_path = None
     if use_lora:
-        adapter_path = os.path.join(config.ADAPTERS_DIR, f"{model_alias}_{dataset_alias}")
+        # Construct path: e.g. "results/adapters/e5_small_darkreddit_expA_3ep"
+        folder_name = f"{model_alias}_{dataset_alias}{suffix}"
+        adapter_path = os.path.join(config.ADAPTERS_DIR, folder_name)
 
+        # Fallback if specific suffix folder doesn't exist but generic does
+        if not os.path.exists(adapter_path):
+            print(f"   [Pipeline] Warning: Specific adapter {folder_name} not found.")
+            # You might want to try without suffix here, or just fail gracefully
+            # adapter_path = os.path.join(config.ADAPTERS_DIR, f"{model_alias}_{dataset_alias}")
+
+    # 2. Select Runner
     if "e5" in model_alias:
         runner = E5Runner(model_alias, adapter_path=adapter_path)
         batch_size = 16
     else:
-        # Llama Runner no longer takes 'load_in_4bit' arg
         runner = LlamaRunner(model_alias, adapter_path=adapter_path)
         batch_size = 4
 
+    # 3. Generate
     print("   [Pipeline] Generating Train Embeddings...")
     train_vecs = runner.get_embeddings(train_texts, batch_size=batch_size)
 

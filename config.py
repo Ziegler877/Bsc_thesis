@@ -13,19 +13,21 @@ if IS_CLUSTER:
     print("   [Config] Detected CLUSTER Environment (Linux).")
 
     # 1. Root Directory (Where config.py is located)
-    # On Cluster: /gpfs/data/fs71186/ziegler/ThesisProject
     PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 
-    # 2. Big Storage Paths (Everything is inside ThesisProject now)
+    # 2. Big Storage Paths (Cluster)
     DATA_DIR = os.path.join(PROJECT_ROOT, "data")
     RESULTS_DIR = os.path.join(PROJECT_ROOT, "results")
     MODELS_DIR = os.path.join(PROJECT_ROOT, "models")
 
-    # 3. Model Checkpoints
+    # 3. Model Checkpoints (Cluster)
     LLAMA2_CHECKPOINT_DIR = os.path.join(MODELS_DIR, "Llama-2-7b-hf")
     LLAMA4_CHECKPOINT_DIR = os.path.join(MODELS_DIR, "Llama-4-Maverick")
-    # NEW: Scout path for Cluster
     LLAMA4_SCOUT_CHECKPOINT_DIR = os.path.join(MODELS_DIR, "Llama-4-Scout")
+
+    # E5 Models (Cluster: using local paths assuming you clone them there too)
+    E5_SMALL_ID = os.path.join(MODELS_DIR, "e5-small-v2")
+    E5_LARGE_ID = os.path.join(MODELS_DIR, "e5-large-v2")
 
 else:
     print("   [Config] Detected LOCAL Environment (Windows).")
@@ -35,11 +37,17 @@ else:
     DATA_DIR = os.path.join(PROJECT_ROOT, "data")
     RESULTS_DIR = os.path.join(PROJECT_ROOT, "results")
 
-    # 2. Local Model Paths (Update these if they change on your laptop)
-    LLAMA2_CHECKPOINT_DIR = r"D:\.llama\checkpoints\Llama-2-7b-hf"
-    LLAMA4_CHECKPOINT_DIR = r"D:\.llama\checkpoints\Llama-4-Maverick-17B-128E-Instruct"
-    # Placeholder for Scout on Windows
-    LLAMA4_SCOUT_CHECKPOINT_DIR = r"D:\.llama\checkpoints\Llama-4-Scout"
+    # 2. Local Model Paths (Updated to your D: drive structure)
+    # Root for models: D:\BSC_Thesis_Models
+
+    LLAMA2_CHECKPOINT_DIR = r"D:\BSC_Thesis_Models\Llama-2-7b-hf"
+    LLAMA4_CHECKPOINT_DIR = r"D:\BSC_Thesis_Models\Llama-4-Maverick-17B-128E-Instruct"
+    # Placeholder if you don't have Scout locally yet
+    LLAMA4_SCOUT_CHECKPOINT_DIR = r"D:\BSC_Thesis_Models\Llama-4-Scout"
+
+    # E5 Models (Local Paths)
+    E5_SMALL_ID = r"D:\BSC_Thesis_Models\e5-small"
+    E5_LARGE_ID = r"D:\BSC_Thesis_Models\e5-large"
 
 # =================================================================
 # 2. OUTPUT SUB-FOLDERS
@@ -48,7 +56,6 @@ LOGS_DIR = os.path.join(RESULTS_DIR, "logs")
 PLOTS_DIR = os.path.join(RESULTS_DIR, "plots")
 EMBEDDINGS_DIR = os.path.join(RESULTS_DIR, "embeddings")
 ADAPTERS_DIR = os.path.join(RESULTS_DIR, "adapters")
-# --- NEW: Folder for RAG Results ---
 RAG_DIR = os.path.join(RESULTS_DIR, "rag_results")
 
 # Create them if they don't exist
@@ -78,5 +85,5 @@ DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 if __name__ == "__main__":
     print(f"--- CONFIGURATION CHECK ---")
     print(f"Project Root: {PROJECT_ROOT}")
-    print(f"RAG Results:  {RAG_DIR}")
-    print(f"Llama Scout:  {LLAMA4_SCOUT_CHECKPOINT_DIR}")
+    print(f"E5 Small Path: {E5_SMALL_ID}")
+    print(f"Llama Path:    {LLAMA2_CHECKPOINT_DIR}")
