@@ -31,7 +31,7 @@ from sklearn.metrics import (
 # ==========================================
 
 MODEL_ORDER = [
-    "SOTA ",
+    "SOTA",
     "E5-Small",
     "E5-Large",
     "Llama-2",
@@ -42,29 +42,18 @@ MODEL_ORDER = [
 SOTA_DATA = {
     "reuters": [
         {"Model": "SOTA", "Variant": "SVM (N-Gram)",
-         "Accuracy": 0.9234, "Top-3": "-", "F1 Macro": 0.9230,
-         "F1 Wtd": "-", "Precision": "-", "Recall": "-", "Log Loss": "-"},
+         "Accuracy": 0.9234, "Top-3": "-", "F1 Macro": 0.9230, "Log Loss": "-"},
 
         {"Model": "SOTA", "Variant": "BERT-AA",
-         "Accuracy": 0.8720, "Top-3": "-", "F1 Macro": 0.8710,
-         "F1 Wtd": "-", "Precision": "-", "Recall": "-", "Log Loss": "-"},
+         "Accuracy": 0.8720, "Top-3": "-", "F1 Macro": 0.8710, "Log Loss": "-"},
     ],
     "darkreddit": [
         {"Model": "SOTA", "Variant": "LUAR (SOTA)",
-         "Accuracy": 0.8200, "Top-3": 0.9410, "F1 Macro": "-",
-         "F1 Wtd": "-", "Precision": "-", "Recall": "-", "Log Loss": "-"},
+         "Accuracy": 0.8200, "Top-3": 0.9410, "F1 Macro": "-", "Log Loss": "-"},
 
         {"Model": "SOTA", "Variant": "VeriDark (BERT)",
-         "Accuracy": 0.6500, "Top-3": "-", "F1 Macro": 0.6400,
-         "F1 Wtd": "-", "Precision": "-", "Recall": "-", "Log Loss": "-"},
+         "Accuracy": 0.6500, "Top-3": "-", "F1 Macro": 0.6400, "Log Loss": "-"},
     ]
-}
-
-SOTA_REFS = {
-    "SVM (N-Gram)": "Houvardas & Stamatatos (2006)",
-    "BERT-AA": "Fabien et al. (2020)",
-    "LUAR (SOTA)": "Rivera-Soto et al. (2021)",
-    "VeriDark (BERT)": "He et al. (2023)"
 }
 
 FILE_PATTERNS = {
@@ -79,23 +68,47 @@ FILE_PATTERNS = {
 #  HELPER FUNCTIONS
 # ==========================================
 
-def parse_epochs(filename):
+def parse_variant(filename):
+    """
+    Parses filename to extract: Epochs, Pooling, Chunking.
+    Format: "LoRA 3ep (GeM, Chunked)" or "Base (Mean, Trunc)"
+    """
     filename = filename.lower()
-    if "ep3" in filename or "_3ep" in filename:
-        return "3 Epochs"
-    elif "ep5" in filename or "_5ep" in filename:
-        return "5 Epochs"
-    elif "base" in filename:
-        return "Base (No LoRA)"
-    elif "lora" in filename:
-        return "LoRA (Unk Ep)"
-    return "Base"
+
+    # 1. Determine Training Mode (Base vs LoRA)
+    if "base" in filename:
+        mode = "Base"
+    elif "ep" in filename:
+        # Try to extract exact epoch number
+        import re
+        match = re.search(r'_(\d+)ep', filename)
+        if match:
+            mode = f"LoRA {match.group(1)}ep"
+        else:
+            mode = "LoRA"
+    else:
+        mode = "Base"  # Default if unsure
+
+    # 2. Determine Pooling
+    if "_gmp" in filename:
+        pooling = "GeM"
+    else:
+        pooling = "Mean"
+
+    # 3. Determine Chunking
+    if "_chunked" in filename:
+        chunking = "Chunked"
+    else:
+        chunking = "Truncated"
+
+    return f"{mode} ({pooling}, {chunking})"
 
 
 def evaluate_embeddings(file_path):
     """Loads a .pt file and calculates ALL metrics."""
     try:
-        data = torch.load(file_path, map_location="cpu", weights_only=False)
+        # Load safely
+        data = torch.load(file_path, map_location="cpu")
 
         train_vecs = data.get('train_vecs', data.get('train_embeddings'))
         train_labels = data.get('train_labels')
@@ -103,9 +116,10 @@ def evaluate_embeddings(file_path):
         test_labels = data.get('test_labels')
 
         if train_vecs is None or test_vecs is None:
+            print(f"(!) Missing vectors in {os.path.basename(file_path)}")
             return None
 
-        # --- CLASSIFICATION LOGIC ---
+        # --- CENTROID CLASSIFICATION LOGIC ---
         unique_classes = sorted(list(set(train_labels)))
         label_to_index = {name: i for i, name in enumerate(unique_classes)}
 
@@ -123,9 +137,8 @@ def evaluate_embeddings(file_path):
         centroid_matrix = torch.stack(centroids)
         scores = torch.mm(test_vecs, centroid_matrix.transpose(0, 1))
 
-        # Scaling x10 for LogLoss
-        probs = F.softmax(scores * 10, dim=1)
-        predictions = torch.argmax(scores, dim=1)
+        probs_all = F.softmax(scores * 10, dim=1)
+        predictions_all = torch.argmax(scores, dim=1)
 
         y_true = []
         y_pred = []
@@ -135,11 +148,14 @@ def evaluate_embeddings(file_path):
         for i, label in enumerate(test_labels):
             if label in label_to_index:
                 y_true.append(label_to_index[label])
-                y_pred.append(predictions[i].item())
+                y_pred.append(predictions_all[i].item())
                 y_scores_filtered.append(scores[i].numpy())
-                y_probs_filtered.append(probs[i].numpy())
+                y_probs_filtered.append(probs_all[i].numpy())
 
-        if not y_true: return None
+        if not y_true:
+            print(f"(!) No matching labels in {os.path.basename(file_path)}")
+            return None
+
         y_scores_filtered = np.array(y_scores_filtered)
         y_probs_filtered = np.array(y_probs_filtered)
 
@@ -178,16 +194,16 @@ def prepare_plot_data(df):
         plot_df[col] = pd.to_numeric(plot_df[col], errors='coerce')
 
     # Create Display Name
-    plot_df['Display Name'] = plot_df['Model'] + "\n(" + plot_df['Variant'] + ")"
+    plot_df['Display Name'] = plot_df['Model'] + "\n" + plot_df['Variant']
     return plot_df
 
 
 def plot_grouped_bar(df, dataset_name, output_dir):
     """1. Grouped Bar Chart: Accuracy Comparison"""
     plot_df = prepare_plot_data(df)
-    plot_df = plot_df.dropna(subset=['Accuracy'])  # Only rows with Accuracy
+    plot_df = plot_df.dropna(subset=['Accuracy'])
 
-    plt.figure(figsize=(12, 6))
+    plt.figure(figsize=(14, 8))
     sns.set_theme(style="whitegrid")
 
     ax = sns.barplot(
@@ -201,8 +217,8 @@ def plot_grouped_bar(df, dataset_name, output_dir):
 
     plt.title(f"Leaderboard: {dataset_name.upper()}", fontsize=16)
     plt.ylim(0, 1.05)
-    plt.xticks(rotation=45, ha='right')
-    plt.legend(bbox_to_anchor=(1.05, 1), loc='upper left')
+    plt.xticks(rotation=45, ha='right', fontsize=9)
+    plt.legend(bbox_to_anchor=(1.01, 1), loc='upper left')
     plt.tight_layout()
 
     save_path = os.path.join(output_dir, f"plot_1_bar_{dataset_name}.png")
@@ -212,16 +228,19 @@ def plot_grouped_bar(df, dataset_name, output_dir):
 
 
 def plot_radar_chart(df, dataset_name, output_dir):
-    """2. Radar Chart: E5-Small Base vs LoRA"""
+    """2. Radar Chart: Compares E5-Small Variants"""
     plot_df = prepare_plot_data(df)
 
-    # Filter for E5-Small Comparison
-    target_models = plot_df[
-        (plot_df['Model'] == "E5-Small") &
-        ((plot_df['Variant'].str.contains("Base")) | (plot_df['Variant'].str.contains("LoRA")))
-        ]
+    # Filter: Only E5-Small and exclude SOTA
+    target_models = plot_df[plot_df['Model'] == "E5-Small"]
 
-    if len(target_models) < 2: return
+    if len(target_models) < 2:
+        print("   [Info] Not enough E5-Small variants for Radar Chart.")
+        return
+
+    # If too many, pick top 5 by Accuracy to avoid clutter
+    if len(target_models) > 5:
+        target_models = target_models.sort_values(by="Accuracy", ascending=False).head(5)
 
     metrics = ['Accuracy', 'F1 Macro', 'Recall', 'Precision']
     categories = metrics
@@ -233,18 +252,23 @@ def plot_radar_chart(df, dataset_name, output_dir):
     plt.figure(figsize=(8, 8))
     ax = plt.subplot(111, polar=True)
 
-    colors = ['#1f77b4', '#ff7f0e', '#2ca02c']
+    # Dynamic color palette
+    colors = sns.color_palette("husl", len(target_models))
 
     for i, (idx, row) in enumerate(target_models.iterrows()):
         values = [row[m] for m in metrics]
-        values += values[:1]  # Close loop
-        ax.plot(angles, values, linewidth=2, linestyle='solid', label=row['Variant'], color=colors[i % len(colors)])
-        ax.fill(angles, values, color=colors[i % len(colors)], alpha=0.1)
+        values += values[:1]
+
+        # Clean label for legend
+        label = row['Variant']
+
+        ax.plot(angles, values, linewidth=2, linestyle='solid', label=label, color=colors[i])
+        ax.fill(angles, values, color=colors[i], alpha=0.1)
 
     plt.xticks(angles[:-1], categories)
     plt.ylim(0, 1.0)
-    plt.title(f"LoRA Impact: E5-Small ({dataset_name})", size=15, y=1.1)
-    plt.legend(loc='upper right', bbox_to_anchor=(0.1, 0.1))
+    plt.title(f"Variant Impact: E5-Small ({dataset_name})", size=15, y=1.1)
+    plt.legend(loc='upper right', bbox_to_anchor=(1.2, 1.1))
 
     save_path = os.path.join(output_dir, f"plot_2_radar_{dataset_name}.png")
     plt.savefig(save_path, dpi=300)
@@ -255,15 +279,12 @@ def plot_radar_chart(df, dataset_name, output_dir):
 def plot_heatmap(df, dataset_name, output_dir):
     """3. Heatmap: Overview of all metrics"""
     plot_df = prepare_plot_data(df)
-
-    # Select columns for heatmap
     metrics = ["Accuracy", "F1 Macro", "Top-3", "Precision", "Recall"]
 
-    # Pivot: Index=Display Name, Columns=Metrics
-    heatmap_data = plot_df.set_index('Display Name')[metrics]
-    heatmap_data = heatmap_data.astype(float)  # Ensure float
+    heatmap_data = plot_df.drop_duplicates(subset=['Display Name']).set_index('Display Name')[metrics]
+    heatmap_data = heatmap_data.astype(float)
 
-    plt.figure(figsize=(10, 8))
+    plt.figure(figsize=(12, 10))
     sns.heatmap(
         heatmap_data,
         annot=True,
@@ -286,38 +307,50 @@ def plot_line_chart(df, dataset_name, output_dir):
     """4. Line Plot: Scaling Trend (Small -> Large -> Llama)"""
     plot_df = prepare_plot_data(df)
 
-    # Define an 'Ordinal' Size mapping
+    # Size mapping
     size_map = {
         "E5-Small": 1,
         "E5-Large": 2,
         "Llama-2": 3,
         "Llama-4-Scout": 4
     }
-
-    # Add Size column
     plot_df['Size_Rank'] = plot_df['Model'].map(size_map)
-
-    # Filter out SOTA and unknown models
     plot_df = plot_df.dropna(subset=['Size_Rank', 'Accuracy'])
 
-    # Sort by size
-    plot_df = plot_df.sort_values('Size_Rank')
+    # === AGGREGATION LOGIC ===
+    # Since we have many variants per model (GeM, Chunked, etc.),
+    # we take the BEST Performing variant for each model size to draw the trend line.
+
+    best_variants = plot_df.loc[plot_df.groupby("Model")["Accuracy"].idxmax()]
+    best_variants = best_variants.sort_values('Size_Rank')
 
     plt.figure(figsize=(10, 6))
 
-    # Plot Base models as one line
-    base_df = plot_df[plot_df['Variant'].str.contains("Base")]
-    if not base_df.empty:
-        sns.lineplot(data=base_df, x='Model', y='Accuracy', marker='o', label='Base Models', linewidth=2.5)
+    # Plot the Best Performing Trend Line
+    sns.lineplot(
+        data=best_variants,
+        x='Model',
+        y='Accuracy',
+        marker='o',
+        label='Best Variant Trend',
+        linewidth=3,
+        color='blue'
+    )
 
-    # Plot LoRA/Other as scatter points
-    other_df = plot_df[~plot_df['Variant'].str.contains("Base")]
-    if not other_df.empty:
-        sns.scatterplot(data=other_df, x='Model', y='Accuracy', hue='Variant', s=100, marker='X')
+    # Scatter all other points in background
+    sns.scatterplot(
+        data=plot_df,
+        x='Model',
+        y='Accuracy',
+        hue='Variant',
+        s=100,
+        alpha=0.6
+    )
 
     plt.title(f"Scaling Trend: Model Size vs Accuracy ({dataset_name})", fontsize=16)
     plt.ylabel("Accuracy")
     plt.grid(True, linestyle='--')
+    plt.legend(bbox_to_anchor=(1.05, 1), loc='upper left')
     plt.tight_layout()
 
     save_path = os.path.join(output_dir, f"plot_4_line_{dataset_name}.png")
@@ -333,21 +366,22 @@ def plot_line_chart(df, dataset_name, output_dir):
 def main():
     print(f"--- EVALUATION & PLOTTING ---")
 
-    downloaded_dir = os.path.join(config.RESULTS_DIR, "embeddings_downloaded")
-    standard_dir = config.EMBEDDINGS_DIR
+    local_dir = config.EMBEDDINGS_DIR
+    cluster_dl_dir = os.path.join(config.RESULTS_DIR, "embeddings_downloaded")
 
-    if os.path.exists(downloaded_dir) and len(os.listdir(downloaded_dir)) > 0:
-        target_dir = downloaded_dir
-        print(f"   [Source] Using DOWNLOADED embeddings.")
+    if os.path.exists(cluster_dl_dir) and len(os.listdir(cluster_dl_dir)) > 0:
+        target_dir = cluster_dl_dir
+        print(f"   [Source] Using DOWNLOADED embeddings from: {target_dir}")
     else:
-        target_dir = standard_dir
-        print(f"   [Source] Using LOCAL/STANDARD embeddings.")
+        target_dir = local_dir
+        print(f"   [Source] Using LOCAL/STANDARD embeddings from: {target_dir}")
 
     if not os.path.exists(target_dir):
         print(f"(!) Directory not found: {target_dir}")
         return
 
     all_files = [f for f in os.listdir(target_dir) if f.endswith(".pt")]
+    print(f"   [Info] Found {len(all_files)} .pt files.")
 
     for dataset_name in ["reuters", "darkreddit"]:
         print(f"\nProcessing {dataset_name.upper()}...")
@@ -364,14 +398,18 @@ def main():
         # 2. Add Our Models
         for model_name in MODEL_ORDER:
             if "SOTA" in model_name: continue
+
             search_terms = FILE_PATTERNS.get(model_name, [])
-            matches = [f for f in all_files if dataset_name in f.lower() and any(t in f.lower() for t in search_terms)]
+            matches = [f for f in all_files
+                       if dataset_name in f.lower()
+                       and any(t in f.lower() for t in search_terms)]
 
             for f in matches:
                 full_path = os.path.join(target_dir, f)
                 metrics = evaluate_embeddings(full_path)
+
                 if metrics:
-                    variant = parse_epochs(f)
+                    variant = parse_variant(f)
                     row = {
                         "Model": model_name,
                         "Variant": variant,
@@ -385,19 +423,27 @@ def main():
                     }
                     table_rows.append(row)
 
+        if not table_rows:
+            print("   No results found for this dataset.")
+            continue
+
         df = pd.DataFrame(table_rows)
 
+        # Sort
+        df['SortKey'] = df['Model'].apply(lambda x: 0 if "SOTA" in x else 1)
+        df = df.sort_values(by=['SortKey', 'Model', 'Variant'])
+
         # Print Table
-        print("-" * 100)
-        print(f"{'Model':<15} {'Variant':<15} {'Acc':<7} {'Top3':<7} {'F1Mac':<7} {'LogLoss':<7}")
-        print("-" * 100)
+        print("-" * 110)
+        print(f"{'Model':<15} {'Variant':<30} {'Acc':<7} {'Top3':<7} {'F1Mac':<7} {'LogLoss':<7}")
+        print("-" * 110)
         for _, row in df.iterrows():
             acc = f"{float(row['Accuracy']):.4f}" if row['Accuracy'] != "-" else "-"
             top3 = f"{float(row['Top-3']):.4f}" if row['Top-3'] != "-" else "-"
             f1 = f"{float(row['F1 Macro']):.4f}" if row['F1 Macro'] != "-" else "-"
             ll = f"{float(row['Log Loss']):.4f}" if row['Log Loss'] != "-" else "-"
-            print(f"{str(row['Model']):<15} {str(row['Variant']):<15} {acc:<7} {top3:<7} {f1:<7} {ll:<7}")
-        print("-" * 100)
+            print(f"{str(row['Model']):<15} {str(row['Variant']):<30} {acc:<7} {top3:<7} {f1:<7} {ll:<7}")
+        print("-" * 110)
 
         # 3. GENERATE ALL 4 PLOTS
         print("   Generating plots...")
@@ -411,9 +457,9 @@ def main():
             import traceback
             traceback.print_exc()
 
-        # Save CSV
         save_path = os.path.join(target_dir, f"final_results_{dataset_name}.csv")
         df.to_csv(save_path, index=False)
+        print(f"   [Saved] CSV saved to: {save_path}")
 
 
 if __name__ == "__main__":

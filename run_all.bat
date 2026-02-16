@@ -30,10 +30,14 @@ echo ========================================================
 ::set "ADAPTER_ROOT=results\adapters"
 
 ::echo.
-::echo [1/4] Running E5_SMALL on REUTERS (BASE - 0 Epochs)...
-::powershell -Command "python main.py --model e5_small --dataset reuters --epochs 0 --suffix _base | Tee-Object -FilePath '%LOGFILE%' -Append"
-::echo [1/4] FINISHED.
+::echo [1/4] Running E5_SMALL on REUTERS (BASE - 0 Epochs) - MEAN POOLING...
+::powershell -Command "python main.py --model e5_small --dataset reuters --epochs 0 --suffix _base --pooling mean | Tee-Object -FilePath '%LOGFILE%' -Append"
+::echo [1/4] FINISHED MEAN.
 
+::echo.
+::echo [1/4b] Running E5_SMALL on REUTERS (BASE - 0 Epochs) - GMP POOLING...
+::powershell -Command "python main.py --model e5_small --dataset reuters --epochs 0 --suffix _base --pooling gmp | Tee-Object -FilePath '%LOGFILE%' -Append"
+::echo [1/4b] FINISHED GMP.
 
 
 ::echo.
@@ -42,11 +46,35 @@ echo ========================================================
 ::    move /Y "%ADAPTER_ROOT%\e5_small_reuters_3ep" "%ADAPTER_ROOT%\e5_small_reuters" > nul
 ::)
 
-::powershell -Command "python main.py --model e5_small --dataset reuters --lora --epochs 3 --suffix _3ep | Tee-Object -FilePath '%LOGFILE%' -Append"
+:: --- RUN MEAN POOLING ---
+::echo Running MEAN Pooling...
+::powershell -Command "python main.py --model e5_small --dataset reuters --lora --epochs 3 --suffix _3ep --pooling mean | Tee-Object -FilePath '%LOGFILE%' -Append"
+
+:: --- RUN GMP POOLING ---
+::echo Running GMP Pooling...
+::powershell -Command "python main.py --model e5_small --dataset reuters --lora --epochs 3 --suffix _3ep --pooling gmp | Tee-Object -FilePath '%LOGFILE%' -Append"
+
 ::if exist "%ADAPTER_ROOT%\e5_small_reuters" (
 ::    move /Y "%ADAPTER_ROOT%\e5_small_reuters" "%ADAPTER_ROOT%\e5_small_reuters_3ep" > nul
 ::)
 ::echo [2/4] FINISHED.
+
+
+
+
+::^^ NEUE
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 ::echo.

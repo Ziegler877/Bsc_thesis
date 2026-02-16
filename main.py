@@ -32,6 +32,14 @@ def main():
     parser.add_argument("--epochs", type=int, default=0,
                         help="Metadata: How many epochs was the adapter trained? (0 = Base Model)")
 
+    # NEW: Pooling Strategy
+    parser.add_argument("--pooling", type=str, default="mean", choices=["mean", "gmp"],
+                        help="Aggregation strategy: 'mean' (standard) or 'gmp' (Generalized Mean Pooling)")
+
+    # NEW: Chunking Option
+    parser.add_argument("--chunking", action="store_true",
+                        help="If set, splits long texts into 512-token chunks and averages them. If not set, truncates at 512.")
+
     parser.add_argument("--device", type=str, default=config.DEVICE,
                         help="Override config device")
 
@@ -54,7 +62,15 @@ def main():
     elif "_base" in args.suffix:
         run_name += "-base"
 
-    # Initialize W&B with the Epoch count in the config
+    # Add pooling to run name if it's not standard
+    if args.pooling != "mean":
+        run_name += f"-{args.pooling}"
+
+    # Add chunking to run name
+    if args.chunking:
+        run_name += "-chunked"
+
+    # Initialize W&B
     wandb.init(
         project="BSC Thesis",
         name=run_name,
@@ -62,7 +78,9 @@ def main():
             "model": args.model,
             "dataset": args.dataset,
             "lora": args.lora,
-            "epochs": args.epochs,  # <--- Now you can sort by this in the dashboard!
+            "epochs": args.epochs,
+            "pooling": args.pooling,
+            "chunking": args.chunking,  # <--- Track chunking in W&B
             "device": args.device
         }
     )
@@ -75,10 +93,16 @@ def main():
     if use_lora:
         job_name += f" (LoRA {args.epochs}ep)"
 
+    job_name += f" [{args.pooling.upper()}]"
+    if args.chunking:
+        job_name += " [CHUNKED]"
+
     print(f"========================================")
     print(f"   STARTING JOB: {job_name}")
-    print(f"   Device: {args.device}")
-    print(f"   Epochs: {args.epochs}")
+    print(f"   Device:   {args.device}")
+    print(f"   Epochs:   {args.epochs}")
+    print(f"   Pooling:  {args.pooling}")
+    print(f"   Chunking: {args.chunking}")
     print(f"========================================")
 
     # ---------------------------
@@ -115,7 +139,10 @@ def main():
             "train_texts": train_txt,
             "test_texts": test_txt,
             "use_lora": use_lora,
-            "dataset_alias": dataset_alias
+            "dataset_alias": dataset_alias,
+            "suffix": args.suffix,  # Pass the suffix (e.g. _expA)
+            "pooling": args.pooling,  # Pass pooling strategy
+            "chunking": args.chunking  # Pass chunking flag
         }
 
         train_vecs, test_vecs = model_runner.run_pipeline(**runner_kwargs)
@@ -140,6 +167,14 @@ def main():
     if args.epochs > 0 and not final_suffix:
         final_suffix = f"_{args.epochs}ep"
 
+    # Add pooling tag
+    if args.pooling == "gmp":
+        final_suffix += "_gmp"
+
+    # Add chunking tag
+    if args.chunking:
+        final_suffix += "_chunked"
+
     filename = f"{model_alias}_{dataset_alias}{lora_tag}{final_suffix}.pt"
 
     save_dir = config.EMBEDDINGS_DIR
@@ -152,7 +187,9 @@ def main():
         "test_vecs": test_vecs.cpu(),
         "train_labels": train_lbl,
         "test_labels": test_lbl,
-        "epochs": args.epochs  # Save metadata inside the file too
+        "epochs": args.epochs,
+        "pooling": args.pooling,
+        "chunking": args.chunking
     }, save_path)
 
     # ---------------------------
@@ -166,7 +203,8 @@ def main():
         model_name=model_alias,
         dataset_name=dataset_alias,
         device=args.device,
-        extra_info=f"LoRA: {use_lora} | Epochs: {args.epochs}"
+        extra_info=f"LoRA: {use_lora} | Ep: {args.epochs} | Pool: {args.pooling} | Chunk: {args.chunking}",
+        pooling=args.pooling
     )
 
     if metrics:
