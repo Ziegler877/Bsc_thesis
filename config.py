@@ -16,6 +16,8 @@ if IS_CLUSTER:
     PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 
     # 2. Big Storage Paths (Cluster)
+    # Assuming config.py is in ThesisProject, these will be:
+    # .../ThesisProject/data, .../ThesisProject/results, .../ThesisProject/models
     DATA_DIR = os.path.join(PROJECT_ROOT, "data")
     RESULTS_DIR = os.path.join(PROJECT_ROOT, "results")
     MODELS_DIR = os.path.join(PROJECT_ROOT, "models")
@@ -23,11 +25,14 @@ if IS_CLUSTER:
     # 3. Model Checkpoints (Cluster)
     LLAMA2_CHECKPOINT_DIR = os.path.join(MODELS_DIR, "Llama-2-7b-hf")
     LLAMA4_CHECKPOINT_DIR = os.path.join(MODELS_DIR, "Llama-4-Maverick")
-    LLAMA4_SCOUT_CHECKPOINT_DIR = os.path.join(MODELS_DIR, "Llama-4-Scout")
 
-    # E5 Models (Cluster: using local paths assuming you clone them there too)
-    E5_SMALL_ID = os.path.join(MODELS_DIR, "e5-small-v2")
-    E5_LARGE_ID = os.path.join(MODELS_DIR, "e5-large-v2")
+    # NEW: Llama 3.1 (Replaced Scout)
+    LLAMA3_CHECKPOINT_DIR = os.path.join(MODELS_DIR, "Llama-3.1-8B")
+
+    # E5 Models (Cluster)
+    # Updated to match your 'ls' output (removed '-v2' suffix)
+    E5_SMALL_ID = os.path.join(MODELS_DIR, "e5-small")
+    E5_LARGE_ID = os.path.join(MODELS_DIR, "e5-large")
 
 else:
     print("   [Config] Detected LOCAL Environment (Windows).")
@@ -85,4 +90,4 @@ if __name__ == "__main__":
     print(f"--- CONFIGURATION CHECK ---")
     print(f"Project Root: {PROJECT_ROOT}")
     print(f"E5 Small Path: {E5_SMALL_ID}")
-    print(f"Llama Path:    {LLAMA2_CHECKPOINT_DIR}")
+    print(f"Llama 3 Path:  {LLAMA3_CHECKPOINT_DIR}")
