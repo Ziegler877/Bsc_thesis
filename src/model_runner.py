@@ -23,22 +23,36 @@ class GeM(nn.Module):
         self.eps = eps
 
     def forward(self, x, attention_mask=None):
+        # Optimization: Use scalar 'p' for calculation if possible to speed up inference
+        p_val = self.p.item() if not self.p.requires_grad else self.p
+
         if attention_mask is not None:
             input_mask_expanded = attention_mask.unsqueeze(-1).expand(x.size()).float()
             x = x * input_mask_expanded
+
+            # Clamp to avoid 0s or negatives (ReLU-like behavior is standard for GeM)
             x = x.clamp(min=self.eps)
-            sum_pow = torch.sum(x.pow(self.p), dim=1)
+
+            # Sum of x^p
+            sum_pow = torch.sum(x.pow(p_val), dim=1)
+
+            # Count non-padded tokens
             count = input_mask_expanded.sum(dim=1)
             count = count.clamp(min=self.eps)
-            return (sum_pow / count).pow(1.0 / self.p)
+
+            # Average and root
+            return (sum_pow / count).pow(1.0 / p_val)
         else:
-            return F.avg_pool1d(x.clamp(min=self.eps).pow(self.p), (x.size(-1))).pow(1. / self.p)
+            return F.avg_pool1d(x.clamp(min=self.eps).pow(p_val), (x.size(-1))).pow(1. / p_val)
 
 
 # ==========================================
 #  HELPER: Centralized LoRA Loader with KEY FIX
 # ==========================================
 def load_adapter_safe(model, adapter_path, model_alias):
+    """
+    Loads LoRA adapters and fixes Key Mismatches (e.g. .bert.encoder vs .encoder).
+    """
     if not adapter_path:
         print(f"   [{model_alias}] Info: No adapter requested. Running BASE model.")
         return model
@@ -50,8 +64,10 @@ def load_adapter_safe(model, adapter_path, model_alias):
         return model
 
     try:
+        # 1. Initialize the PEFT wrapper (this creates the layers with random weights)
         model = PeftModel.from_pretrained(model, adapter_path)
 
+        # 2. Check if we need to manually fix keys
         safe_path = os.path.join(adapter_path, "adapter_model.safetensors")
         bin_path = os.path.join(adapter_path, "adapter_model.bin")
 
@@ -63,22 +79,33 @@ def load_adapter_safe(model, adapter_path, model_alias):
             print(f"   [{model_alias}] [ERROR] No weight file found (safetensors/bin).")
             return model
 
+        # 3. REPAIR KEYS (The Magic Fix)
+        # The log showed the file has '.bert.encoder' but model wants '.encoder'
         new_state_dict = {}
         fixed_count = 0
         for k, v in state_dict.items():
             new_key = k
+
+            # FIX FOR E5 (Bert mismatch)
             if "bert.encoder" in k:
                 new_key = k.replace("bert.encoder", "encoder")
                 fixed_count += 1
+
             new_state_dict[new_key] = v
 
         if fixed_count > 0:
             print(f"   [{model_alias}] [FIX] Renamed {fixed_count} keys (removed .bert prefix) to match model.")
+            # 4. Load the fixed weights into the model
             result = set_peft_model_state_dict(model, new_state_dict)
         else:
+            # If no keys needed fixing, the initial from_pretrained load likely worked,
+            # but usually PeftModel.from_pretrained handles loading too.
+            # We explicitly set dict here just to be safe if keys match perfectly.
             result = set_peft_model_state_dict(model, state_dict)
 
+        # Check result
         if len(result.missing_keys) > 0:
+            # Filter out non-lora missing keys to see if it's a real problem
             real_missing = [k for k in result.missing_keys if "lora" in k]
             if real_missing:
                 print(f"   [{model_alias}] [WARN] Still missing LoRA keys: {real_missing[:3]}...")
@@ -103,6 +130,7 @@ class E5Runner:
         self.pooling_type = pooling_type
         self.use_chunking = use_chunking
 
+        # 1. Determine ID from Config
         if "small" in model_alias:
             self.model_id = config.E5_SMALL_ID
         else:
@@ -111,10 +139,16 @@ class E5Runner:
         print(
             f"   [{model_alias}] Loading E5 (Encoder) from: {self.model_id} | Pool: {pooling_type} | Chunk: {use_chunking}")
 
+        # 2. Tokenizer
         self.tokenizer = AutoTokenizer.from_pretrained(self.model_id)
+
+        # 3. Load Model
         self.model = AutoModel.from_pretrained(self.model_id, device_map="auto")
+
+        # 4. Apply LoRA (With Fix)
         self.model = load_adapter_safe(self.model, adapter_path, model_alias)
 
+        # 5. Initialize GeM if selected
         if self.pooling_type == "gmp":
             self.gem = GeM().to(self.device)
 
@@ -131,18 +165,28 @@ class E5Runner:
         for i in tqdm(range(0, len(text_list), batch_size), desc=f"   [{self.model_alias}] Truncated"):
             batch_texts = text_list[i: i + batch_size]
             inputs = self.tokenizer(
-                batch_texts, return_tensors="pt", padding=True, truncation=True, max_length=512
+                batch_texts,
+                return_tensors="pt",
+                padding=True,
+                truncation=True,
+                max_length=512
             ).to(self.device)
 
             with torch.no_grad():
                 outputs = self.model(**inputs)
 
             last_hidden = outputs.last_hidden_state
+
+            # Select Pooling Strategy
             if self.pooling_type == "gmp":
-                embs = self.gem(last_hidden, inputs['attention_mask'])
+                # Use GeM Layer
+                embeddings = self.gem(last_hidden, inputs['attention_mask'])
             else:
-                embs = self._mean_pooling(last_hidden, inputs['attention_mask'])
-            all_embeddings.append(embs.cpu())
+                # Use Standard Mean Pooling
+                embeddings = self._mean_pooling(last_hidden, inputs['attention_mask'])
+
+            all_embeddings.append(embeddings.cpu())
+
         return torch.cat(all_embeddings, dim=0)
 
     def _get_embeddings_chunked(self, text_list):
@@ -158,15 +202,10 @@ class E5Runner:
             chunks = []
             for i in range(0, len(input_ids), chunk_size):
                 chunk_ids = input_ids[i:i + chunk_size]
-                # Pad if strictly necessary? Usually transformers handles variable length in a batch,
-                # but here we just process one chunk at a time or batch chunks.
-                # Simplest: Process chunk immediately.
                 chunks.append(chunk_ids)
 
             # 3. Embed chunks
             chunk_vecs = []
-            # Batch these chunks if there are many (optional optimization),
-            # here we loop simply as texts are rarely 10k+ tokens.
             for c_ids in chunks:
                 c_ids = c_ids.unsqueeze(0).to(self.device)  # [1, seq_len]
                 attention_mask = torch.ones_like(c_ids).to(self.device)
@@ -203,7 +242,11 @@ class LlamaRunner:
         self.pooling_type = pooling_type
         self.use_chunking = use_chunking
 
-        if "scout" in model_alias:
+        # --- MODEL SELECTION (Updated for Llama 3) ---
+        if "llama3" in model_alias:
+            # Tries to find LLAMA3 in config, otherwise defaults to HF Hub ID
+            self.model_id = getattr(config, 'LLAMA3_CHECKPOINT_DIR', "meta-llama/Meta-Llama-3.1-8B")
+        elif "scout" in model_alias:
             self.model_id = config.LLAMA4_SCOUT_CHECKPOINT_DIR
         elif "llama4" in model_alias:
             self.model_id = config.LLAMA4_CHECKPOINT_DIR
@@ -217,6 +260,7 @@ class LlamaRunner:
         if self.tokenizer.pad_token is None:
             self.tokenizer.pad_token = self.tokenizer.eos_token
 
+        # Standard FP16 loading (No 4-bit quantization)
         self.model = AutoModelForCausalLM.from_pretrained(
             self.model_id,
             device_map="auto",
@@ -224,15 +268,18 @@ class LlamaRunner:
             trust_remote_code=True
         )
 
+        # 4. Apply LoRA
         self.model = load_adapter_safe(self.model, adapter_path, model_alias)
 
+        # 5. Initialize GeM if selected
         if self.pooling_type == "gmp":
             self.gem = GeM().to(self.device)
 
         self.model.eval()
 
     def get_embeddings(self, text_list, batch_size=4):
-        if "scout" in self.model_alias and batch_size > 4:
+        # Enforce small batch size for Scout/Llama if needed
+        if batch_size > 4:
             batch_size = 4
 
         if self.use_chunking:
@@ -245,18 +292,27 @@ class LlamaRunner:
         for i in tqdm(range(0, len(text_list), batch_size), desc=f"   [{self.model_alias}] Truncated"):
             batch_texts = text_list[i: i + batch_size]
             inputs = self.tokenizer(
-                batch_texts, return_tensors="pt", padding=True, truncation=True, max_length=512
+                batch_texts,
+                return_tensors="pt",
+                padding=True,
+                truncation=True,
+                max_length=512
             ).to(self.device)
 
             with torch.no_grad():
                 outputs = self.model(**inputs, output_hidden_states=True)
 
+            # Use the last hidden state
             hidden_states = outputs.hidden_states[-1]
+
+            # Select Pooling Strategy
             if self.pooling_type == "gmp":
-                embs = self.gem(hidden_states, inputs['attention_mask'])
+                embeddings = self.gem(hidden_states, inputs['attention_mask'])
             else:
-                embs = self._mean_pooling(hidden_states, inputs['attention_mask'])
-            all_embeddings.append(embs.cpu())
+                embeddings = self._mean_pooling(hidden_states, inputs['attention_mask'])
+
+            all_embeddings.append(embeddings.cpu())
+
         return torch.cat(all_embeddings, dim=0)
 
     def _get_embeddings_chunked(self, text_list):
@@ -305,11 +361,19 @@ class LlamaRunner:
 # ==========================================
 def run_pipeline(model_alias, train_texts, test_texts, use_lora=False, dataset_alias="unknown", suffix="",
                  pooling="mean", chunking=False):
+    """
+    Main function to load models and generate embeddings.
+    Suffix allows finding specific LoRA folders like 'e5_small_darkreddit_expA_3ep'
+    """
+
     # 1. Determine Adapter Path
     adapter_path = None
     if use_lora:
+        # Construct path: e.g. "results/adapters/e5_small_darkreddit_expA_3ep"
         folder_name = f"{model_alias}_{dataset_alias}{suffix}"
         adapter_path = os.path.join(config.ADAPTERS_DIR, folder_name)
+
+        # Fallback if specific suffix folder doesn't exist but generic does
         if not os.path.exists(adapter_path):
             print(f"   [Pipeline] Warning: Specific adapter {folder_name} not found.")
 

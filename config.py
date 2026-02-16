@@ -42,8 +42,7 @@ else:
 
     LLAMA2_CHECKPOINT_DIR = r"D:\BSC_Thesis_Models\Llama-2-7b-hf"
     LLAMA4_CHECKPOINT_DIR = r"D:\BSC_Thesis_Models\Llama-4-Maverick-17B-128E-Instruct"
-    # Placeholder if you don't have Scout locally yet
-    LLAMA4_SCOUT_CHECKPOINT_DIR = r"D:\BSC_Thesis_Models\Llama-4-Scout"
+    LLAMA3_CHECKPOINT_DIR = "meta-llama/Meta-Llama-3.1-8B"  # Or your local path D:\...\Meta-Llama-3.1-8B
 
     # E5 Models (Local Paths)
     E5_SMALL_ID = r"D:\BSC_Thesis_Models\e5-small"

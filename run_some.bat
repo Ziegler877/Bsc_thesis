@@ -20,15 +20,15 @@ set "WANDB_WATCH=false"
 
 echo.
 echo [1/6] Running BASELINE (Mean + Truncated)...
-powershell -Command "python main.py --model e5_small --dataset reuters --epochs 0 --suffix _base --pooling mean | Tee-Object -FilePath '%LOGFILE%' -Append"
+powershell -Command "python main.py --model e5_small --dataset darkreddit --epochs 0 --suffix _base --pooling mean | Tee-Object -FilePath '%LOGFILE%' -Append"
 
 echo.
 echo [2/6] Running BASELINE (GeM + Truncated)...
-powershell -Command "python main.py --model e5_small --dataset reuters --epochs 0 --suffix _base --pooling gmp | Tee-Object -FilePath '%LOGFILE%' -Append"
+powershell -Command "python main.py --model e5_small --dataset darkreddit --epochs 0 --suffix _base --pooling gmp | Tee-Object -FilePath '%LOGFILE%' -Append"
 
 echo.
 echo [3/6] Running BASELINE (Mean + Chunking)...
-powershell -Command "python main.py --model e5_small --dataset reuters --epochs 0 --suffix _base --pooling mean --chunking | Tee-Object -FilePath '%LOGFILE%' -Append"
+powershell -Command "python main.py --model e5_small --dataset darkreddit --epochs 0 --suffix _base --pooling mean --chunking | Tee-Object -FilePath '%LOGFILE%' -Append"
 
 
 echo.

@@ -18,7 +18,8 @@ def main():
     parser = argparse.ArgumentParser(description="Run Authorship Attribution Experiment")
 
     parser.add_argument("--model", type=str, required=True,
-                        choices=["e5_small", "e5_large", "llama2", "llama4_scout"],
+                        # ADDED llama3 here
+                        choices=["e5_small", "e5_large", "llama2", "llama3", "llama4_scout"],
                         help="Which model architecture to use")
 
     parser.add_argument("--dataset", type=str, required=True,
@@ -204,7 +205,8 @@ def main():
         dataset_name=dataset_alias,
         device=args.device,
         extra_info=f"LoRA: {use_lora} | Ep: {args.epochs} | Pool: {args.pooling} | Chunk: {args.chunking}",
-        pooling=args.pooling
+        pooling=args.pooling,
+        chunking=args.chunking  # <--- CRITICAL: Pass chunking to eval
     )
 
     if metrics:

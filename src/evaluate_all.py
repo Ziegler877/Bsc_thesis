@@ -30,11 +30,13 @@ from sklearn.metrics import (
 #  CONFIGURATION & SOTA DATA
 # ==========================================
 
+# Updated Model Order to include Llama-3
 MODEL_ORDER = [
     "SOTA",
     "E5-Small",
     "E5-Large",
     "Llama-2",
+    "Llama-3",      # <--- ADDED
     "Llama-4-Scout"
 ]
 
@@ -56,10 +58,12 @@ SOTA_DATA = {
     ]
 }
 
+# Added file pattern for Llama-3
 FILE_PATTERNS = {
     "E5-Small": ["e5_small"],
     "E5-Large": ["e5_large"],
     "Llama-2": ["llama2", "llama_2"],
+    "Llama-3": ["llama3", "llama_3"], # <--- ADDED
     "Llama-4-Scout": ["scout", "llama4_scout"]
 }
 
@@ -215,7 +219,7 @@ def plot_grouped_bar(df, dataset_name, output_dir):
         dodge=False
     )
 
-    plt.title(f"Leaderboard: {dataset_name.upper()}", fontsize=16)
+    plt.title(f"Leaderboard: {dataset_name.upper()} (Pooling & Chunking Analysis)", fontsize=16)
     plt.ylim(0, 1.05)
     plt.xticks(rotation=45, ha='right', fontsize=9)
     plt.legend(bbox_to_anchor=(1.01, 1), loc='upper left')
@@ -307,20 +311,19 @@ def plot_line_chart(df, dataset_name, output_dir):
     """4. Line Plot: Scaling Trend (Small -> Large -> Llama)"""
     plot_df = prepare_plot_data(df)
 
-    # Size mapping
+    # Size mapping - ADDED LLAMA 3
     size_map = {
         "E5-Small": 1,
         "E5-Large": 2,
         "Llama-2": 3,
-        "Llama-4-Scout": 4
+        "Llama-3": 4,      # <--- ADDED
+        "Llama-4-Scout": 5
     }
     plot_df['Size_Rank'] = plot_df['Model'].map(size_map)
     plot_df = plot_df.dropna(subset=['Size_Rank', 'Accuracy'])
 
     # === AGGREGATION LOGIC ===
-    # Since we have many variants per model (GeM, Chunked, etc.),
-    # we take the BEST Performing variant for each model size to draw the trend line.
-
+    # Take the BEST Performing variant for each model size to draw the trend line.
     best_variants = plot_df.loc[plot_df.groupby("Model")["Accuracy"].idxmax()]
     best_variants = best_variants.sort_values('Size_Rank')
 
