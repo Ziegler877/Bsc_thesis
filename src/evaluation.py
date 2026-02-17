@@ -64,13 +64,16 @@ def run_evaluation(
         device="cuda",
         extra_info="",
         pooling="mean",
-        chunking=False
+        chunking=False,
+        subset_size=None  # <--- NEW ARGUMENT
 ):
     ensure_directories()
     timestamp = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
     mode_str = "CHUNKED" if chunking else "TRUNCATED"
+    subset_str = f" | Subset: {subset_size}" if subset_size else ""
 
-    print(f"   [Eval] Calculating metrics for {model_name} (Pool: {pooling}, Mode: {mode_str}) on {dataset_name}...")
+    print(
+        f"   [Eval] Calculating metrics for {model_name} (Pool: {pooling}, Mode: {mode_str}{subset_str}) on {dataset_name}...")
 
     # --- FIX: Sanitize Inputs immediately ---
     if torch.isnan(train_vecs).any() or torch.isinf(train_vecs).any():
@@ -136,7 +139,9 @@ def run_evaluation(
 
     # Save Log
     chunk_tag = "chunked" if chunking else "truncated"
-    base_filename = f"{model_name}_{dataset_name}_{pooling}_{chunk_tag}_{timestamp}"
+    subset_tag = f"_sub{subset_size}" if subset_size else ""
+
+    base_filename = f"{model_name}_{dataset_name}_{pooling}_{chunk_tag}{subset_tag}_{timestamp}"
     log_path = os.path.join(config.LOGS_DIR, f"{base_filename}_report.txt")
 
     with open(log_path, "w", encoding="utf-8") as f:
@@ -146,6 +151,7 @@ def run_evaluation(
         f.write(f"Date:       {timestamp}\n")
         f.write(f"Pooling:    {pooling.upper()}\n")
         f.write(f"Chunking:   {chunking} ({mode_str})\n")
+        f.write(f"Subset:     {subset_size if subset_size else 'None (Full)'}\n")
         f.write(f"Info:       {extra_info}\n")
         f.write("-" * 60 + "\n")
         f.write(f"Top-1 Accuracy:   {acc_top1:.4f}\n")
@@ -165,7 +171,7 @@ def run_evaluation(
     sns.heatmap(cm, annot=False, cmap='Blues', xticklabels=unique_authors, yticklabels=unique_authors)
     plt.xlabel('Predicted')
     plt.ylabel('True')
-    title_str = f'{model_name} | {dataset_name}\nPool: {pooling.upper()} | Mode: {mode_str}\nAcc: {acc_top1:.2f} | F1: {f1_macro:.2f}'
+    title_str = f'{model_name} | {dataset_name}\nPool: {pooling.upper()} | Mode: {mode_str} | Sub: {subset_size}\nAcc: {acc_top1:.2f} | F1: {f1_macro:.2f}'
     plt.title(title_str)
     plt.xticks(rotation=90, fontsize=8)
     plt.yticks(fontsize=8)

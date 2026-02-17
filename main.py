@@ -18,7 +18,6 @@ def main():
     parser = argparse.ArgumentParser(description="Run Authorship Attribution Experiment")
 
     parser.add_argument("--model", type=str, required=True,
-                        # ADDED llama3 here
                         choices=["e5_small", "e5_large", "llama2", "llama3", "llama4_scout"],
                         help="Which model architecture to use")
 
@@ -29,17 +28,21 @@ def main():
     parser.add_argument("--lora", action="store_true",
                         help="Enable LoRA fine-tuning/adaptation")
 
-    # NEW: Explicit argument for Epochs (Metadata for W&B)
+    # Metadata for W&B
     parser.add_argument("--epochs", type=int, default=0,
                         help="Metadata: How many epochs was the adapter trained? (0 = Base Model)")
 
-    # NEW: Pooling Strategy
+    # Pooling Strategy
     parser.add_argument("--pooling", type=str, default="mean", choices=["mean", "gmp"],
                         help="Aggregation strategy: 'mean' (standard) or 'gmp' (Generalized Mean Pooling)")
 
-    # NEW: Chunking Option
+    # Chunking Option
     parser.add_argument("--chunking", action="store_true",
                         help="If set, splits long texts into 512-token chunks and averages them. If not set, truncates at 512.")
+
+    # NEW: Subset Option (for faster experiments or robustness checks)
+    parser.add_argument("--subset", type=int, default=None,
+                        help="If set, limits the number of texts per author (e.g., 5).")
 
     parser.add_argument("--device", type=str, default=config.DEVICE,
                         help="Override config device")
@@ -63,13 +66,17 @@ def main():
     elif "_base" in args.suffix:
         run_name += "-base"
 
-    # Add pooling to run name if it's not standard
+    # Add pooling to run name
     if args.pooling != "mean":
         run_name += f"-{args.pooling}"
 
     # Add chunking to run name
     if args.chunking:
         run_name += "-chunked"
+
+    # Add subset to run name
+    if args.subset:
+        run_name += f"-sub{args.subset}"
 
     # Initialize W&B
     wandb.init(
@@ -81,7 +88,8 @@ def main():
             "lora": args.lora,
             "epochs": args.epochs,
             "pooling": args.pooling,
-            "chunking": args.chunking,  # <--- Track chunking in W&B
+            "chunking": args.chunking,
+            "subset": args.subset,  # <--- Track subset size in W&B
             "device": args.device
         }
     )
@@ -97,6 +105,8 @@ def main():
     job_name += f" [{args.pooling.upper()}]"
     if args.chunking:
         job_name += " [CHUNKED]"
+    if args.subset:
+        job_name += f" [SUBSET: {args.subset}]"
 
     print(f"========================================")
     print(f"   STARTING JOB: {job_name}")
@@ -104,14 +114,17 @@ def main():
     print(f"   Epochs:   {args.epochs}")
     print(f"   Pooling:  {args.pooling}")
     print(f"   Chunking: {args.chunking}")
+    print(f"   Subset:   {args.subset}")
     print(f"========================================")
 
     # ---------------------------
     # STEP 1: LOAD DATA
     # ---------------------------
     try:
-        train_txt, train_lbl = data_loader.load_dataset(dataset_alias, "train")
-        test_txt, test_lbl = data_loader.load_dataset(dataset_alias, "test")
+        # Pass subset_size to loader
+        train_txt, train_lbl = data_loader.load_dataset(dataset_alias, "train", subset_size=args.subset)
+        test_txt, test_lbl = data_loader.load_dataset(dataset_alias,
+                                                      "test")  # Usually don't subset test set, but can be added if needed
     except Exception as e:
         print(f"(!) Data Load Failed: {e}")
         sys.exit(1)
@@ -141,9 +154,10 @@ def main():
             "test_texts": test_txt,
             "use_lora": use_lora,
             "dataset_alias": dataset_alias,
-            "suffix": args.suffix,  # Pass the suffix (e.g. _expA)
-            "pooling": args.pooling,  # Pass pooling strategy
-            "chunking": args.chunking  # Pass chunking flag
+            "suffix": args.suffix,
+            "pooling": args.pooling,
+            "chunking": args.chunking,
+            "subset_size": args.subset  # Pass subset info for logging inside runner
         }
 
         train_vecs, test_vecs = model_runner.run_pipeline(**runner_kwargs)
@@ -168,13 +182,13 @@ def main():
     if args.epochs > 0 and not final_suffix:
         final_suffix = f"_{args.epochs}ep"
 
-    # Add pooling tag
+    # Add tags to filename
     if args.pooling == "gmp":
         final_suffix += "_gmp"
-
-    # Add chunking tag
     if args.chunking:
         final_suffix += "_chunked"
+    if args.subset:
+        final_suffix += f"_sub{args.subset}"
 
     filename = f"{model_alias}_{dataset_alias}{lora_tag}{final_suffix}.pt"
 
@@ -190,7 +204,8 @@ def main():
         "test_labels": test_lbl,
         "epochs": args.epochs,
         "pooling": args.pooling,
-        "chunking": args.chunking
+        "chunking": args.chunking,
+        "subset": args.subset
     }, save_path)
 
     # ---------------------------
@@ -204,9 +219,10 @@ def main():
         model_name=model_alias,
         dataset_name=dataset_alias,
         device=args.device,
-        extra_info=f"LoRA: {use_lora} | Ep: {args.epochs} | Pool: {args.pooling} | Chunk: {args.chunking}",
+        extra_info=f"LoRA: {use_lora} | Ep: {args.epochs} | Pool: {args.pooling} | Chunk: {args.chunking} | Sub: {args.subset}",
         pooling=args.pooling,
-        chunking=args.chunking  # <--- CRITICAL: Pass chunking to eval
+        chunking=args.chunking,
+        subset_size=args.subset  # Pass subset to evaluation
     )
 
     if metrics:

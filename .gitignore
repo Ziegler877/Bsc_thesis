@@ -47,4 +47,6 @@ results/*
 
 # 3. Ignore checkpoints everywhere
 checkpoints/
-*.safetensors
+*.safetensors 
+wandb/
+*.pt
