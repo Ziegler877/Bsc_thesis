@@ -107,7 +107,7 @@ def run_evaluation(
     similarity_matrix = torch.mm(test_vecs, centroid_matrix.transpose(0, 1))
 
     # Scaling
-    probs = F.softmax(similarity_matrix * 10, dim=1).cpu().numpy()
+    probs = F.softmax(similarity_matrix * 10, dim=1).detach().cpu().numpy()
     pred_indices = torch.argmax(similarity_matrix, dim=1).cpu().numpy()
 
     # Metrics

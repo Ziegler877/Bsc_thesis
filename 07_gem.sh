@@ -53,10 +53,10 @@ python -u main.py --model llama2 --dataset darkreddit --epochs 0 --pooling gmp
 # ==========================================
 # 4. LLAMA 3
 # ==========================================
-echo "[7/8] Llama 3 | Reuters | GeM"
-python -u main.py --model llama3 --dataset reuters --epochs 0 --pooling gmp
+#echo "[7/8] Llama 3 | Reuters | GeM"
+#python -u main.py --model llama3 --dataset reuters --epochs 0 --pooling gmp
 
-echo "[8/8] Llama 3 | DarkReddit | GeM"
-python -u main.py --model llama3 --dataset darkreddit --epochs 0 --pooling gmp
+#echo "[8/8] Llama 3 | DarkReddit | GeM"
+#python -u main.py --model llama3 --dataset darkreddit --epochs 0 --pooling gmp
 
-echo "=== GeM RUNS COMPLETE ==="
+#echo "=== GeM RUNS COMPLETE ==="

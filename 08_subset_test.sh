@@ -34,7 +34,7 @@ echo "[3/4] Llama 2 | Subset: 5"
 python -u main.py --model llama2 --dataset reuters --epochs 0 --pooling mean --subset 5
 
 # 4. Llama 3
-echo "[4/4] Llama 3 | Subset: 5"
-python -u main.py --model llama3 --dataset reuters --epochs 0 --pooling mean --subset 5
+#echo "[4/4] Llama 3 | Subset: 5"
+#python -u main.py --model llama3 --dataset reuters --epochs 0 --pooling mean --subset 5
 
-echo "=== SUBSET TEST COMPLETE ==="
+#echo "=== SUBSET TEST COMPLETE ==="

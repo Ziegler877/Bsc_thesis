@@ -4,7 +4,7 @@
 #SBATCH -t 24:00:00
 #SBATCH --partition=zen2_0256_a40x2
 #SBATCH --qos=zen2_0256_a40x2
-#SBATCH --gres=gpu:1
+#SBATCH --gres=gpu:2
 #SBATCH --output=results/logs/06_LoRA_L3_%j.out
 #SBATCH --error=results/logs/06_LoRA_L3_%j.err
 

@@ -44,19 +44,19 @@ python -u main.py --model llama2 --dataset darkreddit --epochs 0 --pooling gmp
 # LLAMA 3
 # ==========================================
 
-echo "[6/10] Llama 3 | Reuters | Mean Pooling (Standard)"
-python -u main.py --model llama3 --dataset reuters --epochs 0 --pooling mean
+#echo "[6/10] Llama 3 | Reuters | Mean Pooling (Standard)"
+#python -u main.py --model llama3 --dataset reuters --epochs 0 --pooling mean
 
-echo "[7/10] Llama 3 | Reuters | GeM Pooling"
-python -u main.py --model llama3 --dataset reuters --epochs 0 --pooling gmp
+#echo "[7/10] Llama 3 | Reuters | GeM Pooling"
+#python -u main.py --model llama3 --dataset reuters --epochs 0 --pooling gmp
 
-echo "[8/10] Llama 3 | Reuters | Mean Pooling + Chunking"
-python -u main.py --model llama3 --dataset reuters --epochs 0 --pooling mean --chunking
+#echo "[8/10] Llama 3 | Reuters | Mean Pooling + Chunking"
+#python -u main.py --model llama3 --dataset reuters --epochs 0 --pooling mean --chunking
 
-echo "[9/10] Llama 3 | DarkReddit | Mean Pooling (Standard)"
-python -u main.py --model llama3 --dataset darkreddit --epochs 0 --pooling mean
+#echo "[9/10] Llama 3 | DarkReddit | Mean Pooling (Standard)"
+#python -u main.py --model llama3 --dataset darkreddit --epochs 0 --pooling mean
 
-echo "[10/10] Llama 3 | DarkReddit | GeM Pooling"
-python -u main.py --model llama3 --dataset darkreddit --epochs 0 --pooling gmp
+#echo "[10/10] Llama 3 | DarkReddit | GeM Pooling"
+#python -u main.py --model llama3 --dataset darkreddit --epochs 0 --pooling gmp
 
-echo "=== LLAMA BASELINES DONE ==="
+#echo "=== LLAMA BASELINES DONE ==="
