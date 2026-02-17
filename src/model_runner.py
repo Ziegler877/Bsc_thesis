@@ -360,10 +360,11 @@ class LlamaRunner:
 #  MAIN ENTRY POINT
 # ==========================================
 def run_pipeline(model_alias, train_texts, test_texts, use_lora=False, dataset_alias="unknown", suffix="",
-                 pooling="mean", chunking=False):
+                 pooling="mean", chunking=False, subset_size=None):
     """
     Main function to load models and generate embeddings.
     Suffix allows finding specific LoRA folders like 'e5_small_darkreddit_expA_3ep'
+    subset_size: If provided, indicates that data has been subsampled (log info only).
     """
 
     # 1. Determine Adapter Path
@@ -387,10 +388,12 @@ def run_pipeline(model_alias, train_texts, test_texts, use_lora=False, dataset_a
 
     # 3. Generate
     mode_str = "CHUNKED" if chunking else "TRUNCATED"
-    print(f"   [Pipeline] Generating Train Embeddings (Pool: {pooling}, Mode: {mode_str})...")
+    subset_str = f" | Subset: {subset_size}" if subset_size else ""
+
+    print(f"   [Pipeline] Generating Train Embeddings (Pool: {pooling}, Mode: {mode_str}{subset_str})...")
     train_vecs = runner.get_embeddings(train_texts, batch_size=batch_size)
 
-    print(f"   [Pipeline] Generating Test Embeddings (Pool: {pooling}, Mode: {mode_str})...")
+    print(f"   [Pipeline] Generating Test Embeddings (Pool: {pooling}, Mode: {mode_str}{subset_str})...")
     test_vecs = runner.get_embeddings(test_texts, batch_size=batch_size)
 
     return train_vecs, test_vecs

@@ -1,6 +1,7 @@
 import os
 import sys
 import math
+import re  # Added for regex parsing
 
 # --- FIX: Add parent directory to path so we can find 'config.py' ---
 current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -36,7 +37,7 @@ MODEL_ORDER = [
     "E5-Small",
     "E5-Large",
     "Llama-2",
-    "Llama-3",      # <--- ADDED
+    "Llama-3",
     "Llama-4-Scout"
 ]
 
@@ -58,12 +59,11 @@ SOTA_DATA = {
     ]
 }
 
-# Added file pattern for Llama-3
 FILE_PATTERNS = {
     "E5-Small": ["e5_small"],
     "E5-Large": ["e5_large"],
     "Llama-2": ["llama2", "llama_2"],
-    "Llama-3": ["llama3", "llama_3"], # <--- ADDED
+    "Llama-3": ["llama3", "llama_3"],
     "Llama-4-Scout": ["scout", "llama4_scout"]
 }
 
@@ -74,8 +74,8 @@ FILE_PATTERNS = {
 
 def parse_variant(filename):
     """
-    Parses filename to extract: Epochs, Pooling, Chunking.
-    Format: "LoRA 3ep (GeM, Chunked)" or "Base (Mean, Trunc)"
+    Parses filename to extract: Epochs, Pooling, Chunking, AND Subset.
+    Format: "LoRA 3ep (GeM, Chunked, Sub-5)" or "Base (Mean, Trunc)"
     """
     filename = filename.lower()
 
@@ -84,7 +84,6 @@ def parse_variant(filename):
         mode = "Base"
     elif "ep" in filename:
         # Try to extract exact epoch number
-        import re
         match = re.search(r'_(\d+)ep', filename)
         if match:
             mode = f"LoRA {match.group(1)}ep"
@@ -105,7 +104,13 @@ def parse_variant(filename):
     else:
         chunking = "Truncated"
 
-    return f"{mode} ({pooling}, {chunking})"
+    # 4. Determine Subset (New)
+    subset_str = ""
+    match_sub = re.search(r'_sub(\d+)', filename)
+    if match_sub:
+        subset_str = f", Sub-{match_sub.group(1)}"
+
+    return f"{mode} ({pooling}, {chunking}{subset_str})"
 
 
 def evaluate_embeddings(file_path):
@@ -219,7 +224,7 @@ def plot_grouped_bar(df, dataset_name, output_dir):
         dodge=False
     )
 
-    plt.title(f"Leaderboard: {dataset_name.upper()} (Pooling & Chunking Analysis)", fontsize=16)
+    plt.title(f"Leaderboard: {dataset_name.upper()}", fontsize=16)
     plt.ylim(0, 1.05)
     plt.xticks(rotation=45, ha='right', fontsize=9)
     plt.legend(bbox_to_anchor=(1.01, 1), loc='upper left')
@@ -311,12 +316,12 @@ def plot_line_chart(df, dataset_name, output_dir):
     """4. Line Plot: Scaling Trend (Small -> Large -> Llama)"""
     plot_df = prepare_plot_data(df)
 
-    # Size mapping - ADDED LLAMA 3
+    # Size mapping
     size_map = {
         "E5-Small": 1,
         "E5-Large": 2,
         "Llama-2": 3,
-        "Llama-3": 4,      # <--- ADDED
+        "Llama-3": 4,
         "Llama-4-Scout": 5
     }
     plot_df['Size_Rank'] = plot_df['Model'].map(size_map)
