@@ -277,10 +277,10 @@ class LlamaRunner:
 
         self.model.eval()
 
-    def get_embeddings(self, text_list, batch_size=4):
+    def get_embeddings(self, text_list, batch_size=1):
         # Enforce small batch size for Scout/Llama if needed
         if batch_size > 4:
-            batch_size = 4
+            batch_size = 1
 
         if self.use_chunking:
             return self._get_embeddings_chunked(text_list)
