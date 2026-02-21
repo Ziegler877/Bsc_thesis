@@ -3,8 +3,8 @@
 #SBATCH -A p71186
 #SBATCH -t 06:00:00
 #SBATCH --partition=zen2_0256_a40x2
-#SBATCH --qos=zen2_0256_a40x2
-#SBATCH --gres=gpu:1
+#SBATCH --qos=zen3_0512_a100x2
+#SBATCH --gres=gpu:2
 #SBATCH --output=results/logs/07_GeM_%j.out
 #SBATCH --error=results/logs/07_GeM_%j.err
 
