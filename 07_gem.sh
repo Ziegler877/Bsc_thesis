@@ -23,40 +23,40 @@ echo "=== STARTING GeM (Generalized Mean Pooling) RUNS ==="
 # ==========================================
 # 1. E5 SMALL
 # ==========================================
-echo "[1/8] E5 Small | Reuters | GeM"
-python -u main.py --model e5_small --dataset reuters --epochs 0 --pooling gmp
+#echo "[1/8] E5 Small | Reuters | GeM"
+#python -u main.py --model e5_small --dataset reuters --epochs 0 --pooling gmp --batch_size 1
 
-echo "[2/8] E5 Small | DarkReddit | GeM"
-python -u main.py --model e5_small --dataset darkreddit --epochs 0 --pooling gmp
+#echo "[2/8] E5 Small | DarkReddit | GeM"
+#python -u main.py --model e5_small --dataset darkreddit --epochs 0 --pooling gmp --batch_size 1
 
 
 # ==========================================
 # 2. E5 LARGE
 # ==========================================
-echo "[3/8] E5 Large | Reuters | GeM"
-python -u main.py --model e5_large --dataset reuters --epochs 0 --pooling gmp
+#echo "[3/8] E5 Large | Reuters | GeM"
+#python -u main.py --model e5_large --dataset reuters --epochs 0 --pooling gmp --batch_size 1
 
-echo "[4/8] E5 Large | DarkReddit | GeM"
-python -u main.py --model e5_large --dataset darkreddit --epochs 0 --pooling gmp
+#echo "[4/8] E5 Large | DarkReddit | GeM"
+#python -u main.py --model e5_large --dataset darkreddit --epochs 0 --pooling gmp --batch_size 1
 
 
 # ==========================================
 # 3. LLAMA 2
 # ==========================================
 echo "[5/8] Llama 2 | Reuters | GeM"
-python -u main.py --model llama2 --dataset reuters --epochs 0 --pooling gmp
+python -u main.py --model llama2 --dataset reuters --epochs 0 --pooling gmp --batch_size 1
 
 echo "[6/8] Llama 2 | DarkReddit | GeM"
-python -u main.py --model llama2 --dataset darkreddit --epochs 0 --pooling gmp
+python -u main.py --model llama2 --dataset darkreddit --epochs 0 --pooling gmp --batch_size 1
 
 
 # ==========================================
 # 4. LLAMA 3
 # ==========================================
-#echo "[7/8] Llama 3 | Reuters | GeM"
-#python -u main.py --model llama3 --dataset reuters --epochs 0 --pooling gmp
+echo "[7/8] Llama 3 | Reuters | GeM"
+python -u main.py --model llama3 --dataset reuters --epochs 0 --pooling gmp --batch_size 1
 
-#echo "[8/8] Llama 3 | DarkReddit | GeM"
-#python -u main.py --model llama3 --dataset darkreddit --epochs 0 --pooling gmp
+echo "[8/8] Llama 3 | DarkReddit | GeM"
+python -u main.py --model llama3 --dataset darkreddit --epochs 0 --pooling gmp --batch_size 1
 
-#echo "=== GeM RUNS COMPLETE ==="
+echo "=== GeM RUNS COMPLETE ==="
