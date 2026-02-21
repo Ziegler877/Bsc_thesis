@@ -2,7 +2,7 @@
 #SBATCH -J 904_Train_L3
 #SBATCH -A p71186
 #SBATCH -t 12:00:00
-#SBATCH --partition=zen3_0512_a100x2  # <-- Zen 3 partition with NVIDIA A100s
+#SBATCH --partition=zen3_0512_a100x2
 #SBATCH --qos=zen3_0512_a100x2
 #SBATCH --gres=gpu:2                  # <-- Using BOTH A100 GPUs
 #SBATCH --output=results/logs/904_Train_L3_%j.out
