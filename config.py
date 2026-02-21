@@ -46,7 +46,6 @@ else:
     # Root for models: D:\BSC_Thesis_Models
 
     LLAMA2_CHECKPOINT_DIR = r"D:\BSC_Thesis_Models\Llama-2-7b-hf"
-    LLAMA4_CHECKPOINT_DIR = r"D:\BSC_Thesis_Models\Llama-4-Maverick-17B-128E-Instruct"
     LLAMA3_CHECKPOINT_DIR = "meta-llama/Meta-Llama-3.1-8B"  # Or your local path D:\...\Meta-Llama-3.1-8B
 
     # E5 Models (Local Paths)
@@ -74,6 +73,7 @@ for d in [LOGS_DIR, PLOTS_DIR, EMBEDDINGS_DIR, ADAPTERS_DIR, RAG_DIR]:
 RAW_REUTERS_ROOT = os.path.join(DATA_DIR, "raw", "reuter+50+50")
 REUTERS_TRAIN_DIR = os.path.join(RAW_REUTERS_ROOT, "C50train")
 REUTERS_TEST_DIR = os.path.join(RAW_REUTERS_ROOT, "C50test")
+REUTERS_VAL_DIR = os.path.join(RAW_REUTERS_ROOT, "C50val")
 
 # --- DARK REDDIT ---
 RAW_DARKREDDIT_ROOT = os.path.join(DATA_DIR, "raw", "darkreddit_authorship_attribution_anon")
