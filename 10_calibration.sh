@@ -22,6 +22,6 @@ echo "=== STARTING TEMPERATURE CALIBRATION ==="
 echo "Scanning .pt files and optimizing T for LogLoss..."
 
 # Run the python script
-python -u src/calibrate_temperature.py
+python -u src/find_scaling_temperature_value.py
 
 echo "=== CALIBRATION COMPLETE ==="
