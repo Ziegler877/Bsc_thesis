@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH -J 904_Train_L3
 #SBATCH -A p71186
-#SBATCH -t 12:00:00
+#SBATCH -t 23:00:00
 #SBATCH --partition=zen3_0512_a100x2
 #SBATCH --qos=zen3_0512_a100x2
 #SBATCH --gres=gpu:2                  # <-- Using BOTH A100 GPUs
@@ -34,15 +34,6 @@ python -u src/training/train.py \
     --patience 4 \
     --batch_size 4
 
-# --- 2. DARKREDDIT ---
-echo ""
-echo "[2/2] Training LLAMA-3.1 on DARKREDDIT (Batch: 4, Multi-GPU)"
-python -u src/training/train.py \
-    --model llama3 \
-    --dataset darkreddit \
-    --epochs 100 \
-    --patience 4 \
-    --batch_size 4
 
 echo ""
 echo "=== 904: LLAMA-3.1 TRAINING COMPLETED ==="
