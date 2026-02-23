@@ -15,7 +15,7 @@ import config
 def load_data(filepath):
     """Lädt die Embeddings aus den .pt Files."""
     try:
-        data = torch.load(filepath, map_location="cpu")
+        data = torch.load(filepath, map_location="cpu", weights_only=False)
         return data
     except Exception as e:
         print(f"Error loading {filepath}: {e}")
