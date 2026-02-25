@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH -J 903_Train_L2
 #SBATCH -A p71186
-#SBATCH -t 23:00:00
+#SBATCH -t 40:00:00
 #SBATCH --partition=zen2_0256_a40x2
 #SBATCH --qos=zen2_0256_a40x2
 #SBATCH --gres=gpu:2  # <-- Using BOTH A40 GPUs on the node
@@ -24,6 +24,16 @@ echo "================================================="
 echo "=== STARTING LLAMA-2 TRIPLET LOSS TRAINING ==="
 echo "================================================="
 
+# --- 1. REUTERS ---
+#echo ""
+#echo "[1/2] Training LLAMA-2 on REUTERS (Batch: 4, Multi-GPU)"
+#python -u src/training/train.py \
+#    --model llama2 \
+#    --dataset reuters \
+#    --epochs 100 \
+#    --patience 4 \
+#    --batch_size 4
+
 # --- 2. DARKREDDIT ---
 echo ""
 echo "[2/2] Training LLAMA-2 on DARKREDDIT (Batch: 4, Multi-GPU)"
@@ -33,6 +43,5 @@ python -u src/training/train.py \
     --epochs 100 \
     --patience 4 \
     --batch_size 4
-
 echo ""
 echo "=== 903: LLAMA-2 TRAINING COMPLETED ==="

@@ -24,7 +24,6 @@ echo "================================================="
 echo "=== STARTING LLAMA-3.1 TRIPLET LOSS TRAINING ==="
 echo "================================================="
 
-# --- 1. REUTERS ---
 echo ""
 echo "[1/2] Training LLAMA-3.1 on REUTERS (Batch: 4, Multi-GPU)"
 python -u src/training/train.py \
@@ -34,6 +33,15 @@ python -u src/training/train.py \
     --patience 4 \
     --batch_size 4
 
+ --- 2. DARKREDDIT ---
+echo ""
+echo "[2/2] Training LLAMA-3.1 on DARKREDDIT (Batch: 4, Multi-GPU)"
+python -u src/training/train.py \
+    --model llama3 \
+    --dataset darkreddit \
+    --epochs 100 \
+    --patience 4 \
+    --batch_size 4
 
 echo ""
 echo "=== 904: LLAMA-3.1 TRAINING COMPLETED ==="
