@@ -44,7 +44,7 @@ results/*
 
 # 2. ...BUT allow Git to look at the embeddings folder
 !results/embeddings/
-
+!results/logs/
 # 3. Ignore checkpoints everywhere
 checkpoints/
 *.safetensors

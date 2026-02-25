@@ -34,15 +34,15 @@ python -u src/training/train.py \
     --patience 4 \
     --batch_size 16
 
-# --- 2. DARKREDDIT ---
-#echo ""
-#echo "[2/2] Training E5-Large on DARKREDDIT (Batch: 16)"
-#python -u src/training/train.py \
-#    --model e5_large \
-#    --dataset darkreddit \
-#    --epochs 100 \
-#    --patience 4 \
-#    --batch_size 16
+ --- 2. DARKREDDIT ---
+echo ""
+echo "[2/2] Training E5-Large on DARKREDDIT (Batch: 16)"
+python -u src/training/train.py \
+    --model e5_large \
+    --dataset darkreddit \
+    --epochs 100 \
+    --patience 4 \
+    --batch_size 16
 
 #echo ""
 echo "=== 902: E5-LARGE TRAINING COMPLETED ==="
