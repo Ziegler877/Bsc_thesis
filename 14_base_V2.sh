@@ -62,8 +62,8 @@ python -u main.py --model e5_large --dataset reuters
 echo "[10/16] E5-Large | Reuters | CHUNKED"
 python -u main.py --model e5_large --dataset reuters --chunking
 
-echo "[11/16] E5-Large | Reuters | GMP (GeM)"
-python -u main.py --model e5_large --dataset reuters --pooling gmp
+#echo "[11/16] E5-Large | Reuters | GMP (GeM)"
+#python -u main.py --model e5_large --dataset reuters --pooling gmp
 
 echo "[12/16] E5-Large | Reuters | SUBSET 5"
 python -u main.py --model e5_large --dataset reuters --subset 5
@@ -78,8 +78,8 @@ python -u main.py --model e5_large --dataset darkreddit
 echo "[14/16] E5-Large | DarkReddit | CHUNKED"
 python -u main.py --model e5_large --dataset darkreddit --chunking
 
-echo "[15/16] E5-Large | DarkReddit | GMP (GeM)"
-python -u main.py --model e5_large --dataset darkreddit --pooling gmp
+#echo "[15/16] E5-Large | DarkReddit | GMP (GeM)"
+#python -u main.py --model e5_large --dataset darkreddit --pooling gmp
 
 echo "[16/16] E5-Large | DarkReddit | SUBSET 5"
 python -u main.py --model e5_large --dataset darkreddit --subset 5
