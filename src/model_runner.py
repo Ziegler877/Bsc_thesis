@@ -378,17 +378,17 @@ def run_pipeline(model_alias, train_texts, test_texts, use_lora=False, dataset_a
         if not os.path.exists(adapter_path):
             print(f"   [Pipeline] Warning: Specific adapter {folder_name} not found.")
 
-        # 2. Select Runner
-        if "e5" in model_alias:
-            runner = E5Runner(model_alias, adapter_path=adapter_path, pooling_type=pooling, use_chunking=chunking)
-            batch_size = 16
-            print("   [Data] Prepending 'passage: ' prefix for E5 model evaluation...")
-            train_texts = [f"passage: {t}" for t in train_texts]
-            test_texts = [f"passage: {t}" for t in test_texts]
+    # 2. Select Runner (THIS IS NOW FIXED AND OUTDENTED)
+    if "e5" in model_alias:
+        runner = E5Runner(model_alias, adapter_path=adapter_path, pooling_type=pooling, use_chunking=chunking)
+        batch_size = 16
+        print("   [Data] Prepending 'passage: ' prefix for E5 model evaluation...")
+        train_texts = [f"passage: {t}" for t in train_texts]
+        test_texts = [f"passage: {t}" for t in test_texts]
 
-        else:
-            runner = LlamaRunner(model_alias, adapter_path=adapter_path, pooling_type=pooling, use_chunking=chunking)
-            batch_size = 4
+    else:
+        runner = LlamaRunner(model_alias, adapter_path=adapter_path, pooling_type=pooling, use_chunking=chunking)
+        batch_size = 4
 
     # 3. Generate
     mode_str = "CHUNKED" if chunking else "TRUNCATED"
