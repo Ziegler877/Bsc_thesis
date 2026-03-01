@@ -22,7 +22,7 @@ echo "=== LLAMA 3 DARKREDDIT A/B TESTING ==="
 echo "[1/2] Llama 3 | DarkReddit | Config A (Margin 1.0)"
 python -u src/training/train.py --model llama3 --dataset darkreddit --epochs 100 --patience 4 --batch_size 4 --triplet_margin 1.0
 
-echo "[2/2] Llama 3 | DarkReddit | Config B (LR 1e-4, Rank 128)"
-python -u src/training/train.py --model llama3 --dataset darkreddit --epochs 100 --patience 4 --batch_size 4 --lr 1e-4 --r 128 --lora_alpha 256
+#echo "[2/2] Llama 3 | DarkReddit | Config B (LR 1e-4, Rank 128)"
+#python -u src/training/train.py --model llama3 --dataset darkreddit --epochs 100 --patience 4 --batch_size 4 --lr 1e-4 --r 128 --lora_alpha 256
 
 echo "=== COMPLETED ==="
