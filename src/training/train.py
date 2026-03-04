@@ -10,9 +10,9 @@ sys.path.insert(0, root_dir)
 
 from transformers import (
     AutoTokenizer,
-    AutoModel,  # <-- Only base models needed, no MLM/CLM heads!
+    AutoModel,
     TrainingArguments,
-    DataCollatorWithPadding,  # <-- We only pad texts now, no word masking!
+    DataCollatorWithPadding,
     BitsAndBytesConfig,
     EarlyStoppingCallback
 )
@@ -26,16 +26,22 @@ from src.training.hyper_and_trainer import get_hyperparameters, AuthorTripletTra
 
 def main():
     # 1. Get Hyperparameters
+    # Note: Ensure get_hyperparameters() in hyper_and_trainer.py
+    # now includes parser.add_argument("--suffix", type=str, default="")
     args = get_hyperparameters()
 
     print(f"========================================")
     print(f"   STARTING METRIC LEARNING (TRIPLET LOSS)")
     print(f"   Model:     {args.model}")
     print(f"   Dataset:   {args.dataset}")
+    print(f"   Suffix:    {args.suffix if args.suffix else 'None'}")
     print(f"   Batch Size:{args.batch_size} (Crucial for Triplet Mining)")
     print(f"========================================")
 
-    adapter_dir = os.path.join(config.RESULTS_DIR, "adapters", f"{args.model}_{args.dataset}")
+    # ---> NEW: Dynamic Save Directory based on Suffix <---
+    adapter_name = f"{args.model}_{args.dataset}{args.suffix}"
+    adapter_dir = os.path.join(config.RESULTS_DIR, "adapters", adapter_name)
+    # ----------------------------------------------------
 
     # 2. Load Train and Validation Data (Strictly from files)
     train_texts, val_texts, train_labels, val_labels = load_train_val_data(args.dataset)
@@ -47,7 +53,7 @@ def main():
         val_texts = [f"passage: {t}" for t in val_texts]
     # --------------------------------
 
-    # Convert string labels (e.g., 'AaronPressman') to integer IDs (0, 1, 2) for math operations
+    # Convert string labels to integer IDs
     unique_authors = sorted(list(set(train_labels + val_labels)))
     author_to_id = {author: idx for idx, author in enumerate(unique_authors)}
 
@@ -89,7 +95,6 @@ def main():
             bnb_4bit_compute_dtype=torch.float16
         )
 
-        # Load Base Model (No classification/generation head)
         model = AutoModel.from_pretrained(
             model_id,
             quantization_config=bnb_config,
@@ -101,7 +106,7 @@ def main():
         target_modules = ["q_proj", "k_proj", "v_proj", "o_proj", "gate_proj", "up_proj", "down_proj"]
 
         peft_config = LoraConfig(
-            task_type=TaskType.FEATURE_EXTRACTION,  # We only extract features (embeddings) now!
+            task_type=TaskType.FEATURE_EXTRACTION,
             inference_mode=False,
             r=args.r,
             lora_alpha=args.lora_alpha,
@@ -115,7 +120,6 @@ def main():
         print("   [Config] Detected ENCODER architecture (E5/BERT).")
         model = AutoModel.from_pretrained(model_id, device_map="auto")
 
-        # Added Stylistic Memory centers (Dense) to LoRA targets
         target_modules = ["query", "key", "value", "dense", "intermediate.dense", "output.dense"]
 
         peft_config = LoraConfig(
@@ -129,14 +133,11 @@ def main():
             use_dora=args.use_dora,
         )
 
-    # Apply LoRA
     model = get_peft_model(model, peft_config)
     print("\n   [LoRA Config] Trainable Parameters:")
     model.print_trainable_parameters()
 
     # 6. Tokenization
-    print("   [Data] Tokenizing Train and Validation sets...")
-
     def tokenize_function(examples):
         return tokenizer(examples["text"], truncation=True, padding="max_length", max_length=512)
 
@@ -145,7 +146,7 @@ def main():
 
     # 7. Training Args
     training_args = TrainingArguments(
-        output_dir=adapter_dir,
+        output_dir=adapter_dir, # Uses our new dynamic directory
         per_device_train_batch_size=args.batch_size,
         per_device_eval_batch_size=args.batch_size,
         gradient_accumulation_steps=4,
@@ -155,8 +156,6 @@ def main():
         weight_decay=0.01,
         fp16=True,
         logging_steps=10,
-
-        # Early Stopping Settings
         eval_strategy="epoch",
         save_strategy="epoch",
         load_best_model_at_end=True,
@@ -165,19 +164,19 @@ def main():
         save_total_limit=3,
 
         report_to="wandb",
-        run_name=f"TRIPLET-{model_alias}-{args.dataset}",
-        remove_unused_columns=False,  # Must be False to keep 'labels' column
+        run_name=f"TRIPLET-{model_alias}-{args.dataset}{args.suffix}",
+        remove_unused_columns=False,
         lr_scheduler_type=args.lr_scheduler,
     )
 
     # 8. Instantiate the Custom Trainer
     trainer = AuthorTripletTrainer(
-        triplet_margin=args.triplet_margin,  # Custom parameter
+        triplet_margin=args.triplet_margin,
         model=model,
         args=training_args,
         train_dataset=tokenized_train,
         eval_dataset=tokenized_val,
-        data_collator=DataCollatorWithPadding(tokenizer),  # Just pads texts together
+        data_collator=DataCollatorWithPadding(tokenizer),
         callbacks=[EarlyStoppingCallback(early_stopping_patience=args.patience)]
     )
 
