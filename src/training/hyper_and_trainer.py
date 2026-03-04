@@ -159,7 +159,8 @@ class AuthorTripletTrainer(Trainer):
         # Add a huge penalty to same authors so they are never picked as the minimum
         max_dist = dist_mat.max().item()
         hardest_negative_dist = (dist_mat + (is_pos * (max_dist + 10.0))).min(dim=1)[0]
-
+        #torch.nn.functional.normalize(embeddings, p=2
+        #4 or 10 or 100 doesn't matter - just over 2 is perfect - so it will always take the negative one
         # Calculate Loss: max(0, hardest_pos - hardest_neg + margin)
         loss = torch.relu(hardest_positive_dist - hardest_negative_dist + self.triplet_margin)
 
