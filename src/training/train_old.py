@@ -26,6 +26,8 @@ from src.training.hyper_and_trainer import get_hyperparameters, AuthorTripletTra
 
 def main():
     # 1. Get Hyperparameters
+    # Note: Ensure get_hyperparameters() in hyper_and_trainer.py
+    # now includes parser.add_argument("--suffix", type=str, default="")
     args = get_hyperparameters()
 
     print(f"========================================")
@@ -83,9 +85,6 @@ def main():
     if tokenizer.pad_token is None:
         tokenizer.pad_token = tokenizer.eos_token
 
-    # ---> CRITICAL FIX: Enforce right-padding for dynamic last-token pooling <---
-    tokenizer.padding_side = "right"
-
     # 5. Load Model & Configure LoRA
     if is_decoder:
         print("   [Config] Detected DECODER architecture (Llama).")
@@ -140,17 +139,14 @@ def main():
 
     # 6. Tokenization
     def tokenize_function(examples):
-        # ---> OPTIMIZATION: Removed hard-padding to max_length. <---
-        # We only truncate here. DataCollatorWithPadding will handle dynamic padding
-        # later, saving a huge amount of VRAM and computation time.
-        return tokenizer(examples["text"], truncation=True, max_length=512)
+        return tokenizer(examples["text"], truncation=True, padding="max_length", max_length=512)
 
     tokenized_train = train_dataset.map(tokenize_function, batched=True, remove_columns=["text"])
     tokenized_val = val_dataset.map(tokenize_function, batched=True, remove_columns=["text"])
 
     # 7. Training Args
     training_args = TrainingArguments(
-        output_dir=adapter_dir,
+        output_dir=adapter_dir, # Uses our new dynamic directory
         per_device_train_batch_size=args.batch_size,
         per_device_eval_batch_size=args.batch_size,
         gradient_accumulation_steps=4,
@@ -180,7 +176,6 @@ def main():
         args=training_args,
         train_dataset=tokenized_train,
         eval_dataset=tokenized_val,
-        # DataCollatorWithPadding dynamically pads to the longest sequence in the batch
         data_collator=DataCollatorWithPadding(tokenizer),
         callbacks=[EarlyStoppingCallback(early_stopping_patience=args.patience)]
     )

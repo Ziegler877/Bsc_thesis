@@ -24,61 +24,76 @@ echo "============================================"
 # ---------------------------------------
 # LLAMA 2 | REUTERS
 # ---------------------------------------
-echo "[1/16] Llama 2 | Reuters | NORMAL"
-python -u main.py --model llama2 --dataset reuters
+# echo "[1/16] Llama 2 | Reuters | NORMAL"
+# python -u main.py --model llama2 --dataset reuters
 
-echo "[2/16] Llama 2 | Reuters | CHUNKED"
-python -u main.py --model llama2 --dataset reuters --chunking
+# echo "[2/16] Llama 2 | Reuters | CHUNKED"
+# python -u main.py --model llama2 --dataset reuters --chunking
 
-echo "[3/16] Llama 2 | Reuters | SUB 5"
-python -u main.py --model llama2 --dataset reuters --subset 5
+# echo "[3/16] Llama 2 | Reuters | SUB 5"
+# python -u main.py --model llama2 --dataset reuters --subset 5
 
-echo "[4/16] Llama 2 | Reuters | GMP"
-python -u main.py --model llama2 --dataset reuters --pooling gmp
+# echo "[4/16] Llama 2 | Reuters | GMP"
+# python -u main.py --model llama2 --dataset reuters --pooling gmp
 
 # ---------------------------------------
 # LLAMA 2 | DARKREDDIT
 # ---------------------------------------
-echo "[5/16] Llama 2 | DarkReddit | NORMAL"
-python -u main.py --model llama2 --dataset darkreddit
+# echo "[5/16] Llama 2 | DarkReddit | NORMAL"
+# python -u main.py --model llama2 --dataset darkreddit
 
-echo "[6/16] Llama 2 | DarkReddit | CHUNKED"
-python -u main.py --model llama2 --dataset darkreddit --chunking
+# echo "[6/16] Llama 2 | DarkReddit | CHUNKED"
+# python -u main.py --model llama2 --dataset darkreddit --chunking
 
-echo "[7/16] Llama 2 | DarkReddit | SUB 5"
-python -u main.py --model llama2 --dataset darkreddit --subset 5
+# echo "[7/16] Llama 2 | DarkReddit | SUB 5"
+# python -u main.py --model llama2 --dataset darkreddit --subset 5
 
-echo "[8/16] Llama 2 | DarkReddit | GMP"
-python -u main.py --model llama2 --dataset darkreddit --pooling gmp
+# echo "[8/16] Llama 2 | DarkReddit | GMP"
+# python -u main.py --model llama2 --dataset darkreddit --pooling gmp
 
 # ---------------------------------------
 # LLAMA 3 | REUTERS
 # ---------------------------------------
-echo "[9/16] Llama 3 | Reuters | NORMAL"
-python -u main.py --model llama3 --dataset reuters
+# echo "[9/16] Llama 3 | Reuters | NORMAL"
+# python -u main.py --model llama3 --dataset reuters
 
-echo "[10/16] Llama 3 | Reuters | CHUNKED"
-python -u main.py --model llama3 --dataset reuters --chunking
+# echo "[10/16] Llama 3 | Reuters | CHUNKED"
+# python -u main.py --model llama3 --dataset reuters --chunking
 
-echo "[11/16] Llama 3 | Reuters | SUB 5"
-python -u main.py --model llama3 --dataset reuters --subset 5
+# echo "[11/16] Llama 3 | Reuters | SUB 5"
+# python -u main.py --model llama3 --dataset reuters --subset 5
 
-echo "[12/16] Llama 3 | Reuters | GMP"
-python -u main.py --model llama3 --dataset reuters --pooling gmp
+# echo "[12/16] Llama 3 | Reuters | GMP"
+# python -u main.py --model llama3 --dataset reuters --pooling gmp
 
 # ---------------------------------------
 # LLAMA 3 | DARKREDDIT
 # ---------------------------------------
-echo "[13/16] Llama 3 | DarkReddit | NORMAL"
-python -u main.py --model llama3 --dataset darkreddit
+# echo "[13/16] Llama 3 | DarkReddit | NORMAL"
+# python -u main.py --model llama3 --dataset darkreddit
 
-echo "[14/16] Llama 3 | DarkReddit | CHUNKED"
-python -u main.py --model llama3 --dataset darkreddit --chunking
+# echo "[14/16] Llama 3 | DarkReddit | CHUNKED"
+# python -u main.py --model llama3 --dataset darkreddit --chunking
 
-echo "[15/16] Llama 3 | DarkReddit | SUB 5"
-python -u main.py --model llama3 --dataset darkreddit --subset 5
+# echo "[15/16] Llama 3 | DarkReddit | SUB 5"
+# python -u main.py --model llama3 --dataset darkreddit --subset 5
 
-echo "[16/16] Llama 3 | DarkReddit | GMP"
-python -u main.py --model llama3 --dataset darkreddit --pooling gmp
+# echo "[16/16] Llama 3 | DarkReddit | GMP"
+# python -u main.py --model llama3 --dataset darkreddit --pooling gmp
+
+# ---------------------------------------
+# DYNAMIC POOLING (LAST-TOKEN)
+# ---------------------------------------
+echo "[1/4] Llama 2 | Reuters | DYNAMIC"
+python -u main.py --model llama2 --dataset reuters --pooling dynamic
+
+echo "[2/4] Llama 2 | DarkReddit | DYNAMIC"
+python -u main.py --model llama2 --dataset darkreddit --pooling dynamic
+
+echo "[3/4] Llama 3 | Reuters | DYNAMIC"
+python -u main.py --model llama3 --dataset reuters --pooling dynamic
+
+echo "[4/4] Llama 3 | DarkReddit | DYNAMIC"
+python -u main.py --model llama3 --dataset darkreddit --pooling dynamic
 
 echo "=== LLAMA BASELINES COMPLETE ==="

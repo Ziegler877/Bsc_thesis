@@ -6,8 +6,6 @@ import torch.nn as nn
 from torch.utils.data import Sampler
 from transformers import Trainer
 
-from pytorch_metric_learning import losses, miners, distances
-
 
 def get_hyperparameters():
     """Parses and returns the hyperparameter arguments for training."""
@@ -16,15 +14,14 @@ def get_hyperparameters():
     # Core settings
     parser.add_argument("--model", type=str, required=True, help="Alias: e5_small, e5_large, llama2, llama3")
     parser.add_argument("--dataset", type=str, required=True, help="Alias: reuters, darkreddit")
-    parser.add_argument("--suffix", type=str, default="", help="Suffix for dynamic save directory naming")
 
     # Early Stopping & Epochs
     parser.add_argument("--epochs", type=int, default=100, help="Maximum epochs")
     parser.add_argument("--patience", type=int, default=4, help="Stop after N epochs without improvement")
     parser.add_argument("--val_split", type=float, default=0.1, help="Validation split ratio")
 
-    # Batch Size (Updated to 8 for Llama)
-    parser.add_argument("--batch_size", type=int, default=8, help="E.g., 8 for Llama, 16 for E5")
+    # Batch Size (Will be automatically factored into P and K)
+    parser.add_argument("--batch_size", type=int, default=4, help="E.g., 4 for Llama, 16 for E5")
 
     # LoRA settings
     parser.add_argument("--r", type=int, default=64, help="LoRA Rank")
@@ -36,9 +33,7 @@ def get_hyperparameters():
     # Optimizer settings
     parser.add_argument("--lr", type=float, default=2e-5, help="Learning Rate")
     parser.add_argument("--lr_scheduler", type=str, default="linear")
-
-    # Margin (Updated to 0.2 for L2 normalized hypersphere)
-    parser.add_argument("--triplet_margin", type=float, default=0.2, help="Margin for Triplet Loss")
+    parser.add_argument("--triplet_margin", type=float, default=0.5, help="Margin for Triplet Loss")
 
     return parser.parse_args()
 
@@ -102,26 +97,12 @@ class PKSampler(Sampler):
 
 
 # ==========================================
-#  CUSTOM TRAINER (P-K SAMPLER + PYTORCH-METRIC-LEARNING)
+#  CUSTOM TRAINER (P-K SAMPLER + BATCH-HARD)
 # ==========================================
 class AuthorTripletTrainer(Trainer):
-    def __init__(self, triplet_margin=0.2, *args, **kwargs):
+    def __init__(self, triplet_margin=0.5, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.triplet_margin = triplet_margin
-
-        # We enforce L2 distance to match original formulation
-        distance_metric = distances.LpDistance(p=2)
-
-        self.miner = miners.TripletMarginMiner(
-            margin=self.triplet_margin,
-            type_of_triplets="semihard",
-            distance=distance_metric
-        )
-
-        self.loss_func = losses.TripletMarginLoss(
-            margin=self.triplet_margin,
-            distance=distance_metric
-        )
 
     def _get_train_sampler(self, *args, **kwargs):
         batch_size = self.args.train_batch_size
@@ -131,22 +112,20 @@ class AuthorTripletTrainer(Trainer):
         batch_size = self.args.eval_batch_size
         return PKSampler(eval_dataset, batch_size=batch_size, k=2)
 
+    # ---> NEW: Force the Trainer to calculate Triplet Loss during Evaluation <---
     def prediction_step(self, model, inputs, prediction_loss_only, ignore_keys=None):
         """Overrides evaluation step to ensure our custom Triplet Loss is calculated and returned."""
         with torch.no_grad():
             loss = self.compute_loss(model, inputs)
             # The Trainer expects a tuple of (loss, logits, labels)
+            # We don't care about returning raw logits/labels for Triplet Loss evaluation, just the loss.
             return (loss, None, None)
 
     def compute_loss(self, model, inputs, return_outputs=False, **kwargs):
         # 1. Extract true author IDs
         labels = inputs.pop("labels")
-        # Ensure labels are a 1D tensor for pytorch-metric-learning
-        if labels.dim() > 1:
-            labels = labels.squeeze()
 
         # 2. Forward pass: Force model to output raw hidden states
-        attention_mask = inputs["attention_mask"]
         outputs = model(**inputs, output_hidden_states=True)
 
         # 3. Extract Hidden States for E5 or Llama
@@ -155,36 +134,41 @@ class AuthorTripletTrainer(Trainer):
         else:
             token_embeddings = outputs.hidden_states[-1]
 
-        # 4. DYNAMIC POOLING (Architecture-Aware)
-        is_decoder = "llama" in self.model.config.model_type.lower() or "mistral" in self.model.config.model_type.lower()
+        # 4. Mean Pooling
+        attention_mask = inputs["attention_mask"]
+        input_mask_expanded = attention_mask.unsqueeze(-1).expand(token_embeddings.size()).float()
+        embeddings = torch.sum(token_embeddings * input_mask_expanded, 1) / torch.clamp(input_mask_expanded.sum(1),
+                                                                                        min=1e-9)
 
-        if is_decoder:
-            # LAST-TOKEN POOLING: Get the index of the last non-padded token
-            sequence_lengths = attention_mask.sum(dim=1) - 1
-            batch_size = token_embeddings.shape[0]
-            embeddings = token_embeddings[torch.arange(batch_size, device=token_embeddings.device), sequence_lengths]
-        else:
-            # MEAN POOLING: Average all tokens together
-            input_mask_expanded = attention_mask.unsqueeze(-1).expand(token_embeddings.size()).float()
-            embeddings = torch.sum(token_embeddings * input_mask_expanded, 1) / torch.clamp(input_mask_expanded.sum(1),
-                                                                                            min=1e-9)
-
-        # 5. Normalize vectors to hypersphere
+        # Normalize vectors to hypersphere
         embeddings = torch.nn.functional.normalize(embeddings, p=2, dim=1)
 
-        # 6. SEMIHARD TRIPLET MINING & LOSS CALCULATION
-        indices_tuple = self.miner(embeddings, labels)
+        # 5. SOTA BATCH-HARD TRIPLET LOSS
+        # Calculate pairwise Euclidean distances
+        dist_mat = torch.cdist(embeddings, embeddings, p=2)
 
-        # Guardrail: Check if the miner actually found valid semihard triplets
-        if len(indices_tuple[0]) == 0:
-            # Keep graph alive but return 0 loss
-            loss = (embeddings.sum() * 0.0)
-        else:
-            # Calculate Loss using the mined triplets
-            loss = self.loss_func(embeddings, labels, indices_tuple)
+        # Create Positive/Negative masks
+        labels = labels.unsqueeze(1)
+        is_pos = torch.eq(labels, labels.T).float()
+        is_neg = 1.0 - is_pos
 
-        # Fallback to keep gradient graph alive if loss perfectly zeroes out
-        if loss.item() == 0.0 or torch.isnan(loss):
-            loss = loss + (embeddings.sum() * 0.0)
+        # HARDEST POSITIVE (Max distance among same author)
+        hardest_positive_dist = (dist_mat * is_pos).max(dim=1)[0]
+
+        # HARDEST NEGATIVE (Min distance among different authors)
+        # Add a huge penalty to same authors so they are never picked as the minimum
+        max_dist = dist_mat.max().item()
+        hardest_negative_dist = (dist_mat + (is_pos * (max_dist + 10.0))).min(dim=1)[0]
+        #torch.nn.functional.normalize(embeddings, p=2
+        #4 or 10 or 100 doesn't matter - just over 2 is perfect - so it will always take the negative one
+        # Calculate Loss: max(0, hardest_pos - hardest_neg + margin)
+        loss = torch.relu(hardest_positive_dist - hardest_negative_dist + self.triplet_margin)
+
+        # Average the loss across the batch
+        loss = loss.mean()
+
+        # Fallback to keep gradient graph alive if batch is perfectly zeroed
+        if loss.item() == 0.0:
+            loss = loss + (embeddings.sum() * 0)
 
         return (loss, outputs) if return_outputs else loss

@@ -33,8 +33,8 @@ def main():
                         help="Metadata: How many epochs was the adapter trained? (0 = Base Model)")
 
     # Pooling Strategy
-    parser.add_argument("--pooling", type=str, default="mean", choices=["mean", "gmp"],
-                        help="Aggregation strategy: 'mean' (standard) or 'gmp' (Generalized Mean Pooling)")
+    parser.add_argument("--pooling", type=str, default="mean", choices=["mean", "gmp", "dynamic"],
+                        help="Aggregation strategy: 'mean' (standard), 'gmp' (Generalized Mean Pooling), or 'dynamic'")
 
     # Chunking Option
     parser.add_argument("--chunking", action="store_true",
@@ -185,6 +185,8 @@ def main():
     # Add tags to filename
     if args.pooling == "gmp":
         final_suffix += "_gmp"
+    if args.pooling == "dynamic":
+        final_suffix += "_dynamic"
     if args.chunking:
         final_suffix += "_chunked"
     if args.subset:

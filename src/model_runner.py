@@ -182,7 +182,7 @@ class E5Runner:
                 # Use GeM Layer
                 embeddings = self.gem(last_hidden, inputs['attention_mask'])
             else:
-                # Use Standard Mean Pooling
+                # Use Standard Mean Pooling (also defaults here for dynamic since E5 is an encoder)
                 embeddings = self._mean_pooling(last_hidden, inputs['attention_mask'])
 
             all_embeddings.append(embeddings.cpu())
@@ -260,6 +260,9 @@ class LlamaRunner:
         if self.tokenizer.pad_token is None:
             self.tokenizer.pad_token = self.tokenizer.eos_token
 
+        # Fix padding side for dynamic pooling
+        self.tokenizer.padding_side = "right"
+
         # Standard FP16 loading (No 4-bit quantization)
         self.model = AutoModelForCausalLM.from_pretrained(
             self.model_id,
@@ -308,6 +311,10 @@ class LlamaRunner:
             # Select Pooling Strategy
             if self.pooling_type == "gmp":
                 embeddings = self.gem(hidden_states, inputs['attention_mask'])
+            elif self.pooling_type == "dynamic":
+                sequence_lengths = inputs['attention_mask'].sum(dim=1) - 1
+                batch_size_actual = hidden_states.shape[0]
+                embeddings = hidden_states[torch.arange(batch_size_actual, device=self.device), sequence_lengths]
             else:
                 embeddings = self._mean_pooling(hidden_states, inputs['attention_mask'])
 
@@ -340,6 +347,10 @@ class LlamaRunner:
                 hidden_states = outputs.hidden_states[-1]
                 if self.pooling_type == "gmp":
                     vec = self.gem(hidden_states, attention_mask)
+                elif self.pooling_type == "dynamic":
+                    sequence_lengths = attention_mask.sum(dim=1) - 1
+                    batch_size_actual = hidden_states.shape[0]
+                    vec = hidden_states[torch.arange(batch_size_actual, device=self.device), sequence_lengths]
                 else:
                     vec = self._mean_pooling(hidden_states, attention_mask)
                 chunk_vecs.append(vec.cpu())
