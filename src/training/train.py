@@ -32,6 +32,7 @@ def main():
     print(f"   STARTING METRIC LEARNING (TRIPLET LOSS)")
     print(f"   Model:     {args.model}")
     print(f"   Dataset:   {args.dataset}")
+    print(f"   Pooling:   {args.pooling.upper()}")
     print(f"   Suffix:    {args.suffix if args.suffix else 'None'}")
     print(f"   Batch Size:{args.batch_size} (Crucial for Triplet Mining)")
     print(f"========================================")
@@ -140,9 +141,9 @@ def main():
 
     # 6. Tokenization
     def tokenize_function(examples):
-        # ---> OPTIMIZATION: Removed hard-padding to max_length. <---
-        # We only truncate here. DataCollatorWithPadding will handle dynamic padding
-        # later, saving a huge amount of VRAM and computation time.
+        # Even if --chunking is passed, Triplet Loss requires exactly P authors and K texts.
+        # Splitting documents dynamically during mapping breaks the sampler logic.
+        # Therefore, during *training*, we enforce truncation. Chunking is handled safely in evaluation.
         return tokenizer(examples["text"], truncation=True, max_length=512)
 
     tokenized_train = train_dataset.map(tokenize_function, batched=True, remove_columns=["text"])
@@ -176,6 +177,7 @@ def main():
     # 8. Instantiate the Custom Trainer
     trainer = AuthorTripletTrainer(
         triplet_margin=args.triplet_margin,
+        pooling=args.pooling, # <--- WIRED UP HERE
         model=model,
         args=training_args,
         train_dataset=tokenized_train,
