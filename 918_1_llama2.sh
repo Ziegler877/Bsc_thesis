@@ -5,8 +5,8 @@
 #SBATCH --partition=zen3_0512_a100x2
 #SBATCH --qos=zen3_0512_a100x2
 #SBATCH --gres=gpu:2
-#SBATCH --output=results/logs/918_L3_%j.out
-#SBATCH --error=results/logs/918_L3_%j.err
+#SBATCH --output=results/logs/918_L2_%j.out
+#SBATCH --error=results/logs/918_L2_%j.err
 
 export WANDB_API_KEY=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
 export WANDB_PROJECT="BSC Thesis"
@@ -17,12 +17,14 @@ PROJECT_DIR="/gpfs/data/fs71186/ziegler/ThesisProject"
 source $PROJECT_DIR/.venv/bin/activate
 cd $PROJECT_DIR
 
-echo "=== LLAMA 2 TRAINING ==="
+echo "========================================"
+echo "=== LLAMA 2 TRAINING (OPTIMIZED) ==="
+echo "========================================"
 
-echo "[1/2] Llama 2 | Reuters | NORMAL"
-python -u src/training/train.py --model llama2 --dataset reuters --epochs 100 --patience 4
+echo "[1/2] Llama 2 | Reuters | MEAN"
+python -u src/training/train.py --model llama2 --dataset reuters --epochs 100 --patience 4 --pooling mean
 
-echo "[2/2] Llama 2 | DarkReddit | NORMAL"
-python -u src/training/train.py --model llama2 --dataset darkreddit --epochs 100 --patience 4
+echo "[2/2] Llama 2 | DarkReddit | MEAN"
+python -u src/training/train.py --model llama2 --dataset darkreddit --epochs 100 --patience 4 --pooling mean
 
 echo "=== LLAMA 2 COMPLETE ==="

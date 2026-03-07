@@ -17,12 +17,14 @@ PROJECT_DIR="/gpfs/data/fs71186/ziegler/ThesisProject"
 source $PROJECT_DIR/.venv/bin/activate
 cd $PROJECT_DIR
 
-echo "=== LLAMA 3 TRAINING ==="
+echo "========================================"
+echo "=== LLAMA 3 TRAINING (OPTIMIZED) ==="
+echo "========================================"
 
-echo "[1/2] Llama 3 | Reuters | NORMAL"
-python -u src/training/train.py --model llama3 --dataset reuters --epochs 100 --patience 4
+echo "[1/2] Llama 3 | Reuters | MEAN"
+python -u src/training/train.py --model llama3 --dataset reuters --epochs 100 --patience 4 --pooling mean
 
-echo "[2/2] Llama 3 | DarkReddit | NORMAL"
-python -u src/training/train.py --model llama3 --dataset darkreddit --epochs 100 --patience 4
+echo "[2/2] Llama 3 | DarkReddit | DYNAMIC"
+python -u src/training/train.py --model llama3 --dataset darkreddit --epochs 100 --patience 4 --pooling dynamic
 
 echo "=== LLAMA 3 COMPLETE ==="
