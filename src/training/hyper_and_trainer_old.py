@@ -14,11 +14,6 @@ def get_hyperparameters():
     # Core settings
     parser.add_argument("--model", type=str, required=True, help="Alias: e5_small, e5_large, llama2, llama3")
     parser.add_argument("--dataset", type=str, required=True, help="Alias: reuters, darkreddit")
-    parser.add_argument("--suffix", type=str, default="", help="Optional suffix for the output directory")
-
-    # Pooling & Chunking Additions
-    parser.add_argument("--pooling", type=str, default="mean", help="Pooling strategy: mean, gmp, or dynamic")
-    parser.add_argument("--chunking", action="store_true", help="Enable chunking logic flag")
 
     # Early Stopping & Epochs
     parser.add_argument("--epochs", type=int, default=100, help="Maximum epochs")
@@ -93,6 +88,8 @@ class PKSampler(Sampler):
             # Update available authors
             available_authors = [a for a in available_authors if len(author_to_indices_copy[a]) >= self.k]
 
+        # Returns a flat list of indices. Hugging Face's BatchSampler will chunk this
+        # into exactly batch_size, naturally resulting in P authors * K texts per batch!
         return iter(batches)
 
     def __len__(self):
@@ -103,10 +100,9 @@ class PKSampler(Sampler):
 #  CUSTOM TRAINER (P-K SAMPLER + BATCH-HARD)
 # ==========================================
 class AuthorTripletTrainer(Trainer):
-    def __init__(self, triplet_margin=0.5, pooling="mean", *args, **kwargs):
+    def __init__(self, triplet_margin=0.5, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.triplet_margin = triplet_margin
-        self.pooling = pooling.lower()  # Store the pooling strategy
 
     def _get_train_sampler(self, *args, **kwargs):
         batch_size = self.args.train_batch_size
@@ -116,9 +112,13 @@ class AuthorTripletTrainer(Trainer):
         batch_size = self.args.eval_batch_size
         return PKSampler(eval_dataset, batch_size=batch_size, k=2)
 
+    # ---> NEW: Force the Trainer to calculate Triplet Loss during Evaluation <---
     def prediction_step(self, model, inputs, prediction_loss_only, ignore_keys=None):
+        """Overrides evaluation step to ensure our custom Triplet Loss is calculated and returned."""
         with torch.no_grad():
             loss = self.compute_loss(model, inputs)
+            # The Trainer expects a tuple of (loss, logits, labels)
+            # We don't care about returning raw logits/labels for Triplet Loss evaluation, just the loss.
             return (loss, None, None)
 
     def compute_loss(self, model, inputs, return_outputs=False, **kwargs):
@@ -134,44 +134,40 @@ class AuthorTripletTrainer(Trainer):
         else:
             token_embeddings = outputs.hidden_states[-1]
 
-        # 4. Apply Correct Pooling Strategy
+        # 4. Mean Pooling
         attention_mask = inputs["attention_mask"]
-
-        if self.pooling in ["dynamic", "last"]:
-            # Find the index of the last non-padded token for each sequence
-            sequence_lengths = attention_mask.sum(dim=1) - 1
-            batch_size = token_embeddings.shape[0]
-            embeddings = token_embeddings[torch.arange(batch_size, device=token_embeddings.device), sequence_lengths]
-
-        elif self.pooling == "gmp":
-            input_mask_expanded = attention_mask.unsqueeze(-1).expand(token_embeddings.size()).float()
-            # Mask padded tokens with a large negative number so they are ignored by max
-            embeddings = token_embeddings.masked_fill(input_mask_expanded == 0, -1e9)
-            embeddings = torch.max(embeddings, 1)[0]
-
-        else:  # Default to mean pooling
-            input_mask_expanded = attention_mask.unsqueeze(-1).expand(token_embeddings.size()).float()
-            embeddings = torch.sum(token_embeddings * input_mask_expanded, 1) / torch.clamp(input_mask_expanded.sum(1),
-                                                                                            min=1e-9)
+        input_mask_expanded = attention_mask.unsqueeze(-1).expand(token_embeddings.size()).float()
+        embeddings = torch.sum(token_embeddings * input_mask_expanded, 1) / torch.clamp(input_mask_expanded.sum(1),
+                                                                                        min=1e-9)
 
         # Normalize vectors to hypersphere
         embeddings = torch.nn.functional.normalize(embeddings, p=2, dim=1)
 
         # 5. SOTA BATCH-HARD TRIPLET LOSS
+        # Calculate pairwise Euclidean distances
         dist_mat = torch.cdist(embeddings, embeddings, p=2)
 
+        # Create Positive/Negative masks
         labels = labels.unsqueeze(1)
         is_pos = torch.eq(labels, labels.T).float()
         is_neg = 1.0 - is_pos
 
+        # HARDEST POSITIVE (Max distance among same author)
         hardest_positive_dist = (dist_mat * is_pos).max(dim=1)[0]
 
+        # HARDEST NEGATIVE (Min distance among different authors)
+        # Add a huge penalty to same authors so they are never picked as the minimum
         max_dist = dist_mat.max().item()
         hardest_negative_dist = (dist_mat + (is_pos * (max_dist + 10.0))).min(dim=1)[0]
-
+        #torch.nn.functional.normalize(embeddings, p=2
+        #4 or 10 or 100 doesn't matter - just over 2 is perfect - so it will always take the negative one
+        # Calculate Loss: max(0, hardest_pos - hardest_neg + margin)
         loss = torch.relu(hardest_positive_dist - hardest_negative_dist + self.triplet_margin)
+
+        # Average the loss across the batch
         loss = loss.mean()
 
+        # Fallback to keep gradient graph alive if batch is perfectly zeroed
         if loss.item() == 0.0:
             loss = loss + (embeddings.sum() * 0)
 

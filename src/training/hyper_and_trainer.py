@@ -18,12 +18,16 @@ def get_hyperparameters():
     parser.add_argument("--dataset", type=str, required=True, help="Alias: reuters, darkreddit")
     parser.add_argument("--suffix", type=str, default="", help="Suffix for dynamic save directory naming")
 
+    # ---> FIX: ADDED MISSING POOLING & CHUNKING ARGUMENTS <---
+    parser.add_argument("--pooling", type=str, default="mean", help="Pooling strategy: mean, gmp, or dynamic")
+    parser.add_argument("--chunking", action="store_true", help="Enable chunking logic flag")
+
     # Early Stopping & Epochs
     parser.add_argument("--epochs", type=int, default=100, help="Maximum epochs")
     parser.add_argument("--patience", type=int, default=4, help="Stop after N epochs without improvement")
     parser.add_argument("--val_split", type=float, default=0.1, help="Validation split ratio")
 
-    # Batch Size (Updated to 8 for Llama)
+    # Batch Size
     parser.add_argument("--batch_size", type=int, default=8, help="E.g., 8 for Llama, 16 for E5")
 
     # LoRA settings
@@ -37,7 +41,7 @@ def get_hyperparameters():
     parser.add_argument("--lr", type=float, default=2e-5, help="Learning Rate")
     parser.add_argument("--lr_scheduler", type=str, default="linear")
 
-    # Margin (Updated to 0.2 for L2 normalized hypersphere)
+    # Margin
     parser.add_argument("--triplet_margin", type=float, default=0.2, help="Margin for Triplet Loss")
 
     return parser.parse_args()
@@ -93,8 +97,6 @@ class PKSampler(Sampler):
             # Update available authors
             available_authors = [a for a in available_authors if len(author_to_indices_copy[a]) >= self.k]
 
-        # Returns a flat list of indices. Hugging Face's BatchSampler will chunk this
-        # into exactly batch_size, naturally resulting in P authors * K texts per batch!
         return iter(batches)
 
     def __len__(self):
@@ -105,9 +107,11 @@ class PKSampler(Sampler):
 #  CUSTOM TRAINER (P-K SAMPLER + PYTORCH-METRIC-LEARNING)
 # ==========================================
 class AuthorTripletTrainer(Trainer):
-    def __init__(self, triplet_margin=0.2, *args, **kwargs):
+    # ---> FIX: ACCEPT POOLING STRATEGY IN INIT <---
+    def __init__(self, triplet_margin=0.2, pooling="mean", *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.triplet_margin = triplet_margin
+        self.pooling = pooling.lower()  # Store the pooling strategy
 
         # We enforce L2 distance to match original formulation
         distance_metric = distances.LpDistance(p=2)
@@ -155,16 +159,21 @@ class AuthorTripletTrainer(Trainer):
         else:
             token_embeddings = outputs.hidden_states[-1]
 
-        # 4. DYNAMIC POOLING (Architecture-Aware)
-        is_decoder = "llama" in self.model.config.model_type.lower() or "mistral" in self.model.config.model_type.lower()
-
-        if is_decoder:
+        # 4. ---> FIX: DYNAMIC POOLING WIRED TO BASH ARGUMENTS <---
+        if self.pooling in ["dynamic", "last"]:
             # LAST-TOKEN POOLING: Get the index of the last non-padded token
             sequence_lengths = attention_mask.sum(dim=1) - 1
             batch_size = token_embeddings.shape[0]
             embeddings = token_embeddings[torch.arange(batch_size, device=token_embeddings.device), sequence_lengths]
+
+        elif self.pooling == "gmp":
+            # GLOBAL MAX POOLING
+            input_mask_expanded = attention_mask.unsqueeze(-1).expand(token_embeddings.size()).float()
+            embeddings = token_embeddings.masked_fill(input_mask_expanded == 0, -1e9)
+            embeddings = torch.max(embeddings, 1)[0]
+
         else:
-            # MEAN POOLING: Average all tokens together
+            # MEAN POOLING (Default)
             input_mask_expanded = attention_mask.unsqueeze(-1).expand(token_embeddings.size()).float()
             embeddings = torch.sum(token_embeddings * input_mask_expanded, 1) / torch.clamp(input_mask_expanded.sum(1),
                                                                                             min=1e-9)
