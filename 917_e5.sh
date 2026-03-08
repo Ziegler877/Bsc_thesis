@@ -21,14 +21,14 @@ echo "============================================"
 echo "=== E5 TRAINING: OPTIMIZED CONFIGURATIONS ==="
 echo "============================================"
 
-#echo "[1/4] E5-Small | Reuters | CHUNKED"
-#python -u src/training/train.py --model e5_small --dataset reuters --epochs 100 --patience 4 --batch_size 16 --chunking
+echo "[1/4] E5-Small | Reuters | CHUNKED"
+python -u src/training/train.py --model e5_small --dataset reuters --epochs 100 --patience 4 --batch_size 16 --chunking
 
 echo "[2/4] E5-Small | DarkReddit | CHUNKED"
 python -u src/training/train.py --model e5_small --dataset darkreddit --epochs 100 --patience 4 --batch_size 8 --chunking
 
-#echo "[3/4] E5-Large | Reuters | MEAN"
-#python -u src/training/train.py --model e5_large --dataset reuters --epochs 100 --patience 4 --batch_size 16 --pooling mean
+echo "[3/4] E5-Large | Reuters | MEAN"
+python -u src/training/train.py --model e5_large --dataset reuters --epochs 100 --patience 4 --batch_size 16 --pooling mean
 
 echo "[4/4] E5-Large | DarkReddit | MEAN"
 python -u src/training/train.py --model e5_large --dataset darkreddit --epochs 100 --patience 4 --batch_size 8 --pooling mean
