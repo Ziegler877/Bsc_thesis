@@ -32,8 +32,7 @@ python -u main.py --model e5_small --dataset darkreddit --lora --chunking
 echo "[3/8] EVAL: E5-Large | Reuters | MEAN"
 python -u main.py --model e5_large --dataset reuters --lora --pooling mean
 
-echo "[4/8] EVAL: E5-Large | DarkReddit | MEAN"
-python -u main.py --model e5_large --dataset darkreddit --lora --pooling mean
+
 
 # --- LLAMA 2 ---
 echo "[5/8] EVAL: Llama 2 | Reuters | MEAN"
@@ -48,6 +47,9 @@ python -u main.py --model llama3 --dataset reuters --lora --pooling mean
 
 echo "[8/8] EVAL: Llama 3 | DarkReddit | DYNAMIC"
 python -u main.py --model llama3 --dataset darkreddit --lora --pooling dynamic
+
+echo "[4/8] EVAL: E5-Large | DarkReddit | MEAN"
+python -u main.py --model e5_large --dataset darkreddit --lora --pooling mean
 
 echo "============================================"
 echo "=== ALL EVALUATIONS COMPLETE ==="
