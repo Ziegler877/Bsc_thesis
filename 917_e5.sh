@@ -1,9 +1,8 @@
 #!/bin/bash
 #SBATCH -J 917_E5
 #SBATCH -A p71186
-#SBATCH -t 39:00:00
-#SBATCH --partition=zen2_0256_a40x2
-#SBATCH --qos=zen2_0256_a40x2
+#SBATCH --partition=zen3_0512_a100x2
+#SBATCH --qos=zen3_0512_a100x2
 #SBATCH --gres=gpu:2
 #SBATCH --output=results/logs/917_E5_%j.out
 #SBATCH --error=results/logs/917_E5_%j.err
