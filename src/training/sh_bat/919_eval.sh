@@ -4,7 +4,7 @@
 #SBATCH -t 24:00:00
 #SBATCH --partition=zen3_0512_a100x2
 #SBATCH --qos=zen3_0512_a100x2
-#SBATCH --gres=gpu:2
+#SBATCH --gres=gpu:1
 #SBATCH --output=results/logs/919_EVAL_%j.out
 #SBATCH --error=results/logs/919_EVAL_%j.err
 
