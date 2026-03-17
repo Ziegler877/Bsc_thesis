@@ -23,12 +23,10 @@ ADAPTER_DIR="results/adapters/${MODEL}_${DATASET}"
 
 echo "=== LLAMA 3 REUTERS LOOP ==="
 
-if [ -d "$ADAPTER_DIR" ]; then
-    mv "$ADAPTER_DIR" "${ADAPTER_DIR}_run0"
-fi
+echo "=== LLAMA 3 REUTERS LOOP ==="
 
 for i in {1..4}; do
     python -u src/training/train.py --model $MODEL --dataset $DATASET --epochs 100 --patience 4 --pooling mean
-    python -u main.py --model $MODEL --dataset $DATASET --lora --pooling mean --suffix "_run${i}"
     mv "$ADAPTER_DIR" "${ADAPTER_DIR}_run${i}"
+    python -u main.py --model $MODEL --dataset $DATASET --lora --pooling mean --suffix "_run${i}"
 done

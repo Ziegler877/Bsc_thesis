@@ -107,14 +107,12 @@ class PKSampler(Sampler):
 #  CUSTOM TRAINER (P-K SAMPLER + PYTORCH-METRIC-LEARNING)
 # ==========================================
 class AuthorTripletTrainer(Trainer):
-    # ---> FIX: ACCEPT POOLING STRATEGY IN INIT <---
     def __init__(self, triplet_margin=0.2, pooling="mean", *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.triplet_margin = triplet_margin
         self.pooling = pooling.lower()  # Store the pooling strategy
 
-        # We enforce L2 distance to match original formulation
-        distance_metric = distances.LpDistance(p=2)
+        distance_metric = distances.CosineDistance()
 
         self.miner = miners.TripletMarginMiner(
             margin=self.triplet_margin,
@@ -145,7 +143,6 @@ class AuthorTripletTrainer(Trainer):
     def compute_loss(self, model, inputs, return_outputs=False, **kwargs):
         # 1. Extract true author IDs
         labels = inputs.pop("labels")
-        # Ensure labels are a 1D tensor for pytorch-metric-learning
         if labels.dim() > 1:
             labels = labels.squeeze()
 
@@ -159,7 +156,6 @@ class AuthorTripletTrainer(Trainer):
         else:
             token_embeddings = outputs.hidden_states[-1]
 
-        # 4. ---> FIX: DYNAMIC POOLING WIRED TO BASH ARGUMENTS <---
         if self.pooling in ["dynamic", "last"]:
             # LAST-TOKEN POOLING: Get the index of the last non-padded token
             sequence_lengths = attention_mask.sum(dim=1) - 1

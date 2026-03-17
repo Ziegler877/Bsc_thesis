@@ -115,10 +115,20 @@ def run_evaluation(
         acc_top1 = accuracy_score(true_indices, pred_indices)
 
         k = 3 if len(unique_authors) >= 3 else len(unique_authors)
+        k5 = 5 if len(unique_authors) >= 5 else len(unique_authors)
         # Check for NaNs in similarity matrix before Top-K
         sim_cpu = similarity_matrix.cpu().numpy()
         sim_cpu = np.nan_to_num(sim_cpu)
         acc_top3 = top_k_accuracy_score(true_indices, sim_cpu, k=k)
+        acc_top5 = top_k_accuracy_score(true_indices, sim_cpu, k=k5)
+
+        ranked_indices = np.argsort(-sim_cpu, axis=1)
+        reciprocal_ranks = []
+        for i, true_idx in enumerate(true_indices):
+            # Find the rank (1-based) of the true author
+            rank = np.where(ranked_indices[i] == true_idx)[0][0] + 1
+            reciprocal_ranks.append(1.0 / rank)
+        mrr = np.mean(reciprocal_ranks)
 
         f1_macro = f1_score(true_indices, pred_indices, average='macro')
         f1_weighted = f1_score(true_indices, pred_indices, average='weighted')
@@ -156,6 +166,8 @@ def run_evaluation(
         f.write("-" * 60 + "\n")
         f.write(f"Top-1 Accuracy:   {acc_top1:.4f}\n")
         f.write(f"Top-3 Accuracy:   {acc_top3:.4f}\n")
+        f.write(f"Top-5 Accuracy:   {acc_top5:.4f}\n")
+        f.write(f"MRR (MAP):        {mrr:.4f}\n")
         f.write(f"Macro F1-Score:   {f1_macro:.4f}\n")
         f.write(f"Log Loss:         {ll:.4f}\n")
         f.write("-" * 60 + "\n")
@@ -182,6 +194,8 @@ def run_evaluation(
     return {
         "test_accuracy": acc_top1,
         "test_top3_accuracy": acc_top3,
+        "test_top5_accuracy": acc_top5,
+        "test_mrr": mrr,
         "test_f1_macro": f1_macro,
         "test_f1_weighted": f1_weighted,
         "test_log_loss": ll

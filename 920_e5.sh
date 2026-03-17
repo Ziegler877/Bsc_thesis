@@ -21,17 +21,12 @@ echo "============================================"
 echo "=== E5 TRAINING LOOP: 4x RUNS PER CONFIG ==="
 echo "============================================"
 
-# STEP 0: Protect existing adapters
-for m in "e5_small" "e5_large"; do
-    for d in "reuters" "darkreddit"; do
-        if [ -d "results/adapters/${m}_${d}" ]; then
-            mv "results/adapters/${m}_${d}" "results/adapters/${m}_${d}_run0"
-            echo "Backed up ${m}_${d} to _run0"
-        fi
-    done
-done
 
-# STEP 1: Loop 4 times
+
+echo "============================================"
+echo "=== E5 TRAINING LOOP: 4x RUNS PER CONFIG ==="
+echo "============================================"
+
 for i in {1..4}; do
     echo "=========================================="
     echo "          STARTING E5 RUN $i OF 4         "
@@ -39,23 +34,23 @@ for i in {1..4}; do
 
     # --- E5 Small | Reuters ---
     python -u src/training/train.py --model e5_small --dataset reuters --epochs 100 --patience 4 --batch_size 16 --chunking
-    python -u main.py --model e5_small --dataset reuters --lora --chunking --suffix "_run${i}"
     mv "results/adapters/e5_small_reuters" "results/adapters/e5_small_reuters_run${i}"
+    python -u main.py --model e5_small --dataset reuters --lora --chunking --suffix "_run${i}"
 
     # --- E5 Small | DarkReddit ---
     python -u src/training/train.py --model e5_small --dataset darkreddit --epochs 100 --patience 4 --batch_size 8 --chunking
-    python -u main.py --model e5_small --dataset darkreddit --lora --chunking --suffix "_run${i}"
     mv "results/adapters/e5_small_darkreddit" "results/adapters/e5_small_darkreddit_run${i}"
+    python -u main.py --model e5_small --dataset darkreddit --lora --chunking --suffix "_run${i}"
 
     # --- E5 Large | Reuters ---
     python -u src/training/train.py --model e5_large --dataset reuters --epochs 100 --patience 4 --batch_size 16 --pooling mean
-    python -u main.py --model e5_large --dataset reuters --lora --pooling mean --suffix "_run${i}"
     mv "results/adapters/e5_large_reuters" "results/adapters/e5_large_reuters_run${i}"
+    python -u main.py --model e5_large --dataset reuters --lora --pooling mean --suffix "_run${i}"
 
     # --- E5 Large | DarkReddit ---
     python -u src/training/train.py --model e5_large --dataset darkreddit --epochs 100 --patience 4 --batch_size 8 --pooling mean
-    python -u main.py --model e5_large --dataset darkreddit --lora --pooling mean --suffix "_run${i}"
     mv "results/adapters/e5_large_darkreddit" "results/adapters/e5_large_darkreddit_run${i}"
+    python -u main.py --model e5_large --dataset darkreddit --lora --pooling mean --suffix "_run${i}"
 done
 
 echo "=== E5 TRAINING COMPLETE ==="

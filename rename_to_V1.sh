@@ -1,0 +1,58 @@
+#!/bin/bash
+
+echo "=== RENAMING ALL ADAPTERS TO V1 ==="
+cd /gpfs/data/fs71186/ziegler/ThesisProject/results/adapters
+
+# --- E5 Small ---
+mv e5_small_reuters_run0 e5_small_reuters_run0_V1
+mv e5_small_reuters_run1 e5_small_reuters_run1_V1
+mv e5_small_reuters_run2 e5_small_reuters_run2_V1
+mv e5_small_reuters_run3 e5_small_reuters_run3_V1
+mv e5_small_reuters_run4 e5_small_reuters_run4_V1
+
+mv e5_small_darkreddit_run0 e5_small_darkreddit_run0_V1
+mv e5_small_darkreddit_run1 e5_small_darkreddit_run1_V1
+mv e5_small_darkreddit_run2 e5_small_darkreddit_run2_V1
+mv e5_small_darkreddit_run3 e5_small_darkreddit_run3_V1
+mv e5_small_darkreddit_run4 e5_small_darkreddit_run4_V1
+
+# --- E5 Large ---
+mv e5_large_reuters_run0 e5_large_reuters_run0_V1
+mv e5_large_reuters_run1 e5_large_reuters_run1_V1
+mv e5_large_reuters_run2 e5_large_reuters_run2_V1
+mv e5_large_reuters_run3 e5_large_reuters_run3_V1
+mv e5_large_reuters_run4 e5_large_reuters_run4_V1
+
+mv e5_large_darkreddit_run0 e5_large_darkreddit_run0_V1
+mv e5_large_darkreddit_run1 e5_large_darkreddit_run1_V1
+mv e5_large_darkreddit_run2 e5_large_darkreddit_run2_V1
+mv e5_large_darkreddit_run3 e5_large_darkreddit_run3_V1
+mv e5_large_darkreddit_run4 e5_large_darkreddit_run4_V1
+
+# --- Llama 2 ---
+mv llama2_reuters_run0 llama2_reuters_run0_V1
+mv llama2_reuters_run1 llama2_reuters_run1_V1
+mv llama2_reuters_run2 llama2_reuters_run2_V1
+mv llama2_reuters_run3 llama2_reuters_run3_V1
+mv llama2_reuters_run4 llama2_reuters_run4_V1
+
+mv llama2_darkreddit_run0 llama2_darkreddit_run0_V1
+mv llama2_darkreddit_run1 llama2_darkreddit_run1_V1
+mv llama2_darkreddit_run2 llama2_darkreddit_run2_V1
+mv llama2_darkreddit_run3 llama2_darkreddit_run3_V1
+mv llama2_darkreddit_run4 llama2_darkreddit_run4_V1
+
+# --- Llama 3 ---
+mv llama3_reuters_run0 llama3_reuters_run0_V1
+mv llama3_reuters_run1 llama3_reuters_run1_V1
+mv llama3_reuters_run2 llama3_reuters_run2_V1
+mv llama3_reuters_run3 llama3_reuters_run3_V1
+mv llama3_reuters_run4 llama3_reuters_run4_V1
+
+mv llama3_darkreddit_run0 llama3_darkreddit_run0_V1
+mv llama3_darkreddit_run1 llama3_darkreddit_run1_V1
+mv llama3_darkreddit_run2 llama3_darkreddit_run2_V1
+mv llama3_darkreddit_run3 llama3_darkreddit_run3_V1
+mv llama3_darkreddit_run4 llama3_darkreddit_run4_V1
+
+echo "=== RENAMING COMPLETE ==="

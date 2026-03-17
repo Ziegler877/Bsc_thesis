@@ -2,7 +2,6 @@ import os
 import sys
 import torch
 
-# Fix paths to access config and modules safely
 current_dir = os.path.dirname(os.path.abspath(__file__))
 parent_dir = os.path.dirname(current_dir)
 root_dir = os.path.dirname(parent_dir)
@@ -45,12 +44,10 @@ def main():
     # 2. Load Train and Validation Data (Strictly from files)
     train_texts, val_texts, train_labels, val_labels = load_train_val_data(args.dataset)
 
-    # --- SOTA FIX: E5 Magic Words ---
     if "e5" in args.model.lower():
         print("   [Data] Prepending 'passage: ' prefix for E5 model...")
         train_texts = [f"passage: {t}" for t in train_texts]
         val_texts = [f"passage: {t}" for t in val_texts]
-    # --------------------------------
 
     # Convert string labels to integer IDs
     unique_authors = sorted(list(set(train_labels + val_labels)))
@@ -84,22 +81,15 @@ def main():
     if tokenizer.pad_token is None:
         tokenizer.pad_token = tokenizer.eos_token
 
-    # ---> CRITICAL FIX: Enforce right-padding for dynamic last-token pooling <---
     tokenizer.padding_side = "right"
 
     # 5. Load Model & Configure LoRA
     if is_decoder:
         print("   [Config] Detected DECODER architecture (Llama).")
-        bnb_config = BitsAndBytesConfig(
-            load_in_4bit=True,
-            bnb_4bit_use_double_quant=True,
-            bnb_4bit_quant_type="nf4",
-            bnb_4bit_compute_dtype=torch.float16
-        )
 
         model = AutoModel.from_pretrained(
             model_id,
-            quantization_config=bnb_config,
+            quantization_config=torch.float16,
             device_map="auto",
             trust_remote_code=True
         )
@@ -141,9 +131,8 @@ def main():
 
     # 6. Tokenization
     def tokenize_function(examples):
-        # Even if --chunking is passed, Triplet Loss requires exactly P authors and K texts.
         # Splitting documents dynamically during mapping breaks the sampler logic.
-        # Therefore, during *training*, we enforce truncation. Chunking is handled safely in evaluation.
+        # Therefore, during *training*, enforce truncation
         return tokenizer(examples["text"], truncation=True, max_length=512)
 
     tokenized_train = train_dataset.map(tokenize_function, batched=True, remove_columns=["text"])
@@ -177,12 +166,11 @@ def main():
     # 8. Instantiate the Custom Trainer
     trainer = AuthorTripletTrainer(
         triplet_margin=args.triplet_margin,
-        pooling=args.pooling, # <--- WIRED UP HERE
+        pooling=args.pooling, 
         model=model,
         args=training_args,
         train_dataset=tokenized_train,
         eval_dataset=tokenized_val,
-        # DataCollatorWithPadding dynamically pads to the longest sequence in the batch
         data_collator=DataCollatorWithPadding(tokenizer),
         callbacks=[EarlyStoppingCallback(early_stopping_patience=args.patience)]
     )

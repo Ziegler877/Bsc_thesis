@@ -21,15 +21,9 @@ MODEL="llama3"
 DATASET="darkreddit"
 ADAPTER_DIR="results/adapters/${MODEL}_${DATASET}"
 
-echo "=== LLAMA 3 DARKREDDIT LOOP ==="
-
-if [ -d "$ADAPTER_DIR" ]; then
-    mv "$ADAPTER_DIR" "${ADAPTER_DIR}_run0"
-fi
-
 for i in {1..4}; do
     # Notice: Pooling dynamic is used here based on your last script parameters
     python -u src/training/train.py --model $MODEL --dataset $DATASET --epochs 100 --patience 4 --pooling dynamic
-    python -u main.py --model $MODEL --dataset $DATASET --lora --pooling dynamic --suffix "_run${i}"
     mv "$ADAPTER_DIR" "${ADAPTER_DIR}_run${i}"
+    python -u main.py --model $MODEL --dataset $DATASET --lora --pooling dynamic --suffix "_run${i}"
 done
