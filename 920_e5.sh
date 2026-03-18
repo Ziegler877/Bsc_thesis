@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH -J 920_e5
+#SBATCH -J 920_e5_V2
 #SBATCH -A p71186
 #SBATCH -t 48:00:00
 #SBATCH --partition=zen3_0512_a100x2
@@ -27,9 +27,9 @@ echo "============================================"
 echo "=== E5 TRAINING LOOP: 4x RUNS PER CONFIG ==="
 echo "============================================"
 
-for i in {1..4}; do
+for i in {1..5}; do
     echo "=========================================="
-    echo "          STARTING E5 RUN $i OF 4         "
+    echo "          STARTING E5 RUN $i OF 5         "
     echo "=========================================="
 
     # --- E5 Small | Reuters ---

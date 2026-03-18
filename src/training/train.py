@@ -89,7 +89,7 @@ def main():
 
         model = AutoModel.from_pretrained(
             model_id,
-            quantization_config=torch.float16,
+            torch_dtype=torch.float16,
             device_map="auto",
             trust_remote_code=True
         )

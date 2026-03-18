@@ -112,7 +112,7 @@ class AuthorTripletTrainer(Trainer):
         self.triplet_margin = triplet_margin
         self.pooling = pooling.lower()  # Store the pooling strategy
 
-        distance_metric = distances.CosineDistance()
+        distance_metric = distances.DotProductSimilarity()
 
         self.miner = miners.TripletMarginMiner(
             margin=self.triplet_margin,
@@ -175,7 +175,7 @@ class AuthorTripletTrainer(Trainer):
                                                                                             min=1e-9)
 
         # 5. Normalize vectors to hypersphere
-        embeddings = torch.nn.functional.normalize(embeddings, p=2, dim=1)
+        #embeddings = torch.nn.functional.normalize(embeddings, p=2, dim=1)
 
         # 6. SEMIHARD TRIPLET MINING & LOSS CALCULATION
         indices_tuple = self.miner(embeddings, labels)
