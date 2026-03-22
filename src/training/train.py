@@ -161,6 +161,7 @@ def main():
         run_name=f"TRIPLET-{model_alias}-{args.dataset}{args.suffix}",
         remove_unused_columns=False,
         lr_scheduler_type=args.lr_scheduler,
+        gradient_checkpointing=True,
     )
 
     # 8. Instantiate the Custom Trainer
