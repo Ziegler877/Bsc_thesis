@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH -J 920_e5_V2
+#SBATCH -J 920_e5_s
 #SBATCH -A p71186
 #SBATCH -t 48:00:00
 #SBATCH --partition=zen3_0512_a100x2
@@ -33,24 +33,15 @@ for i in {1..5}; do
     echo "=========================================="
 
     # --- E5 Small | Reuters ---
-    python -u src/training/train.py --model e5_small --dataset reuters --epochs 100 --patience 4 --batch_size 16 --chunking
+    python -u src/training/train.py --model e5_small --dataset reuters --epochs 100 --patience 10 --batch_size 16 --chunking
     mv "results/adapters/e5_small_reuters" "results/adapters/e5_small_reuters_run${i}"
     python -u main.py --model e5_small --dataset reuters --lora --chunking --suffix "_run${i}"
 
     # --- E5 Small | DarkReddit ---
-    python -u src/training/train.py --model e5_small --dataset darkreddit --epochs 100 --patience 4 --batch_size 8 --chunking
+    python -u src/training/train.py --model e5_small --dataset darkreddit --epochs 100 --patience 10 --batch_size 8 --chunking
     mv "results/adapters/e5_small_darkreddit" "results/adapters/e5_small_darkreddit_run${i}"
     python -u main.py --model e5_small --dataset darkreddit --lora --chunking --suffix "_run${i}"
 
-    # --- E5 Large | Reuters ---
-    python -u src/training/train.py --model e5_large --dataset reuters --epochs 100 --patience 4 --batch_size 16 --pooling mean
-    mv "results/adapters/e5_large_reuters" "results/adapters/e5_large_reuters_run${i}"
-    python -u main.py --model e5_large --dataset reuters --lora --pooling mean --suffix "_run${i}"
-
-    # --- E5 Large | DarkReddit ---
-    python -u src/training/train.py --model e5_large --dataset darkreddit --epochs 100 --patience 4 --batch_size 8 --pooling mean
-    mv "results/adapters/e5_large_darkreddit" "results/adapters/e5_large_darkreddit_run${i}"
-    python -u main.py --model e5_large --dataset darkreddit --lora --pooling mean --suffix "_run${i}"
 done
 
 echo "=== E5 TRAINING COMPLETE ==="
