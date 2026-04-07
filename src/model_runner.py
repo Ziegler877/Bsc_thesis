@@ -264,7 +264,7 @@ class LlamaRunner:
         self.tokenizer.padding_side = "right"
 
         # Standard FP16 loading (No 4-bit quantization)
-        self.model = AutoModelForCausalLM.from_pretrained(
+        self.model = AutoModel.from_pretrained(
             self.model_id,
             device_map="auto",
             torch_dtype=torch.float16,
