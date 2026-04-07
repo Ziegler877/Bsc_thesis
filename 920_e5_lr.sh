@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH -J 920_e5_lr
 #SBATCH -A p71186
-#SBATCH -t 48:00:00
+#SBATCH -t 72:00:00
 #SBATCH --partition=zen3_0512_a100x2
 #SBATCH --qos=zen3_0512_a100x2
 #SBATCH --gres=gpu:2
