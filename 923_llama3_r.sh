@@ -25,7 +25,7 @@ echo "=== LLAMA 3 REUTERS LOOP ==="
 
 echo "=== LLAMA 3 REUTERS LOOP ==="
 
-for i in {1..5}; do
+for i in {5..5}; do
     python -u src/training/train.py --model $MODEL --dataset $DATASET --epochs 100 --patience 10 --pooling mean
     mv "$ADAPTER_DIR" "${ADAPTER_DIR}_run${i}"
     python -u main.py --model $MODEL --dataset $DATASET --lora --pooling mean --suffix "_run${i}"
