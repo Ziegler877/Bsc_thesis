@@ -1,0 +1,186 @@
+  0%|          | 0/50 [00:00<?, ?it/s] 10%|█         | 5/50 [00:00<00:01, 43.43it/s] 20%|██        | 10/50 [00:00<00:00, 41.59it/s] 30%|███       | 15/50 [00:00<00:00, 42.62it/s] 40%|████      | 20/50 [00:00<00:00, 43.93it/s] 50%|█████     | 25/50 [00:00<00:00, 44.30it/s] 60%|██████    | 30/50 [00:00<00:00, 44.64it/s] 70%|███████   | 35/50 [00:00<00:00, 44.77it/s] 80%|████████  | 40/50 [00:00<00:00, 43.88it/s] 90%|█████████ | 45/50 [00:01<00:00, 42.79it/s]100%|██████████| 50/50 [00:01<00:00, 42.80it/s]                                                 0%|          | 0/50 [00:00<?, ?it/s] 10%|█         | 5/50 [00:00<00:01, 41.36it/s] 20%|██        | 10/50 [00:00<00:00, 40.80it/s] 30%|███       | 15/50 [00:00<00:00, 42.52it/s] 40%|████      | 20/50 [00:00<00:00, 43.71it/s] 50%|█████     | 25/50 [00:00<00:00, 43.01it/s] 60%|██████    | 30/50 [00:00<00:00, 42.48it/s] 70%|███████   | 35/50 [00:00<00:00, 43.08it/s] 80%|████████  | 40/50 [00:00<00:00, 43.01it/s] 90%|█████████ | 45/50 [00:01<00:00, 42.93it/s]100%|██████████| 50/50 [00:01<00:00, 43.05it/s]                                               `torch_dtype` is deprecated! Use `dtype` instead!
+Loading checkpoint shards:   0%|          | 0/55 [00:00<?, ?it/s]Loading checkpoint shards:   2%|▏         | 1/55 [00:09<08:36,  9.57s/it]Loading checkpoint shards:   4%|▎         | 2/55 [00:14<05:53,  6.67s/it]Loading checkpoint shards:   5%|▌         | 3/55 [00:17<04:26,  5.12s/it]Loading checkpoint shards:   7%|▋         | 4/55 [00:24<05:07,  6.02s/it]Loading checkpoint shards:   9%|▉         | 5/55 [00:28<04:17,  5.15s/it]Loading checkpoint shards:  11%|█         | 6/55 [00:35<04:51,  5.94s/it]Loading checkpoint shards:  13%|█▎        | 7/55 [00:39<04:08,  5.17s/it]Loading checkpoint shards:  15%|█▍        | 8/55 [00:46<04:32,  5.79s/it]Loading checkpoint shards:  16%|█▋        | 9/55 [00:50<03:57,  5.15s/it]Loading checkpoint shards:  18%|█▊        | 10/55 [00:57<04:23,  5.86s/it]Loading checkpoint shards:  20%|██        | 11/55 [01:01<03:49,  5.21s/it]Loading checkpoint shards:  22%|██▏       | 12/55 [01:09<04:12,  5.88s/it]Loading checkpoint shards:  24%|██▎       | 13/55 [01:12<03:38,  5.20s/it]Loading checkpoint shards:  25%|██▌       | 14/55 [01:22<04:33,  6.68s/it]Loading checkpoint shards:  27%|██▋       | 15/55 [01:30<04:35,  6.89s/it]Loading checkpoint shards:  29%|██▉       | 16/55 [01:33<03:51,  5.94s/it]Loading checkpoint shards:  31%|███       | 17/55 [01:41<04:04,  6.43s/it]Loading checkpoint shards:  33%|███▎      | 18/55 [01:45<03:29,  5.67s/it]Loading checkpoint shards:  35%|███▍      | 19/55 [01:53<03:46,  6.30s/it]Loading checkpoint shards:  36%|███▋      | 20/55 [01:57<03:18,  5.67s/it]Loading checkpoint shards:  38%|███▊      | 21/55 [02:06<03:48,  6.73s/it]Loading checkpoint shards:  40%|████      | 22/55 [02:11<03:21,  6.11s/it]Loading checkpoint shards:  42%|████▏     | 23/55 [02:20<03:44,  7.00s/it]Loading checkpoint shards:  44%|████▎     | 24/55 [02:25<03:18,  6.42s/it]Loading checkpoint shards:  45%|████▌     | 25/55 [02:33<03:26,  6.90s/it]Loading checkpoint shards:  47%|████▋     | 26/55 [02:43<03:46,  7.82s/it]Loading checkpoint shards:  49%|████▉     | 27/55 [02:48<03:16,  7.03s/it]Loading checkpoint shards:  51%|█████     | 28/55 [02:59<03:45,  8.34s/it]Loading checkpoint shards:  53%|█████▎    | 29/55 [03:05<03:16,  7.57s/it]Loading checkpoint shards:  55%|█████▍    | 30/55 [03:18<03:50,  9.21s/it]Loading checkpoint shards:  56%|█████▋    | 31/55 [03:24<03:19,  8.33s/it]Loading checkpoint shards:  58%|█████▊    | 32/55 [03:36<03:35,  9.35s/it]Loading checkpoint shards:  60%|██████    | 33/55 [03:42<03:03,  8.33s/it]Loading checkpoint shards:  65%|██████▌   | 36/55 [03:51<01:40,  5.28s/it]Loading checkpoint shards: 100%|██████████| 55/55 [03:51<00:00,  4.21s/it]
+Some parameters are on the meta device because they were offloaded to the cpu and disk.
+   [llama4] Embedding:   0%|          | 0/1250 [00:00<?, ?it/s]   [llama4] Embedding:   0%|          | 0/1250 [00:02<?, ?it/s]
+Traceback (most recent call last):
+  File "/gpfs/data/fs71186/ziegler/ThesisProject/main.py", line 87, in main
+    train_vecs, test_vecs = model_runner.run_pipeline(
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/gpfs/data/fs71186/ziegler/ThesisProject/src/model_runner.py", line 180, in run_pipeline
+    train_vecs = runner.get_embeddings(train_texts, batch_size=batch_s)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/gpfs/data/fs71186/ziegler/ThesisProject/src/model_runner.py", line 80, in get_embeddings
+    outputs = self.model(**inputs, output_hidden_states=True)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/gpfs/data/fs71186/ziegler/ThesisProject/.venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1776, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/gpfs/data/fs71186/ziegler/ThesisProject/.venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1787, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/gpfs/data/fs71186/ziegler/ThesisProject/.venv/lib/python3.12/site-packages/accelerate/hooks.py", line 175, in new_forward
+    output = module._old_forward(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/gpfs/data/fs71186/ziegler/ThesisProject/.venv/lib/python3.12/site-packages/transformers/utils/generic.py", line 918, in wrapper
+    output = func(self, *args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/gpfs/data/fs71186/ziegler/ThesisProject/.venv/lib/python3.12/site-packages/transformers/models/llama4/modeling_llama4.py", line 619, in forward
+    outputs = self.model(
+              ^^^^^^^^^^^
+  File "/gpfs/data/fs71186/ziegler/ThesisProject/.venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1776, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/gpfs/data/fs71186/ziegler/ThesisProject/.venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1787, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/gpfs/data/fs71186/ziegler/ThesisProject/.venv/lib/python3.12/site-packages/transformers/utils/generic.py", line 918, in wrapper
+    output = func(self, *args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/gpfs/data/fs71186/ziegler/ThesisProject/.venv/lib/python3.12/site-packages/transformers/utils/generic.py", line 1072, in wrapper
+    outputs = func(self, *args, **kwargs)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/gpfs/data/fs71186/ziegler/ThesisProject/.venv/lib/python3.12/site-packages/transformers/models/llama4/modeling_llama4.py", line 548, in forward
+    hidden_states = decoder_layer(
+                    ^^^^^^^^^^^^^^
+  File "/gpfs/data/fs71186/ziegler/ThesisProject/.venv/lib/python3.12/site-packages/transformers/modeling_layers.py", line 94, in __call__
+    return super().__call__(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/gpfs/data/fs71186/ziegler/ThesisProject/.venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1776, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/gpfs/data/fs71186/ziegler/ThesisProject/.venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1787, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/gpfs/data/fs71186/ziegler/ThesisProject/.venv/lib/python3.12/site-packages/transformers/utils/generic.py", line 1031, in wrapped_forward
+    output = orig_forward(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/gpfs/data/fs71186/ziegler/ThesisProject/.venv/lib/python3.12/site-packages/accelerate/hooks.py", line 175, in new_forward
+    output = module._old_forward(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/gpfs/data/fs71186/ziegler/ThesisProject/.venv/lib/python3.12/site-packages/transformers/utils/deprecation.py", line 172, in wrapped_func
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/gpfs/data/fs71186/ziegler/ThesisProject/.venv/lib/python3.12/site-packages/transformers/models/llama4/modeling_llama4.py", line 420, in forward
+    hidden_states = self.feed_forward(hidden_states)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/gpfs/data/fs71186/ziegler/ThesisProject/.venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1776, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/gpfs/data/fs71186/ziegler/ThesisProject/.venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1787, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/gpfs/data/fs71186/ziegler/ThesisProject/.venv/lib/python3.12/site-packages/accelerate/hooks.py", line 175, in new_forward
+    output = module._old_forward(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/gpfs/data/fs71186/ziegler/ThesisProject/.venv/lib/python3.12/site-packages/transformers/models/llama4/modeling_llama4.py", line 162, in forward
+    routed_out = self.experts(routed_in)
+                 ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/gpfs/data/fs71186/ziegler/ThesisProject/.venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1776, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/gpfs/data/fs71186/ziegler/ThesisProject/.venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1787, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/gpfs/data/fs71186/ziegler/ThesisProject/.venv/lib/python3.12/site-packages/accelerate/hooks.py", line 175, in new_forward
+    output = module._old_forward(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/gpfs/data/fs71186/ziegler/ThesisProject/.venv/lib/python3.12/site-packages/transformers/models/llama4/modeling_llama4.py", line 73, in forward
+    next_states = torch.bmm((up * self.act_fn(gate)), self.down_proj)
+                             ~~~^~~~~~~~~~~~~~~~~~~
+torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 2.00 GiB. GPU 1 has a total capacity of 39.39 GiB of which 552.81 MiB is free. Including non-PyTorch memory, this process has 38.84 GiB memory in use. Of the allocated memory 38.24 GiB is allocated by PyTorch, and 107.33 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)
+0it [00:00, ?it/s]                  0it [00:00, ?it/s]                  `torch_dtype` is deprecated! Use `dtype` instead!
+Loading checkpoint shards:   0%|          | 0/55 [00:00<?, ?it/s]Loading checkpoint shards:   2%|▏         | 1/55 [00:09<08:58,  9.97s/it]Loading checkpoint shards:   4%|▎         | 2/55 [00:14<06:14,  7.06s/it]Loading checkpoint shards:   5%|▌         | 3/55 [00:18<04:47,  5.53s/it]Loading checkpoint shards:   7%|▋         | 4/55 [00:26<05:35,  6.57s/it]Loading checkpoint shards:   9%|▉         | 5/55 [00:30<04:43,  5.67s/it]Loading checkpoint shards:  11%|█         | 6/55 [00:39<05:18,  6.50s/it]Loading checkpoint shards:  13%|█▎        | 7/55 [00:43<04:31,  5.67s/it]Loading checkpoint shards:  15%|█▍        | 8/55 [00:50<04:58,  6.35s/it]Loading checkpoint shards:  16%|█▋        | 9/55 [00:54<04:18,  5.61s/it]Loading checkpoint shards:  18%|█▊        | 10/55 [01:02<04:42,  6.28s/it]Loading checkpoint shards:  20%|██        | 11/55 [01:06<04:02,  5.52s/it]Loading checkpoint shards:  22%|██▏       | 12/55 [01:13<04:23,  6.12s/it]Loading checkpoint shards:  24%|██▎       | 13/55 [01:17<03:46,  5.40s/it]Loading checkpoint shards:  25%|██▌       | 14/55 [01:27<04:38,  6.78s/it]Loading checkpoint shards:  27%|██▋       | 15/55 [01:35<04:40,  7.02s/it]Loading checkpoint shards:  29%|██▉       | 16/55 [01:39<03:59,  6.15s/it]Loading checkpoint shards:  31%|███       | 17/55 [01:47<04:12,  6.64s/it]Loading checkpoint shards:  33%|███▎      | 18/55 [01:51<03:40,  5.95s/it]Loading checkpoint shards:  35%|███▍      | 19/55 [01:59<03:59,  6.66s/it]Loading checkpoint shards:  36%|███▋      | 20/55 [02:03<03:27,  5.93s/it]Loading checkpoint shards:  38%|███▊      | 21/55 [02:11<03:42,  6.53s/it]Loading checkpoint shards:  40%|████      | 22/55 [02:16<03:13,  5.86s/it]Loading checkpoint shards:  42%|████▏     | 23/55 [02:24<03:34,  6.71s/it]Loading checkpoint shards:  44%|████▎     | 24/55 [02:29<03:06,  6.03s/it]Loading checkpoint shards:  45%|████▌     | 25/55 [02:36<03:11,  6.37s/it]Loading checkpoint shards:  47%|████▋     | 26/55 [02:45<03:28,  7.19s/it]Loading checkpoint shards:  49%|████▉     | 27/55 [02:50<02:59,  6.41s/it]Loading checkpoint shards:  51%|█████     | 28/55 [02:59<03:15,  7.24s/it]Loading checkpoint shards:  53%|█████▎    | 29/55 [03:04<02:48,  6.48s/it]Loading checkpoint shards:  55%|█████▍    | 30/55 [03:14<03:15,  7.80s/it]Loading checkpoint shards:  56%|█████▋    | 31/55 [03:19<02:46,  6.93s/it]Loading checkpoint shards:  58%|█████▊    | 32/55 [03:31<03:12,  8.38s/it]Loading checkpoint shards:  60%|██████    | 33/55 [03:36<02:43,  7.45s/it]Loading checkpoint shards:  65%|██████▌   | 36/55 [03:46<01:35,  5.03s/it]Loading checkpoint shards: 100%|██████████| 55/55 [03:46<00:00,  4.11s/it]
+Some parameters are on the meta device because they were offloaded to the cpu and disk.
+   [llama4] Embedding:   0%|          | 0/3409 [00:00<?, ?it/s]   [llama4] Embedding:   0%|          | 0/3409 [01:10<?, ?it/s]
+Traceback (most recent call last):
+  File "/gpfs/data/fs71186/ziegler/ThesisProject/main.py", line 87, in main
+    train_vecs, test_vecs = model_runner.run_pipeline(
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/gpfs/data/fs71186/ziegler/ThesisProject/src/model_runner.py", line 180, in run_pipeline
+    train_vecs = runner.get_embeddings(train_texts, batch_size=batch_s)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/gpfs/data/fs71186/ziegler/ThesisProject/src/model_runner.py", line 80, in get_embeddings
+    outputs = self.model(**inputs, output_hidden_states=True)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/gpfs/data/fs71186/ziegler/ThesisProject/.venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1776, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/gpfs/data/fs71186/ziegler/ThesisProject/.venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1787, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/gpfs/data/fs71186/ziegler/ThesisProject/.venv/lib/python3.12/site-packages/accelerate/hooks.py", line 175, in new_forward
+    output = module._old_forward(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/gpfs/data/fs71186/ziegler/ThesisProject/.venv/lib/python3.12/site-packages/transformers/utils/generic.py", line 918, in wrapper
+    output = func(self, *args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/gpfs/data/fs71186/ziegler/ThesisProject/.venv/lib/python3.12/site-packages/transformers/models/llama4/modeling_llama4.py", line 619, in forward
+    outputs = self.model(
+              ^^^^^^^^^^^
+  File "/gpfs/data/fs71186/ziegler/ThesisProject/.venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1776, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/gpfs/data/fs71186/ziegler/ThesisProject/.venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1787, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/gpfs/data/fs71186/ziegler/ThesisProject/.venv/lib/python3.12/site-packages/transformers/utils/generic.py", line 918, in wrapper
+    output = func(self, *args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/gpfs/data/fs71186/ziegler/ThesisProject/.venv/lib/python3.12/site-packages/transformers/utils/generic.py", line 1072, in wrapper
+    outputs = func(self, *args, **kwargs)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/gpfs/data/fs71186/ziegler/ThesisProject/.venv/lib/python3.12/site-packages/transformers/models/llama4/modeling_llama4.py", line 548, in forward
+    hidden_states = decoder_layer(
+                    ^^^^^^^^^^^^^^
+  File "/gpfs/data/fs71186/ziegler/ThesisProject/.venv/lib/python3.12/site-packages/transformers/modeling_layers.py", line 94, in __call__
+    return super().__call__(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/gpfs/data/fs71186/ziegler/ThesisProject/.venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1776, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/gpfs/data/fs71186/ziegler/ThesisProject/.venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1787, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/gpfs/data/fs71186/ziegler/ThesisProject/.venv/lib/python3.12/site-packages/transformers/utils/generic.py", line 1031, in wrapped_forward
+    output = orig_forward(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/gpfs/data/fs71186/ziegler/ThesisProject/.venv/lib/python3.12/site-packages/accelerate/hooks.py", line 175, in new_forward
+    output = module._old_forward(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/gpfs/data/fs71186/ziegler/ThesisProject/.venv/lib/python3.12/site-packages/transformers/utils/deprecation.py", line 172, in wrapped_func
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/gpfs/data/fs71186/ziegler/ThesisProject/.venv/lib/python3.12/site-packages/transformers/models/llama4/modeling_llama4.py", line 420, in forward
+    hidden_states = self.feed_forward(hidden_states)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/gpfs/data/fs71186/ziegler/ThesisProject/.venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1776, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/gpfs/data/fs71186/ziegler/ThesisProject/.venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1787, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/gpfs/data/fs71186/ziegler/ThesisProject/.venv/lib/python3.12/site-packages/accelerate/hooks.py", line 175, in new_forward
+    output = module._old_forward(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/gpfs/data/fs71186/ziegler/ThesisProject/.venv/lib/python3.12/site-packages/transformers/models/llama4/modeling_llama4.py", line 162, in forward
+    routed_out = self.experts(routed_in)
+                 ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/gpfs/data/fs71186/ziegler/ThesisProject/.venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1776, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/gpfs/data/fs71186/ziegler/ThesisProject/.venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1787, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/gpfs/data/fs71186/ziegler/ThesisProject/.venv/lib/python3.12/site-packages/accelerate/hooks.py", line 170, in new_forward
+    args, kwargs = module._hf_hook.pre_forward(module, *args, **kwargs)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/gpfs/data/fs71186/ziegler/ThesisProject/.venv/lib/python3.12/site-packages/accelerate/hooks.py", line 341, in pre_forward
+    value = self.weights_map[name]
+            ~~~~~~~~~~~~~~~~^^^^^^
+  File "/gpfs/data/fs71186/ziegler/ThesisProject/.venv/lib/python3.12/site-packages/accelerate/utils/offload.py", line 118, in __getitem__
+    return self.dataset[f"{self.prefix}{key}"]
+           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "/gpfs/data/fs71186/ziegler/ThesisProject/.venv/lib/python3.12/site-packages/accelerate/utils/offload.py", line 178, in __getitem__
+    tensor = tensor.to(getattr(torch, weight_info["dtype"]))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 20.00 GiB. GPU 0 has a total capacity of 39.39 GiB of which 15.98 GiB is free. Including non-PyTorch memory, this process has 23.40 GiB memory in use. Of the allocated memory 22.89 GiB is allocated by PyTorch, and 14.23 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)

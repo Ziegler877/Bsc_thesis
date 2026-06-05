@@ -1,0 +1,137 @@
+ERROR: Unable to locate a modulefile for 'cuda/11.8.0-gcc-11.2.0-411'
+==================================================
+   STARTING LLAMA 4 SCOUT (17B) PIPELINE
+   Partition: Zen3 A100
+   Date: Wed Jan 28 20:06:30 CET 2026
+==================================================
+
+>>> [1/5] Evaluating BASE Model (No LoRA)...
+   [Config] Detected CLUSTER Environment (Linux).
+========================================
+   STARTING JOB: llama4_scout_reuters (4-bit)
+   Device: cuda
+========================================
+   [Data] Loading Reuters (C50train)...
+   [Data] Loading Reuters (C50test)...
+   [Data] Final Test Size: 2500 samples
+   [llama4_scout] Loading Llama (Decoder) from: /gpfs/data/fs71186/ziegler/ThesisProject/models/Llama-4-Scout
+   [llama4_scout] Enabling 4-bit Quantization...
+(!) Model Execution Failed: CUDA out of memory. Tried to allocate 2.50 GiB. GPU 0 has a total capacity of 39.39 GiB of which 970.81 MiB is free. Including non-PyTorch memory, this process has 38.43 GiB memory in use. Of the allocated memory 37.80 GiB is allocated by PyTorch, and 152.55 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)
+   [Config] Detected CLUSTER Environment (Linux).
+========================================
+   STARTING JOB: llama4_scout_darkreddit (4-bit)
+   Device: cuda
+========================================
+   [Data] Loading DarkReddit (darkreddit_authorship_attribution_train_anon.jsonl)...
+   [Info] Detected keys - Text: 'comment', Author: 'author'
+   [Data] Loading DarkReddit (darkreddit_authorship_attribution_test_anon.jsonl)...
+   [Info] Detected keys - Text: 'comment', Author: 'author'
+   [Data] Final Test Size: 2276 samples
+   [llama4_scout] Loading Llama (Decoder) from: /gpfs/data/fs71186/ziegler/ThesisProject/models/Llama-4-Scout
+   [llama4_scout] Enabling 4-bit Quantization...
+(!) Model Execution Failed: CUDA out of memory. Tried to allocate 2.50 GiB. GPU 0 has a total capacity of 39.39 GiB of which 970.81 MiB is free. Including non-PyTorch memory, this process has 38.43 GiB memory in use. Of the allocated memory 37.80 GiB is allocated by PyTorch, and 152.55 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)
+
+>>> [2/5] Training LoRA (3 Epochs)...
+   [Config] Detected CLUSTER Environment (Linux).
+========================================
+   STARTING LORA TRAINING (STANDARD BASE)
+   Model:   llama4_scout
+   Dataset: reuters
+========================================
+   [Data] Loading dataset...
+   [Data] Loading Reuters (C50train)...
+   [Model] Loading Base: /gpfs/data/fs71186/ziegler/ThesisProject/models/Llama-4-Maverick
+trainable params: 6,291,456 || all params: 400,718,140,416 || trainable%: 0.0016
+   [Train] Starting training loop...
+   [Config] Detected CLUSTER Environment (Linux).
+========================================
+   STARTING LORA TRAINING (STANDARD BASE)
+   Model:   llama4_scout
+   Dataset: darkreddit
+========================================
+   [Data] Loading dataset...
+   [Data] Loading DarkReddit (darkreddit_authorship_attribution_train_anon.jsonl)...
+   [Info] Detected keys - Text: 'comment', Author: 'author'
+   [Model] Loading Base: /gpfs/data/fs71186/ziegler/ThesisProject/models/Llama-4-Maverick
+trainable params: 6,291,456 || all params: 400,718,140,416 || trainable%: 0.0016
+   [Train] Starting training loop...
+   [System] Renaming adapters to *_3ep...
+>>> [3/5] Evaluating LoRA (3 Epochs)...
+   [Config] Detected CLUSTER Environment (Linux).
+========================================
+   STARTING JOB: llama4_scout_reuters (LoRA) (4-bit)
+   Device: cuda
+========================================
+   [Data] Loading Reuters (C50train)...
+   [Data] Loading Reuters (C50test)...
+   [Data] Final Test Size: 2500 samples
+   [llama4_scout] Loading Llama (Decoder) from: /gpfs/data/fs71186/ziegler/ThesisProject/models/Llama-4-Scout
+   [llama4_scout] Enabling 4-bit Quantization...
+(!) Model Execution Failed: CUDA out of memory. Tried to allocate 2.50 GiB. GPU 0 has a total capacity of 39.39 GiB of which 970.81 MiB is free. Including non-PyTorch memory, this process has 38.43 GiB memory in use. Of the allocated memory 37.80 GiB is allocated by PyTorch, and 152.55 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)
+   [Config] Detected CLUSTER Environment (Linux).
+========================================
+   STARTING JOB: llama4_scout_darkreddit (LoRA) (4-bit)
+   Device: cuda
+========================================
+   [Data] Loading DarkReddit (darkreddit_authorship_attribution_train_anon.jsonl)...
+   [Info] Detected keys - Text: 'comment', Author: 'author'
+   [Data] Loading DarkReddit (darkreddit_authorship_attribution_test_anon.jsonl)...
+   [Info] Detected keys - Text: 'comment', Author: 'author'
+   [Data] Final Test Size: 2276 samples
+   [llama4_scout] Loading Llama (Decoder) from: /gpfs/data/fs71186/ziegler/ThesisProject/models/Llama-4-Scout
+   [llama4_scout] Enabling 4-bit Quantization...
+(!) Model Execution Failed: CUDA out of memory. Tried to allocate 2.50 GiB. GPU 0 has a total capacity of 39.39 GiB of which 970.81 MiB is free. Including non-PyTorch memory, this process has 38.43 GiB memory in use. Of the allocated memory 37.80 GiB is allocated by PyTorch, and 152.55 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)
+
+>>> [4/5] Training LoRA (5 Epochs)...
+   [Config] Detected CLUSTER Environment (Linux).
+========================================
+   STARTING LORA TRAINING (STANDARD BASE)
+   Model:   llama4_scout
+   Dataset: reuters
+========================================
+   [Data] Loading dataset...
+   [Data] Loading Reuters (C50train)...
+   [Model] Loading Base: /gpfs/data/fs71186/ziegler/ThesisProject/models/Llama-4-Maverick
+trainable params: 6,291,456 || all params: 400,718,140,416 || trainable%: 0.0016
+   [Train] Starting training loop...
+   [Config] Detected CLUSTER Environment (Linux).
+========================================
+   STARTING LORA TRAINING (STANDARD BASE)
+   Model:   llama4_scout
+   Dataset: darkreddit
+========================================
+   [Data] Loading dataset...
+   [Data] Loading DarkReddit (darkreddit_authorship_attribution_train_anon.jsonl)...
+   [Info] Detected keys - Text: 'comment', Author: 'author'
+   [Model] Loading Base: /gpfs/data/fs71186/ziegler/ThesisProject/models/Llama-4-Maverick
+trainable params: 6,291,456 || all params: 400,718,140,416 || trainable%: 0.0016
+   [Train] Starting training loop...
+   [System] Renaming adapters to *_5ep...
+>>> [5/5] Evaluating LoRA (5 Epochs)...
+   [Config] Detected CLUSTER Environment (Linux).
+========================================
+   STARTING JOB: llama4_scout_reuters (LoRA) (4-bit)
+   Device: cuda
+========================================
+   [Data] Loading Reuters (C50train)...
+   [Data] Loading Reuters (C50test)...
+   [Data] Final Test Size: 2500 samples
+   [llama4_scout] Loading Llama (Decoder) from: /gpfs/data/fs71186/ziegler/ThesisProject/models/Llama-4-Scout
+   [llama4_scout] Enabling 4-bit Quantization...
+(!) Model Execution Failed: CUDA out of memory. Tried to allocate 2.50 GiB. GPU 0 has a total capacity of 39.39 GiB of which 970.81 MiB is free. Including non-PyTorch memory, this process has 38.43 GiB memory in use. Of the allocated memory 37.80 GiB is allocated by PyTorch, and 152.55 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)
+   [Config] Detected CLUSTER Environment (Linux).
+========================================
+   STARTING JOB: llama4_scout_darkreddit (LoRA) (4-bit)
+   Device: cuda
+========================================
+   [Data] Loading DarkReddit (darkreddit_authorship_attribution_train_anon.jsonl)...
+   [Info] Detected keys - Text: 'comment', Author: 'author'
+   [Data] Loading DarkReddit (darkreddit_authorship_attribution_test_anon.jsonl)...
+   [Info] Detected keys - Text: 'comment', Author: 'author'
+   [Data] Final Test Size: 2276 samples
+   [llama4_scout] Loading Llama (Decoder) from: /gpfs/data/fs71186/ziegler/ThesisProject/models/Llama-4-Scout
+   [llama4_scout] Enabling 4-bit Quantization...
+(!) Model Execution Failed: CUDA out of memory. Tried to allocate 2.50 GiB. GPU 0 has a total capacity of 39.39 GiB of which 970.81 MiB is free. Including non-PyTorch memory, this process has 38.43 GiB memory in use. Of the allocated memory 37.80 GiB is allocated by PyTorch, and 152.55 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)
+
+=== SCOUT PIPELINE FINISHED ===
+Results available in results/embeddings/

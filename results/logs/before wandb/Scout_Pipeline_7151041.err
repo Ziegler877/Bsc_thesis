@@ -1,0 +1,221 @@
+  0%|          | 0/50 [00:00<?, ?it/s]  8%|▊         | 4/50 [00:00<00:01, 37.63it/s] 16%|█▌        | 8/50 [00:00<00:01, 38.83it/s] 24%|██▍       | 12/50 [00:00<00:00, 39.19it/s] 32%|███▏      | 16/50 [00:00<00:00, 39.42it/s] 42%|████▏     | 21/50 [00:00<00:00, 41.35it/s] 52%|█████▏    | 26/50 [00:00<00:00, 42.34it/s] 62%|██████▏   | 31/50 [00:00<00:00, 42.75it/s] 72%|███████▏  | 36/50 [00:00<00:00, 40.79it/s] 82%|████████▏ | 41/50 [00:01<00:00, 40.42it/s] 92%|█████████▏| 46/50 [00:01<00:00, 40.63it/s]                                                 0%|          | 0/50 [00:00<?, ?it/s]  8%|▊         | 4/50 [00:00<00:01, 39.61it/s] 16%|█▌        | 8/50 [00:00<00:01, 39.58it/s] 26%|██▌       | 13/50 [00:00<00:00, 38.67it/s] 36%|███▌      | 18/50 [00:00<00:00, 40.35it/s] 46%|████▌     | 23/50 [00:00<00:00, 41.47it/s] 56%|█████▌    | 28/50 [00:00<00:00, 41.25it/s] 66%|██████▌   | 33/50 [00:00<00:00, 40.23it/s] 76%|███████▌  | 38/50 [00:00<00:00, 39.63it/s] 84%|████████▍ | 42/50 [00:01<00:00, 39.21it/s] 94%|█████████▍| 47/50 [00:01<00:00, 39.82it/s]                                               `torch_dtype` is deprecated! Use `dtype` instead!
+Traceback (most recent call last):
+  File "/gpfs/data/fs71186/ziegler/ThesisProject/src/model_runner.py", line 66, in _load_model
+    self.model = AutoModelForCausalLM.from_pretrained(self.model_path, **load_args)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/gpfs/data/fs71186/ziegler/ThesisProject/.venv/lib/python3.12/site-packages/transformers/models/auto/auto_factory.py", line 604, in from_pretrained
+    return model_class.from_pretrained(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/gpfs/data/fs71186/ziegler/ThesisProject/.venv/lib/python3.12/site-packages/transformers/modeling_utils.py", line 277, in _wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/gpfs/data/fs71186/ziegler/ThesisProject/.venv/lib/python3.12/site-packages/transformers/modeling_utils.py", line 5029, in from_pretrained
+    device_map = _get_device_map(model, device_map, max_memory, hf_quantizer, dtype, keep_in_fp32_regex)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/gpfs/data/fs71186/ziegler/ThesisProject/.venv/lib/python3.12/site-packages/transformers/modeling_utils.py", line 1365, in _get_device_map
+    hf_quantizer.validate_environment(device_map=device_map)
+  File "/gpfs/data/fs71186/ziegler/ThesisProject/.venv/lib/python3.12/site-packages/transformers/quantizers/quantizer_bnb_4bit.py", line 127, in validate_environment
+    raise ValueError(
+ValueError: Some modules are dispatched on the CPU or the disk. Make sure you have enough GPU RAM to fit the quantized model. If you want to dispatch the model on the CPU or the disk while keeping these modules in 32-bit, you need to set `llm_int8_enable_fp32_cpu_offload=True` and pass a custom `device_map` to `from_pretrained`. Check https://huggingface.co/docs/transformers/main/en/main_classes/quantization#offload-between-cpu-and-gpu for more details. 
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/gpfs/data/fs71186/ziegler/ThesisProject/main.py", line 108, in main
+    train_vecs, test_vecs = model_runner.run_pipeline(**runner_kwargs)
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/gpfs/data/fs71186/ziegler/ThesisProject/src/model_runner.py", line 198, in run_pipeline
+    runner = LlamaRunner(target_path, friendly_name, use_lora, dataset_alias, load_in_4bit=load_in_4bit)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/gpfs/data/fs71186/ziegler/ThesisProject/src/model_runner.py", line 28, in __init__
+    self._load_model()
+  File "/gpfs/data/fs71186/ziegler/ThesisProject/src/model_runner.py", line 86, in _load_model
+    raise RuntimeError(f"Failed to load {self.model_name}: {e}")
+RuntimeError: Failed to load llama4_scout: Some modules are dispatched on the CPU or the disk. Make sure you have enough GPU RAM to fit the quantized model. If you want to dispatch the model on the CPU or the disk while keeping these modules in 32-bit, you need to set `llm_int8_enable_fp32_cpu_offload=True` and pass a custom `device_map` to `from_pretrained`. Check https://huggingface.co/docs/transformers/main/en/main_classes/quantization#offload-between-cpu-and-gpu for more details. 
+0it [00:00, ?it/s]                  0it [00:00, ?it/s]                  `torch_dtype` is deprecated! Use `dtype` instead!
+Traceback (most recent call last):
+  File "/gpfs/data/fs71186/ziegler/ThesisProject/src/model_runner.py", line 66, in _load_model
+    self.model = AutoModelForCausalLM.from_pretrained(self.model_path, **load_args)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/gpfs/data/fs71186/ziegler/ThesisProject/.venv/lib/python3.12/site-packages/transformers/models/auto/auto_factory.py", line 604, in from_pretrained
+    return model_class.from_pretrained(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/gpfs/data/fs71186/ziegler/ThesisProject/.venv/lib/python3.12/site-packages/transformers/modeling_utils.py", line 277, in _wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/gpfs/data/fs71186/ziegler/ThesisProject/.venv/lib/python3.12/site-packages/transformers/modeling_utils.py", line 5029, in from_pretrained
+    device_map = _get_device_map(model, device_map, max_memory, hf_quantizer, dtype, keep_in_fp32_regex)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/gpfs/data/fs71186/ziegler/ThesisProject/.venv/lib/python3.12/site-packages/transformers/modeling_utils.py", line 1365, in _get_device_map
+    hf_quantizer.validate_environment(device_map=device_map)
+  File "/gpfs/data/fs71186/ziegler/ThesisProject/.venv/lib/python3.12/site-packages/transformers/quantizers/quantizer_bnb_4bit.py", line 127, in validate_environment
+    raise ValueError(
+ValueError: Some modules are dispatched on the CPU or the disk. Make sure you have enough GPU RAM to fit the quantized model. If you want to dispatch the model on the CPU or the disk while keeping these modules in 32-bit, you need to set `llm_int8_enable_fp32_cpu_offload=True` and pass a custom `device_map` to `from_pretrained`. Check https://huggingface.co/docs/transformers/main/en/main_classes/quantization#offload-between-cpu-and-gpu for more details. 
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/gpfs/data/fs71186/ziegler/ThesisProject/main.py", line 108, in main
+    train_vecs, test_vecs = model_runner.run_pipeline(**runner_kwargs)
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/gpfs/data/fs71186/ziegler/ThesisProject/src/model_runner.py", line 198, in run_pipeline
+    runner = LlamaRunner(target_path, friendly_name, use_lora, dataset_alias, load_in_4bit=load_in_4bit)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/gpfs/data/fs71186/ziegler/ThesisProject/src/model_runner.py", line 28, in __init__
+    self._load_model()
+  File "/gpfs/data/fs71186/ziegler/ThesisProject/src/model_runner.py", line 86, in _load_model
+    raise RuntimeError(f"Failed to load {self.model_name}: {e}")
+RuntimeError: Failed to load llama4_scout: Some modules are dispatched on the CPU or the disk. Make sure you have enough GPU RAM to fit the quantized model. If you want to dispatch the model on the CPU or the disk while keeping these modules in 32-bit, you need to set `llm_int8_enable_fp32_cpu_offload=True` and pass a custom `device_map` to `from_pretrained`. Check https://huggingface.co/docs/transformers/main/en/main_classes/quantization#offload-between-cpu-and-gpu for more details. 
+  0%|          | 0/50 [00:00<?, ?it/s]100%|██████████| 50/50 [00:00<00:00, 490.95it/s]                                                `torch_dtype` is deprecated! Use `dtype` instead!
+Loading checkpoint shards:   0%|          | 0/55 [00:00<?, ?it/s]Loading checkpoint shards:   2%|▏         | 1/55 [00:06<06:11,  6.88s/it]Loading checkpoint shards:   4%|▎         | 2/55 [00:10<04:15,  4.82s/it]Loading checkpoint shards:   5%|▌         | 3/55 [00:12<03:19,  3.83s/it]Loading checkpoint shards:   7%|▋         | 4/55 [00:20<04:24,  5.19s/it]Loading checkpoint shards:   9%|▉         | 5/55 [00:23<03:46,  4.53s/it]Loading checkpoint shards:  11%|█         | 6/55 [00:30<04:25,  5.41s/it]Loading checkpoint shards:  13%|█▎        | 7/55 [00:34<03:56,  4.92s/it]Loading checkpoint shards:  15%|█▍        | 8/55 [00:40<04:12,  5.38s/it]Loading checkpoint shards:  16%|█▋        | 9/55 [00:44<03:38,  4.75s/it]Loading checkpoint shards:  18%|█▊        | 10/55 [00:52<04:18,  5.74s/it]Loading checkpoint shards:  20%|██        | 11/55 [00:55<03:42,  5.05s/it]Loading checkpoint shards:  22%|██▏       | 12/55 [01:02<04:04,  5.68s/it]Loading checkpoint shards:  24%|██▎       | 13/55 [01:06<03:29,  5.00s/it]Loading checkpoint shards:  25%|██▌       | 14/55 [01:14<04:01,  5.88s/it]Loading checkpoint shards:  27%|██▋       | 15/55 [01:25<05:05,  7.65s/it]Loading checkpoint shards:  29%|██▉       | 16/55 [01:30<04:22,  6.73s/it]Loading checkpoint shards:  31%|███       | 17/55 [01:44<05:34,  8.80s/it]/var/spool/slurm/slurmd/job7151041/slurm_script: line 46: 620035 Killed                  python -u src/train_lora.py --model $MODEL --dataset reuters --epochs 3 --batch_size 4
+0it [00:00, ?it/s]                  `torch_dtype` is deprecated! Use `dtype` instead!
+Loading checkpoint shards:   0%|          | 0/55 [00:00<?, ?it/s]Loading checkpoint shards:   2%|▏         | 1/55 [00:06<05:57,  6.63s/it]Loading checkpoint shards:   4%|▎         | 2/55 [00:09<04:09,  4.71s/it]Loading checkpoint shards:   5%|▌         | 3/55 [00:12<03:17,  3.80s/it]Loading checkpoint shards:   7%|▋         | 4/55 [00:19<04:23,  5.17s/it]Loading checkpoint shards:   9%|▉         | 5/55 [00:23<03:46,  4.53s/it]Loading checkpoint shards:  11%|█         | 6/55 [00:30<04:21,  5.34s/it]Loading checkpoint shards:  13%|█▎        | 7/55 [00:34<03:53,  4.86s/it]Loading checkpoint shards:  15%|█▍        | 8/55 [00:41<04:20,  5.54s/it]Loading checkpoint shards:  16%|█▋        | 9/55 [00:45<03:52,  5.06s/it]Loading checkpoint shards:  18%|█▊        | 10/55 [00:52<04:22,  5.84s/it]Loading checkpoint shards:  20%|██        | 11/55 [00:56<03:46,  5.15s/it]Loading checkpoint shards:  22%|██▏       | 12/55 [01:03<04:07,  5.75s/it]Loading checkpoint shards:  24%|██▎       | 13/55 [01:07<03:38,  5.19s/it]Loading checkpoint shards:  25%|██▌       | 14/55 [01:15<04:07,  6.04s/it]Loading checkpoint shards:  27%|██▋       | 15/55 [01:28<05:26,  8.17s/it]Loading checkpoint shards:  29%|██▉       | 16/55 [01:33<04:47,  7.36s/it]Loading checkpoint shards:  31%|███       | 17/55 [01:48<05:56,  9.38s/it]/var/spool/slurm/slurmd/job7151041/slurm_script: line 47: 621076 Killed                  python -u src/train_lora.py --model $MODEL --dataset darkreddit --epochs 3 --batch_size 4
+mv: cannot stat 'results/adapters/llama4_scout_reuters': No such file or directory
+mv: cannot stat 'results/adapters/llama4_scout_darkreddit': No such file or directory
+cp: cannot stat 'results/adapters/llama4_scout_reuters_3ep': No such file or directory
+cp: cannot stat 'results/adapters/llama4_scout_darkreddit_3ep': No such file or directory
+  0%|          | 0/50 [00:00<?, ?it/s] 26%|██▌       | 13/50 [00:00<00:00, 126.99it/s] 52%|█████▏    | 26/50 [00:00<00:00, 127.03it/s] 78%|███████▊  | 39/50 [00:00<00:00, 128.21it/s]                                                  0%|          | 0/50 [00:00<?, ?it/s] 28%|██▊       | 14/50 [00:00<00:00, 130.51it/s] 56%|█████▌    | 28/50 [00:00<00:00, 131.10it/s] 84%|████████▍ | 42/50 [00:00<00:00, 130.92it/s]                                                `torch_dtype` is deprecated! Use `dtype` instead!
+Traceback (most recent call last):
+  File "/gpfs/data/fs71186/ziegler/ThesisProject/src/model_runner.py", line 66, in _load_model
+    self.model = AutoModelForCausalLM.from_pretrained(self.model_path, **load_args)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/gpfs/data/fs71186/ziegler/ThesisProject/.venv/lib/python3.12/site-packages/transformers/models/auto/auto_factory.py", line 604, in from_pretrained
+    return model_class.from_pretrained(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/gpfs/data/fs71186/ziegler/ThesisProject/.venv/lib/python3.12/site-packages/transformers/modeling_utils.py", line 277, in _wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/gpfs/data/fs71186/ziegler/ThesisProject/.venv/lib/python3.12/site-packages/transformers/modeling_utils.py", line 5029, in from_pretrained
+    device_map = _get_device_map(model, device_map, max_memory, hf_quantizer, dtype, keep_in_fp32_regex)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/gpfs/data/fs71186/ziegler/ThesisProject/.venv/lib/python3.12/site-packages/transformers/modeling_utils.py", line 1365, in _get_device_map
+    hf_quantizer.validate_environment(device_map=device_map)
+  File "/gpfs/data/fs71186/ziegler/ThesisProject/.venv/lib/python3.12/site-packages/transformers/quantizers/quantizer_bnb_4bit.py", line 127, in validate_environment
+    raise ValueError(
+ValueError: Some modules are dispatched on the CPU or the disk. Make sure you have enough GPU RAM to fit the quantized model. If you want to dispatch the model on the CPU or the disk while keeping these modules in 32-bit, you need to set `llm_int8_enable_fp32_cpu_offload=True` and pass a custom `device_map` to `from_pretrained`. Check https://huggingface.co/docs/transformers/main/en/main_classes/quantization#offload-between-cpu-and-gpu for more details. 
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/gpfs/data/fs71186/ziegler/ThesisProject/main.py", line 108, in main
+    train_vecs, test_vecs = model_runner.run_pipeline(**runner_kwargs)
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/gpfs/data/fs71186/ziegler/ThesisProject/src/model_runner.py", line 198, in run_pipeline
+    runner = LlamaRunner(target_path, friendly_name, use_lora, dataset_alias, load_in_4bit=load_in_4bit)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/gpfs/data/fs71186/ziegler/ThesisProject/src/model_runner.py", line 28, in __init__
+    self._load_model()
+  File "/gpfs/data/fs71186/ziegler/ThesisProject/src/model_runner.py", line 86, in _load_model
+    raise RuntimeError(f"Failed to load {self.model_name}: {e}")
+RuntimeError: Failed to load llama4_scout: Some modules are dispatched on the CPU or the disk. Make sure you have enough GPU RAM to fit the quantized model. If you want to dispatch the model on the CPU or the disk while keeping these modules in 32-bit, you need to set `llm_int8_enable_fp32_cpu_offload=True` and pass a custom `device_map` to `from_pretrained`. Check https://huggingface.co/docs/transformers/main/en/main_classes/quantization#offload-between-cpu-and-gpu for more details. 
+0it [00:00, ?it/s]                  0it [00:00, ?it/s]                  `torch_dtype` is deprecated! Use `dtype` instead!
+Traceback (most recent call last):
+  File "/gpfs/data/fs71186/ziegler/ThesisProject/src/model_runner.py", line 66, in _load_model
+    self.model = AutoModelForCausalLM.from_pretrained(self.model_path, **load_args)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/gpfs/data/fs71186/ziegler/ThesisProject/.venv/lib/python3.12/site-packages/transformers/models/auto/auto_factory.py", line 604, in from_pretrained
+    return model_class.from_pretrained(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/gpfs/data/fs71186/ziegler/ThesisProject/.venv/lib/python3.12/site-packages/transformers/modeling_utils.py", line 277, in _wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/gpfs/data/fs71186/ziegler/ThesisProject/.venv/lib/python3.12/site-packages/transformers/modeling_utils.py", line 5029, in from_pretrained
+    device_map = _get_device_map(model, device_map, max_memory, hf_quantizer, dtype, keep_in_fp32_regex)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/gpfs/data/fs71186/ziegler/ThesisProject/.venv/lib/python3.12/site-packages/transformers/modeling_utils.py", line 1365, in _get_device_map
+    hf_quantizer.validate_environment(device_map=device_map)
+  File "/gpfs/data/fs71186/ziegler/ThesisProject/.venv/lib/python3.12/site-packages/transformers/quantizers/quantizer_bnb_4bit.py", line 127, in validate_environment
+    raise ValueError(
+ValueError: Some modules are dispatched on the CPU or the disk. Make sure you have enough GPU RAM to fit the quantized model. If you want to dispatch the model on the CPU or the disk while keeping these modules in 32-bit, you need to set `llm_int8_enable_fp32_cpu_offload=True` and pass a custom `device_map` to `from_pretrained`. Check https://huggingface.co/docs/transformers/main/en/main_classes/quantization#offload-between-cpu-and-gpu for more details. 
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/gpfs/data/fs71186/ziegler/ThesisProject/main.py", line 108, in main
+    train_vecs, test_vecs = model_runner.run_pipeline(**runner_kwargs)
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/gpfs/data/fs71186/ziegler/ThesisProject/src/model_runner.py", line 198, in run_pipeline
+    runner = LlamaRunner(target_path, friendly_name, use_lora, dataset_alias, load_in_4bit=load_in_4bit)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/gpfs/data/fs71186/ziegler/ThesisProject/src/model_runner.py", line 28, in __init__
+    self._load_model()
+  File "/gpfs/data/fs71186/ziegler/ThesisProject/src/model_runner.py", line 86, in _load_model
+    raise RuntimeError(f"Failed to load {self.model_name}: {e}")
+RuntimeError: Failed to load llama4_scout: Some modules are dispatched on the CPU or the disk. Make sure you have enough GPU RAM to fit the quantized model. If you want to dispatch the model on the CPU or the disk while keeping these modules in 32-bit, you need to set `llm_int8_enable_fp32_cpu_offload=True` and pass a custom `device_map` to `from_pretrained`. Check https://huggingface.co/docs/transformers/main/en/main_classes/quantization#offload-between-cpu-and-gpu for more details. 
+  0%|          | 0/50 [00:00<?, ?it/s]100%|██████████| 50/50 [00:00<00:00, 490.30it/s]                                                `torch_dtype` is deprecated! Use `dtype` instead!
+Loading checkpoint shards:   0%|          | 0/55 [00:00<?, ?it/s]Loading checkpoint shards:   2%|▏         | 1/55 [00:08<07:21,  8.17s/it]Loading checkpoint shards:   4%|▎         | 2/55 [00:12<05:00,  5.67s/it]Loading checkpoint shards:   5%|▌         | 3/55 [00:14<03:45,  4.33s/it]Loading checkpoint shards:   7%|▋         | 4/55 [00:21<04:35,  5.41s/it]Loading checkpoint shards:   9%|▉         | 5/55 [00:25<04:03,  4.87s/it]Loading checkpoint shards:  11%|█         | 6/55 [00:32<04:21,  5.34s/it]Loading checkpoint shards:  13%|█▎        | 7/55 [00:36<03:57,  4.96s/it]Loading checkpoint shards:  15%|█▍        | 8/55 [00:43<04:23,  5.61s/it]Loading checkpoint shards:  16%|█▋        | 9/55 [00:47<03:52,  5.05s/it]Loading checkpoint shards:  18%|█▊        | 10/55 [00:55<04:38,  6.19s/it]Loading checkpoint shards:  20%|██        | 11/55 [00:59<04:03,  5.53s/it]Loading checkpoint shards:  22%|██▏       | 12/55 [01:07<04:22,  6.11s/it]Loading checkpoint shards:  24%|██▎       | 13/55 [01:11<03:51,  5.50s/it]Loading checkpoint shards:  25%|██▌       | 14/55 [01:19<04:23,  6.43s/it]Loading checkpoint shards:  27%|██▋       | 15/55 [01:32<05:35,  8.38s/it]Loading checkpoint shards:  29%|██▉       | 16/55 [01:38<04:55,  7.56s/it]Loading checkpoint shards:  31%|███       | 17/55 [01:52<06:04,  9.59s/it]/var/spool/slurm/slurmd/job7151041/slurm_script: line 70: 622519 Killed                  python -u src/train_lora.py --model $MODEL --dataset reuters --epochs 5 --batch_size 4
+0it [00:00, ?it/s]                  `torch_dtype` is deprecated! Use `dtype` instead!
+Loading checkpoint shards:   0%|          | 0/55 [00:00<?, ?it/s]Loading checkpoint shards:   2%|▏         | 1/55 [00:06<05:39,  6.29s/it]Loading checkpoint shards:   4%|▎         | 2/55 [00:09<04:10,  4.73s/it]Loading checkpoint shards:   5%|▌         | 3/55 [00:12<03:19,  3.83s/it]Loading checkpoint shards:   7%|▋         | 4/55 [00:18<04:05,  4.80s/it]Loading checkpoint shards:   9%|▉         | 5/55 [00:23<03:48,  4.56s/it]Loading checkpoint shards:  11%|█         | 6/55 [00:29<04:14,  5.20s/it]Loading checkpoint shards:  13%|█▎        | 7/55 [00:32<03:36,  4.50s/it]Loading checkpoint shards:  15%|█▍        | 8/55 [00:38<03:57,  5.06s/it]Loading checkpoint shards:  16%|█▋        | 9/55 [00:42<03:29,  4.55s/it]Loading checkpoint shards:  18%|█▊        | 10/55 [00:49<04:06,  5.48s/it]Loading checkpoint shards:  20%|██        | 11/55 [00:53<03:33,  4.84s/it]Loading checkpoint shards:  22%|██▏       | 12/55 [01:00<03:57,  5.52s/it]Loading checkpoint shards:  24%|██▎       | 13/55 [01:03<03:28,  4.95s/it]Loading checkpoint shards:  25%|██▌       | 14/55 [01:12<04:12,  6.15s/it]Loading checkpoint shards:  27%|██▋       | 15/55 [01:25<05:22,  8.07s/it]Loading checkpoint shards:  29%|██▉       | 16/55 [01:30<04:36,  7.08s/it]Loading checkpoint shards:  31%|███       | 17/55 [01:43<05:45,  9.10s/it]/var/spool/slurm/slurmd/job7151041/slurm_script: line 71: 623048 Killed                  python -u src/train_lora.py --model $MODEL --dataset darkreddit --epochs 5 --batch_size 4
+mv: cannot stat 'results/adapters/llama4_scout_reuters': No such file or directory
+mv: cannot stat 'results/adapters/llama4_scout_darkreddit': No such file or directory
+cp: cannot stat 'results/adapters/llama4_scout_reuters_5ep': No such file or directory
+cp: cannot stat 'results/adapters/llama4_scout_darkreddit_5ep': No such file or directory
+  0%|          | 0/50 [00:00<?, ?it/s] 26%|██▌       | 13/50 [00:00<00:00, 124.39it/s] 54%|█████▍    | 27/50 [00:00<00:00, 130.19it/s] 82%|████████▏ | 41/50 [00:00<00:00, 131.26it/s]                                                  0%|          | 0/50 [00:00<?, ?it/s] 28%|██▊       | 14/50 [00:00<00:00, 132.07it/s] 56%|█████▌    | 28/50 [00:00<00:00, 132.37it/s] 84%|████████▍ | 42/50 [00:00<00:00, 132.08it/s]                                                `torch_dtype` is deprecated! Use `dtype` instead!
+Traceback (most recent call last):
+  File "/gpfs/data/fs71186/ziegler/ThesisProject/src/model_runner.py", line 66, in _load_model
+    self.model = AutoModelForCausalLM.from_pretrained(self.model_path, **load_args)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/gpfs/data/fs71186/ziegler/ThesisProject/.venv/lib/python3.12/site-packages/transformers/models/auto/auto_factory.py", line 604, in from_pretrained
+    return model_class.from_pretrained(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/gpfs/data/fs71186/ziegler/ThesisProject/.venv/lib/python3.12/site-packages/transformers/modeling_utils.py", line 277, in _wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/gpfs/data/fs71186/ziegler/ThesisProject/.venv/lib/python3.12/site-packages/transformers/modeling_utils.py", line 5029, in from_pretrained
+    device_map = _get_device_map(model, device_map, max_memory, hf_quantizer, dtype, keep_in_fp32_regex)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/gpfs/data/fs71186/ziegler/ThesisProject/.venv/lib/python3.12/site-packages/transformers/modeling_utils.py", line 1365, in _get_device_map
+    hf_quantizer.validate_environment(device_map=device_map)
+  File "/gpfs/data/fs71186/ziegler/ThesisProject/.venv/lib/python3.12/site-packages/transformers/quantizers/quantizer_bnb_4bit.py", line 127, in validate_environment
+    raise ValueError(
+ValueError: Some modules are dispatched on the CPU or the disk. Make sure you have enough GPU RAM to fit the quantized model. If you want to dispatch the model on the CPU or the disk while keeping these modules in 32-bit, you need to set `llm_int8_enable_fp32_cpu_offload=True` and pass a custom `device_map` to `from_pretrained`. Check https://huggingface.co/docs/transformers/main/en/main_classes/quantization#offload-between-cpu-and-gpu for more details. 
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/gpfs/data/fs71186/ziegler/ThesisProject/main.py", line 108, in main
+    train_vecs, test_vecs = model_runner.run_pipeline(**runner_kwargs)
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/gpfs/data/fs71186/ziegler/ThesisProject/src/model_runner.py", line 198, in run_pipeline
+    runner = LlamaRunner(target_path, friendly_name, use_lora, dataset_alias, load_in_4bit=load_in_4bit)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/gpfs/data/fs71186/ziegler/ThesisProject/src/model_runner.py", line 28, in __init__
+    self._load_model()
+  File "/gpfs/data/fs71186/ziegler/ThesisProject/src/model_runner.py", line 86, in _load_model
+    raise RuntimeError(f"Failed to load {self.model_name}: {e}")
+RuntimeError: Failed to load llama4_scout: Some modules are dispatched on the CPU or the disk. Make sure you have enough GPU RAM to fit the quantized model. If you want to dispatch the model on the CPU or the disk while keeping these modules in 32-bit, you need to set `llm_int8_enable_fp32_cpu_offload=True` and pass a custom `device_map` to `from_pretrained`. Check https://huggingface.co/docs/transformers/main/en/main_classes/quantization#offload-between-cpu-and-gpu for more details. 
+0it [00:00, ?it/s]                  0it [00:00, ?it/s]                  `torch_dtype` is deprecated! Use `dtype` instead!
+Traceback (most recent call last):
+  File "/gpfs/data/fs71186/ziegler/ThesisProject/src/model_runner.py", line 66, in _load_model
+    self.model = AutoModelForCausalLM.from_pretrained(self.model_path, **load_args)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/gpfs/data/fs71186/ziegler/ThesisProject/.venv/lib/python3.12/site-packages/transformers/models/auto/auto_factory.py", line 604, in from_pretrained
+    return model_class.from_pretrained(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/gpfs/data/fs71186/ziegler/ThesisProject/.venv/lib/python3.12/site-packages/transformers/modeling_utils.py", line 277, in _wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/gpfs/data/fs71186/ziegler/ThesisProject/.venv/lib/python3.12/site-packages/transformers/modeling_utils.py", line 5029, in from_pretrained
+    device_map = _get_device_map(model, device_map, max_memory, hf_quantizer, dtype, keep_in_fp32_regex)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/gpfs/data/fs71186/ziegler/ThesisProject/.venv/lib/python3.12/site-packages/transformers/modeling_utils.py", line 1365, in _get_device_map
+    hf_quantizer.validate_environment(device_map=device_map)
+  File "/gpfs/data/fs71186/ziegler/ThesisProject/.venv/lib/python3.12/site-packages/transformers/quantizers/quantizer_bnb_4bit.py", line 127, in validate_environment
+    raise ValueError(
+ValueError: Some modules are dispatched on the CPU or the disk. Make sure you have enough GPU RAM to fit the quantized model. If you want to dispatch the model on the CPU or the disk while keeping these modules in 32-bit, you need to set `llm_int8_enable_fp32_cpu_offload=True` and pass a custom `device_map` to `from_pretrained`. Check https://huggingface.co/docs/transformers/main/en/main_classes/quantization#offload-between-cpu-and-gpu for more details. 
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/gpfs/data/fs71186/ziegler/ThesisProject/main.py", line 108, in main
+    train_vecs, test_vecs = model_runner.run_pipeline(**runner_kwargs)
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/gpfs/data/fs71186/ziegler/ThesisProject/src/model_runner.py", line 198, in run_pipeline
+    runner = LlamaRunner(target_path, friendly_name, use_lora, dataset_alias, load_in_4bit=load_in_4bit)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/gpfs/data/fs71186/ziegler/ThesisProject/src/model_runner.py", line 28, in __init__
+    self._load_model()
+  File "/gpfs/data/fs71186/ziegler/ThesisProject/src/model_runner.py", line 86, in _load_model
+    raise RuntimeError(f"Failed to load {self.model_name}: {e}")
+RuntimeError: Failed to load llama4_scout: Some modules are dispatched on the CPU or the disk. Make sure you have enough GPU RAM to fit the quantized model. If you want to dispatch the model on the CPU or the disk while keeping these modules in 32-bit, you need to set `llm_int8_enable_fp32_cpu_offload=True` and pass a custom `device_map` to `from_pretrained`. Check https://huggingface.co/docs/transformers/main/en/main_classes/quantization#offload-between-cpu-and-gpu for more details. 
+slurmstepd: error: Detected 9 oom-kill event(s) in StepId=7151041.batch. Some of your processes may have been killed by the cgroup out-of-memory handler.

@@ -1,0 +1,130 @@
+ERROR: Unable to locate a modulefile for 'cuda/11.8.0-gcc-11.2.0-411'
+==================================================
+   STARTING LLAMA 4 SCOUT (17B) PIPELINE
+   Partition: Zen3 A100
+   Date: Tue Jan 27 19:55:11 CET 2026
+==================================================
+
+>>> [1/5] Evaluating BASE Model (No LoRA)...
+   [Config] Detected CLUSTER Environment (Linux).
+========================================
+   STARTING JOB: llama4_scout_reuters (4-bit)
+   Device: cuda
+========================================
+   [Data] Loading Reuters (C50train)...
+   [Data] Loading Reuters (C50test)...
+   [Data] Final Test Size: 2500 samples
+   [llama4_scout] Loading Base Model from: /gpfs/data/fs71186/ziegler/ThesisProject/models/Llama-4-Scout
+   [llama4_scout] Enabling 4-bit Quantization (BitsAndBytes)...
+(!) Model Execution Failed: Failed to load llama4_scout: Some modules are dispatched on the CPU or the disk. Make sure you have enough GPU RAM to fit the quantized model. If you want to dispatch the model on the CPU or the disk while keeping these modules in 32-bit, you need to set `llm_int8_enable_fp32_cpu_offload=True` and pass a custom `device_map` to `from_pretrained`. Check https://huggingface.co/docs/transformers/main/en/main_classes/quantization#offload-between-cpu-and-gpu for more details. 
+   [Config] Detected CLUSTER Environment (Linux).
+========================================
+   STARTING JOB: llama4_scout_darkreddit (4-bit)
+   Device: cuda
+========================================
+   [Data] Loading DarkReddit (darkreddit_authorship_attribution_train_anon.jsonl)...
+   [Info] Detected keys - Text: 'comment', Author: 'author'
+   [Data] Loading DarkReddit (darkreddit_authorship_attribution_test_anon.jsonl)...
+   [Info] Detected keys - Text: 'comment', Author: 'author'
+   [Data] Final Test Size: 2276 samples
+   [llama4_scout] Loading Base Model from: /gpfs/data/fs71186/ziegler/ThesisProject/models/Llama-4-Scout
+   [llama4_scout] Enabling 4-bit Quantization (BitsAndBytes)...
+(!) Model Execution Failed: Failed to load llama4_scout: Some modules are dispatched on the CPU or the disk. Make sure you have enough GPU RAM to fit the quantized model. If you want to dispatch the model on the CPU or the disk while keeping these modules in 32-bit, you need to set `llm_int8_enable_fp32_cpu_offload=True` and pass a custom `device_map` to `from_pretrained`. Check https://huggingface.co/docs/transformers/main/en/main_classes/quantization#offload-between-cpu-and-gpu for more details. 
+
+>>> [2/5] Training LoRA (3 Epochs)...
+   [Config] Detected CLUSTER Environment (Linux).
+========================================
+   STARTING LORA TRAINING (STANDARD BASE)
+   Model:   llama4_scout
+   Dataset: reuters
+========================================
+   [Data] Loading dataset...
+   [Data] Loading Reuters (C50train)...
+   [Model] Loading Base: /gpfs/data/fs71186/ziegler/ThesisProject/models/Llama-4-Maverick
+   [Config] Detected CLUSTER Environment (Linux).
+========================================
+   STARTING LORA TRAINING (STANDARD BASE)
+   Model:   llama4_scout
+   Dataset: darkreddit
+========================================
+   [Data] Loading dataset...
+   [Data] Loading DarkReddit (darkreddit_authorship_attribution_train_anon.jsonl)...
+   [Info] Detected keys - Text: 'comment', Author: 'author'
+   [Model] Loading Base: /gpfs/data/fs71186/ziegler/ThesisProject/models/Llama-4-Maverick
+   [System] Renaming adapters to *_3ep...
+>>> [3/5] Evaluating LoRA (3 Epochs)...
+   [Config] Detected CLUSTER Environment (Linux).
+========================================
+   STARTING JOB: llama4_scout_reuters (LoRA) (4-bit)
+   Device: cuda
+========================================
+   [Data] Loading Reuters (C50train)...
+   [Data] Loading Reuters (C50test)...
+   [Data] Final Test Size: 2500 samples
+   [llama4_scout] Loading Base Model from: /gpfs/data/fs71186/ziegler/ThesisProject/models/Llama-4-Scout
+   [llama4_scout] Enabling 4-bit Quantization (BitsAndBytes)...
+(!) Model Execution Failed: Failed to load llama4_scout: Some modules are dispatched on the CPU or the disk. Make sure you have enough GPU RAM to fit the quantized model. If you want to dispatch the model on the CPU or the disk while keeping these modules in 32-bit, you need to set `llm_int8_enable_fp32_cpu_offload=True` and pass a custom `device_map` to `from_pretrained`. Check https://huggingface.co/docs/transformers/main/en/main_classes/quantization#offload-between-cpu-and-gpu for more details. 
+   [Config] Detected CLUSTER Environment (Linux).
+========================================
+   STARTING JOB: llama4_scout_darkreddit (LoRA) (4-bit)
+   Device: cuda
+========================================
+   [Data] Loading DarkReddit (darkreddit_authorship_attribution_train_anon.jsonl)...
+   [Info] Detected keys - Text: 'comment', Author: 'author'
+   [Data] Loading DarkReddit (darkreddit_authorship_attribution_test_anon.jsonl)...
+   [Info] Detected keys - Text: 'comment', Author: 'author'
+   [Data] Final Test Size: 2276 samples
+   [llama4_scout] Loading Base Model from: /gpfs/data/fs71186/ziegler/ThesisProject/models/Llama-4-Scout
+   [llama4_scout] Enabling 4-bit Quantization (BitsAndBytes)...
+(!) Model Execution Failed: Failed to load llama4_scout: Some modules are dispatched on the CPU or the disk. Make sure you have enough GPU RAM to fit the quantized model. If you want to dispatch the model on the CPU or the disk while keeping these modules in 32-bit, you need to set `llm_int8_enable_fp32_cpu_offload=True` and pass a custom `device_map` to `from_pretrained`. Check https://huggingface.co/docs/transformers/main/en/main_classes/quantization#offload-between-cpu-and-gpu for more details. 
+
+>>> [4/5] Training LoRA (5 Epochs)...
+   [Config] Detected CLUSTER Environment (Linux).
+========================================
+   STARTING LORA TRAINING (STANDARD BASE)
+   Model:   llama4_scout
+   Dataset: reuters
+========================================
+   [Data] Loading dataset...
+   [Data] Loading Reuters (C50train)...
+   [Model] Loading Base: /gpfs/data/fs71186/ziegler/ThesisProject/models/Llama-4-Maverick
+   [Config] Detected CLUSTER Environment (Linux).
+========================================
+   STARTING LORA TRAINING (STANDARD BASE)
+   Model:   llama4_scout
+   Dataset: darkreddit
+========================================
+   [Data] Loading dataset...
+   [Data] Loading DarkReddit (darkreddit_authorship_attribution_train_anon.jsonl)...
+   [Info] Detected keys - Text: 'comment', Author: 'author'
+   [Model] Loading Base: /gpfs/data/fs71186/ziegler/ThesisProject/models/Llama-4-Maverick
+   [System] Renaming adapters to *_5ep...
+>>> [5/5] Evaluating LoRA (5 Epochs)...
+   [Config] Detected CLUSTER Environment (Linux).
+========================================
+   STARTING JOB: llama4_scout_reuters (LoRA) (4-bit)
+   Device: cuda
+========================================
+   [Data] Loading Reuters (C50train)...
+   [Data] Loading Reuters (C50test)...
+   [Data] Final Test Size: 2500 samples
+   [llama4_scout] Loading Base Model from: /gpfs/data/fs71186/ziegler/ThesisProject/models/Llama-4-Scout
+   [llama4_scout] Enabling 4-bit Quantization (BitsAndBytes)...
+(!) Model Execution Failed: Failed to load llama4_scout: Some modules are dispatched on the CPU or the disk. Make sure you have enough GPU RAM to fit the quantized model. If you want to dispatch the model on the CPU or the disk while keeping these modules in 32-bit, you need to set `llm_int8_enable_fp32_cpu_offload=True` and pass a custom `device_map` to `from_pretrained`. Check https://huggingface.co/docs/transformers/main/en/main_classes/quantization#offload-between-cpu-and-gpu for more details. 
+   [Config] Detected CLUSTER Environment (Linux).
+========================================
+   STARTING JOB: llama4_scout_darkreddit (LoRA) (4-bit)
+   Device: cuda
+========================================
+   [Data] Loading DarkReddit (darkreddit_authorship_attribution_train_anon.jsonl)...
+   [Info] Detected keys - Text: 'comment', Author: 'author'
+   [Data] Loading DarkReddit (darkreddit_authorship_attribution_test_anon.jsonl)...
+   [Info] Detected keys - Text: 'comment', Author: 'author'
+   [Data] Final Test Size: 2276 samples
+   [llama4_scout] Loading Base Model from: /gpfs/data/fs71186/ziegler/ThesisProject/models/Llama-4-Scout
+   [llama4_scout] Enabling 4-bit Quantization (BitsAndBytes)...
+(!) Model Execution Failed: Failed to load llama4_scout: Some modules are dispatched on the CPU or the disk. Make sure you have enough GPU RAM to fit the quantized model. If you want to dispatch the model on the CPU or the disk while keeping these modules in 32-bit, you need to set `llm_int8_enable_fp32_cpu_offload=True` and pass a custom `device_map` to `from_pretrained`. Check https://huggingface.co/docs/transformers/main/en/main_classes/quantization#offload-between-cpu-and-gpu for more details. 
+
+=== SCOUT PIPELINE FINISHED ===
+Results available in results/embeddings/
+=== Your job 7151041 has been killed by a cgroup out-of-memory event ===

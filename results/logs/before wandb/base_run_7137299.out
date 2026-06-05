@@ -1,0 +1,54 @@
+ERROR: Unable to locate a modulefile for 'cuda/11.8.0-gcc-11.2.0-411'
+=== STARTING JOB on n3066-012 ===
+Date: Mon Jan 26 11:21:34 CET 2026
+Partition: zen2_0256_a40x2 (A40 GPU)
+--- [1/4] Running Llama 2 (Reuters) ---
+   [Config] Detected CLUSTER Environment (Linux).
+========================================
+   STARTING JOB: llama2_reuters
+   Device: cuda
+========================================
+   [Data] Loading Reuters (C50train)...
+   [Data] Loading Reuters (C50test)...
+   [Data] Final Test Size: 2500 samples
+   [llama2] Loading Base Model from: /gpfs/data/fs71186/ziegler/ThesisProject/models/Llama-2-7b-hf
+   [Pipeline] Generating Train Embeddings...
+   [Pipeline] Generating Test Embeddings...
+--- [2/4] Running Llama 2 (DarkReddit) ---
+   [Config] Detected CLUSTER Environment (Linux).
+========================================
+   STARTING JOB: llama2_darkreddit
+   Device: cuda
+========================================
+   [Data] Loading DarkReddit (darkreddit_authorship_attribution_train_anon.jsonl)...
+   [Info] Detected keys - Text: 'comment', Author: 'author'
+   [Data] Loading DarkReddit (darkreddit_authorship_attribution_test_anon.jsonl)...
+   [Info] Detected keys - Text: 'comment', Author: 'author'
+   [Data] Final Test Size: 2276 samples
+   [llama2] Loading Base Model from: /gpfs/data/fs71186/ziegler/ThesisProject/models/Llama-2-7b-hf
+   [Pipeline] Generating Train Embeddings...
+   [Pipeline] Generating Test Embeddings...
+--- [3/4] Running Llama 4 (Reuters) ---
+   [Config] Detected CLUSTER Environment (Linux).
+========================================
+   STARTING JOB: llama4_reuters
+   Device: cuda
+========================================
+   [Data] Loading Reuters (C50train)...
+   [Data] Loading Reuters (C50test)...
+   [Data] Final Test Size: 2500 samples
+   [llama4] Loading Base Model from: /gpfs/data/fs71186/ziegler/ThesisProject/models/Llama-4-Maverick
+--- [4/4] Running Llama 4 (DarkReddit) ---
+   [Config] Detected CLUSTER Environment (Linux).
+========================================
+   STARTING JOB: llama4_darkreddit
+   Device: cuda
+========================================
+   [Data] Loading DarkReddit (darkreddit_authorship_attribution_train_anon.jsonl)...
+   [Info] Detected keys - Text: 'comment', Author: 'author'
+   [Data] Loading DarkReddit (darkreddit_authorship_attribution_test_anon.jsonl)...
+   [Info] Detected keys - Text: 'comment', Author: 'author'
+   [Data] Final Test Size: 2276 samples
+   [llama4] Loading Base Model from: /gpfs/data/fs71186/ziegler/ThesisProject/models/Llama-4-Maverick
+=== FINISHED ===
+=== Your job 7137299 has been killed by a cgroup out-of-memory event ===
