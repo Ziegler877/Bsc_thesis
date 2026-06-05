@@ -181,6 +181,11 @@ class E5Runner:
             if self.pooling_type == "gmp":
                 # Use GeM Layer
                 embeddings = self.gem(last_hidden, inputs['attention_mask'])
+            elif self.pooling_type == "dynamic":
+                # FORCED LAST-TOKEN POOLING FOR E5 (For empirical baseline testing)
+                sequence_lengths = inputs['attention_mask'].sum(dim=1) - 1
+                batch_size_actual = last_hidden.shape[0]
+                embeddings = last_hidden[torch.arange(batch_size_actual, device=self.device), sequence_lengths]
             else:
                 # Use Standard Mean Pooling (also defaults here for dynamic since E5 is an encoder)
                 embeddings = self._mean_pooling(last_hidden, inputs['attention_mask'])
@@ -216,6 +221,11 @@ class E5Runner:
                 last_hidden = outputs.last_hidden_state
                 if self.pooling_type == "gmp":
                     vec = self.gem(last_hidden, attention_mask)
+                elif self.pooling_type == "dynamic":
+                    # FORCED LAST-TOKEN POOLING FOR E5 (For empirical baseline testing)
+                    sequence_lengths = attention_mask.sum(dim=1) - 1
+                    batch_size_actual = last_hidden.shape[0]
+                    vec = last_hidden[torch.arange(batch_size_actual, device=self.device), sequence_lengths]
                 else:
                     vec = self._mean_pooling(last_hidden, attention_mask)
                 chunk_vecs.append(vec.cpu())

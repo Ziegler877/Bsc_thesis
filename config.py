@@ -49,8 +49,8 @@ else:
     LLAMA3_CHECKPOINT_DIR = "meta-llama/Meta-Llama-3.1-8B"  # Or your local path D:\...\Meta-Llama-3.1-8B
 
     # E5 Models (Local Paths)
-    E5_SMALL_ID = r"D:\BSC_Thesis_Models\e5-small"
-    E5_LARGE_ID = r"D:\BSC_Thesis_Models\e5-large"
+    E5_SMALL_ID = r"D:\12._Semester\BSC\Cluster\Models\e5-small"
+    E5_LARGE_ID = r"D:\12._Semester\BSC\Cluster\Models\e5-large"
 
 # =================================================================
 # 2. OUTPUT SUB-FOLDERS
