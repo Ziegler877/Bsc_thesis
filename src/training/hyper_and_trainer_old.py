@@ -20,7 +20,7 @@ def get_hyperparameters():
     parser.add_argument("--patience", type=int, default=4, help="Stop after N epochs without improvement")
     parser.add_argument("--val_split", type=float, default=0.1, help="Validation split ratio")
 
-    # Batch Size (Will be automatically factored into P and K)
+    # Batch Size
     parser.add_argument("--batch_size", type=int, default=4, help="E.g., 4 for Llama, 16 for E5")
 
     # LoRA settings
@@ -38,9 +38,7 @@ def get_hyperparameters():
     return parser.parse_args()
 
 
-# ==========================================
 #  CUSTOM P-K SAMPLER FOR TRIPLET LOSS
-# ==========================================
 class PKSampler(Sampler):
     """
     Ensures every batch contains P authors and K texts per author.
@@ -88,17 +86,13 @@ class PKSampler(Sampler):
             # Update available authors
             available_authors = [a for a in available_authors if len(author_to_indices_copy[a]) >= self.k]
 
-        # Returns a flat list of indices. Hugging Face's BatchSampler will chunk this
-        # into exactly batch_size, naturally resulting in P authors * K texts per batch!
         return iter(batches)
 
     def __len__(self):
         return len(self.dataset)
 
 
-# ==========================================
 #  CUSTOM TRAINER (P-K SAMPLER + BATCH-HARD)
-# ==========================================
 class AuthorTripletTrainer(Trainer):
     def __init__(self, triplet_margin=0.5, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -112,13 +106,10 @@ class AuthorTripletTrainer(Trainer):
         batch_size = self.args.eval_batch_size
         return PKSampler(eval_dataset, batch_size=batch_size, k=2)
 
-    # ---> NEW: Force the Trainer to calculate Triplet Loss during Evaluation <---
     def prediction_step(self, model, inputs, prediction_loss_only, ignore_keys=None):
         """Overrides evaluation step to ensure our custom Triplet Loss is calculated and returned."""
         with torch.no_grad():
             loss = self.compute_loss(model, inputs)
-            # The Trainer expects a tuple of (loss, logits, labels)
-            # We don't care about returning raw logits/labels for Triplet Loss evaluation, just the loss.
             return (loss, None, None)
 
     def compute_loss(self, model, inputs, return_outputs=False, **kwargs):
@@ -156,18 +147,13 @@ class AuthorTripletTrainer(Trainer):
         hardest_positive_dist = (dist_mat * is_pos).max(dim=1)[0]
 
         # HARDEST NEGATIVE (Min distance among different authors)
-        # Add a huge penalty to same authors so they are never picked as the minimum
         max_dist = dist_mat.max().item()
         hardest_negative_dist = (dist_mat + (is_pos * (max_dist + 10.0))).min(dim=1)[0]
-        #torch.nn.functional.normalize(embeddings, p=2
-        #4 or 10 or 100 doesn't matter - just over 2 is perfect - so it will always take the negative one
-        # Calculate Loss: max(0, hardest_pos - hardest_neg + margin)
         loss = torch.relu(hardest_positive_dist - hardest_negative_dist + self.triplet_margin)
 
         # Average the loss across the batch
         loss = loss.mean()
 
-        # Fallback to keep gradient graph alive if batch is perfectly zeroed
         if loss.item() == 0.0:
             loss = loss + (embeddings.sum() * 0)
 

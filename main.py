@@ -3,10 +3,7 @@ import os
 import argparse
 import torch
 import wandb
-import random
-import numpy as np
 
-# --- IMPORTS ---
 import config
 from src import data_loader
 from src import model_runner
@@ -14,68 +11,48 @@ from src import evaluation
 
 
 def main():
-    # ---------------------------------------------------------
     # 1. SETUP ARGUMENT PARSER
-    # ---------------------------------------------------------
     parser = argparse.ArgumentParser(description="Run Authorship Attribution Experiment")
-
     parser.add_argument("--model", type=str, required=True,
                         choices=["e5_small", "e5_large", "llama2", "llama3", "llama4_scout"],
                         help="Which model architecture to use")
-
     parser.add_argument("--dataset", type=str, required=True,
                         choices=["reuters", "darkreddit"],
                         help="Which dataset to load")
-
     parser.add_argument("--lora", action="store_true",
                         help="Enable LoRA fine-tuning/adaptation")
-
     # Metadata for W&B
     parser.add_argument("--epochs", type=int, default=0,
                         help="Metadata: How many epochs was the adapter trained? (0 = Base Model)")
-
     # Pooling Strategy
     parser.add_argument("--pooling", type=str, default="mean", choices=["mean", "gmp", "dynamic"],
                         help="Aggregation strategy: 'mean' (standard), 'gmp' (Generalized Mean Pooling), or 'dynamic'")
-
     # Chunking Option
     parser.add_argument("--chunking", action="store_true",
                         help="If set, splits long texts into 512-token chunks and averages them. If not set, truncates at 512.")
-
-    # NEW: Subset Option (for faster experiments or robustness checks)
     parser.add_argument("--subset", type=int, default=None,
                         help="If set, limits the number of texts per author (e.g., 5).")
-
     parser.add_argument("--device", type=str, default=config.DEVICE,
                         help="Override config device")
-
     parser.add_argument("--suffix", type=str, default="",
                         help="Optional string appended to the saved .pt filename")
-
     parser.add_argument("--use_adapter", action="store_true", help="Alias for --lora")
-
     args = parser.parse_args()
 
-    # ---------------------------------------------------------
+
     # 2. CONFIGURE BASED ON ARGUMENTS
-    # ---------------------------------------------------------
-
-    # Construct a smart Run Name
+    # Construct a Run Name
     run_name = f"EVAL-{args.model}-{args.dataset}"
-
     if args.epochs > 0:
         run_name += f"-{args.epochs}ep"
     elif "_base" in args.suffix:
         run_name += "-base"
-
     # Add pooling to run name
     if args.pooling != "mean":
         run_name += f"-{args.pooling}"
-
     # Add chunking to run name
     if args.chunking:
         run_name += "-chunked"
-
     # Add subset to run name
     if args.subset:
         run_name += f"-sub{args.subset}"
@@ -91,7 +68,7 @@ def main():
             "epochs": args.epochs,
             "pooling": args.pooling,
             "chunking": args.chunking,
-            "subset": args.subset,  # <--- Track subset size in W&B
+            "subset": args.subset,
             "device": args.device
         }
     )
@@ -119,14 +96,12 @@ def main():
     print(f"   Subset:   {args.subset}")
     print(f"========================================")
 
-    # ---------------------------
     # STEP 1: LOAD DATA
-    # ---------------------------
     try:
         # Pass subset_size to loader
         train_txt, train_lbl = data_loader.load_dataset(dataset_alias, "train", subset_size=args.subset)
         test_txt, test_lbl = data_loader.load_dataset(dataset_alias,
-                                                      "test")  # Usually don't subset test set, but can be added if needed
+                                                      "test")
     except Exception as e:
         print(f"(!) Data Load Failed: {e}")
         sys.exit(1)
@@ -146,9 +121,7 @@ def main():
         print("(!) Error: Training set empty.")
         sys.exit(1)
 
-    # ---------------------------
     # STEP 2: RUN MODEL
-    # ---------------------------
     try:
         runner_kwargs = {
             "model_alias": model_alias,
@@ -159,7 +132,7 @@ def main():
             "suffix": args.suffix,
             "pooling": args.pooling,
             "chunking": args.chunking,
-            "subset_size": args.subset  # Pass subset info for logging inside runner
+            "subset_size": args.subset
         }
 
         train_vecs, test_vecs = model_runner.run_pipeline(**runner_kwargs)
@@ -174,9 +147,7 @@ def main():
         print("(!) Model returned no embeddings.")
         sys.exit(1)
 
-    # ---------------------------
-    # STEP 2.5: SAVE EMBEDDINGS
-    # ---------------------------
+    # STEP 3 SAVE EMBEDDINGS
     lora_tag = "_lora" if use_lora else ""
 
     # If explicit epochs are given, auto-generate suffix if one wasn't provided
@@ -212,9 +183,7 @@ def main():
         "subset": args.subset
     }, save_path)
 
-    # ---------------------------
-    # STEP 3: EVALUATE & LOG
-    # ---------------------------
+    # STEP 4: EVALUATE & LOG
     metrics = evaluation.run_evaluation(
         train_vecs=train_vecs,
         test_vecs=test_vecs,
@@ -226,7 +195,7 @@ def main():
         extra_info=f"LoRA: {use_lora} | Ep: {args.epochs} | Pool: {args.pooling} | Chunk: {args.chunking} | Sub: {args.subset}",
         pooling=args.pooling,
         chunking=args.chunking,
-        subset_size=args.subset  # Pass subset to evaluation
+        subset_size=args.subset
     )
 
     if metrics:

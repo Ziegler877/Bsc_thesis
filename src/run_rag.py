@@ -24,60 +24,46 @@ def main():
     print(f"   Retrieval: {args.embeddings}")
     print(f"   Candidates (K): {args.k}")
 
-    # 1. Daten laden (Texte)
     print("   [Data] Loading raw texts...")
     train_txt, train_lbl = data_loader.load_dataset(args.dataset, "train")
     test_txt, test_lbl = data_loader.load_dataset(args.dataset, "test")
 
-    # 2. Retriever initialisieren (Der Suchhund)
     retriever = AuthorRetriever(args.embeddings, train_txt, train_lbl)
 
-    # Test-Embeddings aus der gleichen Datei laden (für die Suche)
     emb_data = torch.load(args.embeddings, map_location="cpu")
-    test_vecs = emb_data['test_vecs']  # Die Vektoren der Test-Daten
+    test_vecs = emb_data['test_vecs']
 
-    # 3. Generator initialisieren (Der Experte)
     generator = LLMGenerator(args.model)
 
-    # 4. Main Loop
     results = []
 
-    # Limitieren für Tests (Prompting dauert länger als Embeddings!)
     limit = min(args.limit, len(test_txt))
     print(f"   [Run] Processing {limit} test samples...")
 
     for i in tqdm(range(limit)):
-        # A. Suche (Retrieval)
-        # Wir nutzen den vorberechneten Vektor des Test-Samples
         query_vec = test_vecs[i]
         true_author = test_lbl[i]
         unknown_text = test_txt[i]
 
-        # Hole Top-K Kandidaten
         candidates = retriever.retrieve(query_vec, k=args.k)
 
-        # Check: Ist der richtige Autor überhaupt in den Kandidaten? (Recall@K)
         candidate_authors = [c['author'] for c in candidates]
         hit_in_retrieval = true_author in candidate_authors
 
-        # B. Generierung (Prompting)
         response, prompt_used = generator.generate_decision(unknown_text, candidates)
 
-        # C. Ergebnis speichern
         results.append({
             "id": i,
             "true_author": true_author,
             "candidates": candidate_authors,
-            "hit_retrieval": hit_in_retrieval,  # War das Embedding gut genug?
+            "hit_retrieval": hit_in_retrieval,
             "llm_response": response,
             "prompt": prompt_used
         })
 
-        # Zwischenspeichern alle 10 Schritte
         if i % 10 == 0:
             save_results(results, args.model, args.dataset)
 
-    # Final speichern
     save_results(results, args.model, args.dataset)
     print("   [Done] Finished.")
 

@@ -18,7 +18,6 @@ def get_hyperparameters():
     parser.add_argument("--dataset", type=str, required=True, help="Alias: reuters, darkreddit")
     parser.add_argument("--suffix", type=str, default="", help="Suffix for dynamic save directory naming")
 
-    # ---> FIX: ADDED MISSING POOLING & CHUNKING ARGUMENTS <---
     parser.add_argument("--pooling", type=str, default="mean", help="Pooling strategy: mean, gmp, or dynamic")
     parser.add_argument("--chunking", action="store_true", help="Enable chunking logic flag")
 
@@ -47,9 +46,6 @@ def get_hyperparameters():
     return parser.parse_args()
 
 
-# ==========================================
-#  CUSTOM P-K SAMPLER FOR TRIPLET LOSS
-# ==========================================
 class PKSampler(Sampler):
     """
     Ensures every batch contains P authors and K texts per author.
@@ -103,14 +99,11 @@ class PKSampler(Sampler):
         return len(self.dataset)
 
 
-# ==========================================
-#  CUSTOM TRAINER (P-K SAMPLER + PYTORCH-METRIC-LEARNING)
-# ==========================================
 class AuthorTripletTrainer(Trainer):
     def __init__(self, triplet_margin=0.2, pooling="mean", *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.triplet_margin = triplet_margin
-        self.pooling = pooling.lower()  # Store the pooling strategy
+        self.pooling = pooling.lower()
 
         distance_metric = distances.DotProductSimilarity()
 
@@ -137,7 +130,6 @@ class AuthorTripletTrainer(Trainer):
         """Overrides evaluation step to ensure our custom Triplet Loss is calculated and returned."""
         with torch.no_grad():
             loss = self.compute_loss(model, inputs)
-            # The Trainer expects a tuple of (loss, logits, labels)
             return (loss, None, None)
 
     def compute_loss(self, model, inputs, return_outputs=False, **kwargs):
@@ -157,13 +149,11 @@ class AuthorTripletTrainer(Trainer):
             token_embeddings = outputs.hidden_states[-1]
 
         if self.pooling in ["dynamic", "last"]:
-            # LAST-TOKEN POOLING: Get the index of the last non-padded token
             sequence_lengths = attention_mask.sum(dim=1) - 1
             batch_size = token_embeddings.shape[0]
             embeddings = token_embeddings[torch.arange(batch_size, device=token_embeddings.device), sequence_lengths]
 
         elif self.pooling == "gmp":
-            # GLOBAL MAX POOLING
             input_mask_expanded = attention_mask.unsqueeze(-1).expand(token_embeddings.size()).float()
             embeddings = token_embeddings.masked_fill(input_mask_expanded == 0, -1e9)
             embeddings = torch.max(embeddings, 1)[0]
@@ -182,13 +172,9 @@ class AuthorTripletTrainer(Trainer):
 
         # Guardrail: Check if the miner actually found valid semihard triplets
         if len(indices_tuple[0]) == 0:
-            # Keep graph alive but return 0 loss
             loss = (embeddings.sum() * 0.0)
         else:
-            # Calculate Loss using the mined triplets
             loss = self.loss_func(embeddings, labels, indices_tuple)
-
-        # Fallback to keep gradient graph alive if loss perfectly zeroes out
         if loss.item() == 0.0 or torch.isnan(loss):
             loss = loss + (embeddings.sum() * 0.0)
 

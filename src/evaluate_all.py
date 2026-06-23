@@ -1,17 +1,13 @@
 import os
 import sys
 import math
-import re  # Added for regex parsing
+import re
 
-# --- FIX: Add parent directory to path so we can find 'config.py' ---
 current_dir = os.path.dirname(os.path.abspath(__file__))
 parent_dir = os.path.dirname(current_dir)
 sys.path.insert(0, parent_dir)
-# --------------------------------------------------------------------
 
 import config
-
-# Standard library imports
 import torch
 import torch.nn.functional as F
 import pandas as pd
@@ -27,11 +23,7 @@ from sklearn.metrics import (
     log_loss
 )
 
-# ==========================================
 #  CONFIGURATION & SOTA DATA
-# ==========================================
-
-# Updated Model Order to include Llama-3
 MODEL_ORDER = [
     "SOTA",
     "E5-Small",
@@ -41,7 +33,6 @@ MODEL_ORDER = [
     "Llama-4-Scout"
 ]
 
-# Hardcoded SOTA Benchmarks
 SOTA_DATA = {
     "reuters": [
         {"Model": "SOTA", "Variant": "SVM (N-Gram)",
@@ -68,10 +59,7 @@ FILE_PATTERNS = {
 }
 
 
-# ==========================================
 #  HELPER FUNCTIONS
-# ==========================================
-
 def parse_variant(filename):
     """
     Parses filename to extract: Epochs, Pooling, Chunking, AND Subset.
@@ -90,7 +78,7 @@ def parse_variant(filename):
         else:
             mode = "LoRA"
     else:
-        mode = "Base"  # Default if unsure
+        mode = "Base"
 
     # 2. Determine Pooling
     if "_gmp" in filename:
@@ -104,7 +92,7 @@ def parse_variant(filename):
     else:
         chunking = "Truncated"
 
-    # 4. Determine Subset (New)
+    # 4. Determine Subset
     subset_str = ""
     match_sub = re.search(r'_sub(\d+)', filename)
     if match_sub:
@@ -128,7 +116,6 @@ def evaluate_embeddings(file_path):
             print(f"(!) Missing vectors in {os.path.basename(file_path)}")
             return None
 
-        # --- CENTROID CLASSIFICATION LOGIC ---
         unique_classes = sorted(list(set(train_labels)))
         label_to_index = {name: i for i, name in enumerate(unique_classes)}
 
@@ -190,10 +177,7 @@ def evaluate_embeddings(file_path):
         return None
 
 
-# ==========================================
 #  PLOTTING FUNCTIONS
-# ==========================================
-
 def prepare_plot_data(df):
     """Cleans dataframe for plotting (converts strings to floats, handles '-')"""
     plot_df = df.copy()
@@ -247,7 +231,7 @@ def plot_radar_chart(df, dataset_name, output_dir):
         print("   [Info] Not enough E5-Small variants for Radar Chart.")
         return
 
-    # If too many, pick top 5 by Accuracy to avoid clutter
+    # Pick top 5 by Accuracy to avoid clutter
     if len(target_models) > 5:
         target_models = target_models.sort_values(by="Accuracy", ascending=False).head(5)
 
@@ -327,7 +311,7 @@ def plot_line_chart(df, dataset_name, output_dir):
     plot_df['Size_Rank'] = plot_df['Model'].map(size_map)
     plot_df = plot_df.dropna(subset=['Size_Rank', 'Accuracy'])
 
-    # === AGGREGATION LOGIC ===
+    # AGGREGATION LOGIC
     # Take the BEST Performing variant for each model size to draw the trend line.
     best_variants = plot_df.loc[plot_df.groupby("Model")["Accuracy"].idxmax()]
     best_variants = best_variants.sort_values('Size_Rank')
@@ -367,10 +351,7 @@ def plot_line_chart(df, dataset_name, output_dir):
     print(f"   [Plot] Saved Line Plot: {save_path}")
 
 
-# ==========================================
-#  MAIN LOGIC
-# ==========================================
-
+#  MAIN
 def main():
     print(f"--- EVALUATION & PLOTTING ---")
 

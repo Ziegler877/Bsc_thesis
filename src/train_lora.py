@@ -37,10 +37,6 @@ def run_lora_training(model_alias, dataset_alias, epochs=3, batch_size=4):
     print("   [Data] Loading dataset...")
     train_texts, _ = data_loader.load_dataset(dataset_alias, "train")
 
-    # Optional: Add a "Style" prefix to help the model distinguish this task
-    # (Only use this if you also add it in main.py evaluation!)
-    # train_texts = [f"Analyze style: {t}" for t in train_texts]
-
     dataset = Dataset.from_dict({"text": train_texts})
 
     # 2. Config & ID Selection
@@ -176,7 +172,7 @@ if __name__ == "__main__":
     parser.add_argument("--model", type=str, required=True)
     parser.add_argument("--dataset", type=str, required=True)
     parser.add_argument("--epochs", type=int, default=3)
-    parser.add_argument("--batch_size", type=int, default=2)  # Keep low for 17B
+    parser.add_argument("--batch_size", type=int, default=2)
 
     parser.add_argument("--r", type=int, default=64, help="LoRA Rank")
     parser.add_argument("--lora_alpha", type=int, default=128, help="LoRA Alpha")

@@ -3,10 +3,10 @@
 #import sys
 #from collections import defaultdict
 #
-## Add the parent directory to sys.path so we can import config.py
+#
 #sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 #
-## Import the exact paths from your config file!
+## Import the exact paths from config file!
 #from config import DARK_REDDIT_TRAIN, DARK_REDDIT_VAL, DARK_REDDIT_TEST
 #
 #files = {
@@ -99,7 +99,7 @@
 #    percent = (astats["texts"] / global_texts) * 100
 #    avg_words = astats["words"] / astats["texts"]
 #
-#    # Handle the edge case where an author has 0 words somehow
+#    # Handle the edge case where an author has 0 words
 #    min_w = astats["min_words"] if astats["min_words"] != float('inf') else 0
 #
 #   print(f"Alias: {author}")
@@ -122,10 +122,7 @@ import os
 import sys
 from collections import defaultdict
 
-# Add the parent directory to sys.path so we can import config.py
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-
-# Import the exact Reuters paths from your config file!
 from config import REUTERS_TRAIN_DIR, REUTERS_VAL_DIR, REUTERS_TEST_DIR
 
 split_dirs = {
@@ -173,7 +170,6 @@ for split_name, split_dir in split_dirs.items():
 
             file_path = os.path.join(author_path, filename)
 
-            # Using errors='ignore' because Reuters is an older dataset and might have weird encodings
             with open(file_path, 'r', encoding='utf-8', errors='ignore') as f:
                 text = f.read()
 
@@ -223,7 +219,6 @@ for split_name in ["Train", "Val", "Test"]:
 print("\n=========================================")
 print("        AUTHOR-BY-AUTHOR BREAKDOWN       ")
 print("=========================================")
-# Sort authors alphabetically for Reuters since there are 50 of them and they should all be uniform
 for author, astats in sorted(author_stats.items()):
     percent = (astats["texts"] / global_texts) * 100
     avg_words = astats["words"] / astats["texts"]

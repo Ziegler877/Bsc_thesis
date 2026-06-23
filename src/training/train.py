@@ -36,10 +36,8 @@ def main():
     print(f"   Batch Size:{args.batch_size} (Crucial for Triplet Mining)")
     print(f"========================================")
 
-    # ---> NEW: Dynamic Save Directory based on Suffix <---
     adapter_name = f"{args.model}_{args.dataset}{args.suffix}"
     adapter_dir = os.path.join(config.RESULTS_DIR, "adapters", adapter_name)
-    # ----------------------------------------------------
 
     # 2. Load Train and Validation Data (Strictly from files)
     train_texts, val_texts, train_labels, val_labels = load_train_val_data(args.dataset)
@@ -132,8 +130,6 @@ def main():
 
     # 6. Tokenization
     def tokenize_function(examples):
-        # Splitting documents dynamically during mapping breaks the sampler logic.
-        # Therefore, during *training*, enforce truncation
         return tokenizer(examples["text"], truncation=True, max_length=512)
 
     tokenized_train = train_dataset.map(tokenize_function, batched=True, remove_columns=["text"])

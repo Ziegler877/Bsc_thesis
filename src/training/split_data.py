@@ -49,9 +49,9 @@ def analyze_overlap(train_dir, test_dir):
                 overlap_count += 1
 
     if overlap_count == 0:
-        print("✅ SUCCESS: 0 overlapping texts found. Train and Test are completely disjoint.")
+        print("SUCCESS: 0 overlapping texts found. Train and Test are completely disjoint.")
     else:
-        print(f"❌ WARNING: Found {overlap_count} overlapping texts between Train and Test!")
+        print(f"WARNING: Found {overlap_count} overlapping texts between Train and Test!")
     print("-" * 50)
 
 
@@ -63,7 +63,7 @@ def create_validation_split(train_dir, val_split_size=5):
     val_dir = os.path.join(base_dataset_dir, "C50val")
 
     if os.path.exists(val_dir):
-        print(f"⚠️ Validation directory already exists at: {val_dir}")
+        print(f"⚠alidation directory already exists at: {val_dir}")
         print("To prevent accidentally deleting more training data, the script will abort the split.")
         print("If you want to re-run, delete the C50val folder first.")
         return val_dir
@@ -86,7 +86,7 @@ def create_validation_split(train_dir, val_split_size=5):
         files = [f for f in os.listdir(train_author_dir) if f.endswith(".txt")]
 
         # Randomly shuffle your data before splitting to ensure that each subset is representative.
-        random.seed(42)  # Set seed for reproducibility
+        random.seed(42)
         random.shuffle(files)
 
         # Select the texts to move
@@ -99,8 +99,8 @@ def create_validation_split(train_dir, val_split_size=5):
             shutil.move(src_path, dest_path)
             total_moved += 1
 
-    print(f"✅ SUCCESS: Moved {total_moved} files ({val_split_size} per author) to C50val.")
-    print("Your training set now has 45 texts per author, and validation has 5.")
+    print(f"SUCCESS: Moved {total_moved} files ({val_split_size} per author) to C50val.")
+    print("Training set now has 45 texts per author, and validation has 5.")
     return val_dir
 
 

@@ -5,7 +5,6 @@ import numpy as np
 import torch
 import umap
 
-# 1. Set the folder and the list of files to process
 EMBEDDING_DIR = Path(r"C:\Users\maxid\Universität\12._Semester\BSC\Programm\results\embeddings\dynamic")
 #D:\12._Semester\BSC\Cluster\results_2\embeddings\embeddings\try something out
 
@@ -44,14 +43,12 @@ file_list = [
     #"llama3_reuters_sub5.pt"
 ]
 
-# 2. Standard color palette and shapes
 shapes = ['circle', 'square', 'diamond', 'cross', 'triangle-up']
 hex_palette = [
     "#E6194B", "#3CB44B", "#FFE119", "#4363D8", "#F58231",
     "#911EB4", "#46F0F0", "#F032E6", "#BCF60C", "#FABEBE"
 ]
 
-# 3. Loop through every file in the list
 for filename in file_list:
     data_path = EMBEDDING_DIR / filename
 
@@ -74,8 +71,8 @@ for filename in file_list:
     shape_map = {}
 
     for i, author in enumerate(unique_authors):
-        color_map[author] = hex_palette[i % len(hex_palette)]  # Cycles 10 colors
-        shape_map[author] = shapes[(i // len(hex_palette)) % len(shapes)]  # Cycles shapes every 10 authors
+        color_map[author] = hex_palette[i % len(hex_palette)]
+        shape_map[author] = shapes[(i // len(hex_palette)) % len(shapes)]
 
     # Run UMAP
     print("Running UMAP dimensionality reduction...")
@@ -83,7 +80,7 @@ for filename in file_list:
     reduced = reducer.fit_transform(encodings)
 
     # Build unique JSON for this model
-    file_stem = data_path.stem  # e.g., "llama3_reuters_lora_run1"
+    file_stem = data_path.stem
     output_json = f"umap_data_{file_stem}.json"
 
     export_data = []

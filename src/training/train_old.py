@@ -2,7 +2,6 @@ import os
 import sys
 import torch
 
-# Fix paths to access config and modules safely
 current_dir = os.path.dirname(os.path.abspath(__file__))
 parent_dir = os.path.dirname(current_dir)
 root_dir = os.path.dirname(parent_dir)
@@ -25,9 +24,6 @@ from src.training.hyper_and_trainer import get_hyperparameters, AuthorTripletTra
 
 
 def main():
-    # 1. Get Hyperparameters
-    # Note: Ensure get_hyperparameters() in hyper_and_trainer.py
-    # now includes parser.add_argument("--suffix", type=str, default="")
     args = get_hyperparameters()
 
     print(f"========================================")
@@ -38,20 +34,15 @@ def main():
     print(f"   Batch Size:{args.batch_size} (Crucial for Triplet Mining)")
     print(f"========================================")
 
-    # ---> NEW: Dynamic Save Directory based on Suffix <---
     adapter_name = f"{args.model}_{args.dataset}{args.suffix}"
     adapter_dir = os.path.join(config.RESULTS_DIR, "adapters", adapter_name)
-    # ----------------------------------------------------
 
-    # 2. Load Train and Validation Data (Strictly from files)
     train_texts, val_texts, train_labels, val_labels = load_train_val_data(args.dataset)
 
-    # --- SOTA FIX: E5 Magic Words ---
     if "e5" in args.model.lower():
         print("   [Data] Prepending 'passage: ' prefix for E5 model...")
         train_texts = [f"passage: {t}" for t in train_texts]
         val_texts = [f"passage: {t}" for t in val_texts]
-    # --------------------------------
 
     # Convert string labels to integer IDs
     unique_authors = sorted(list(set(train_labels + val_labels)))

@@ -5,14 +5,12 @@ import torch.nn.functional as F
 import numpy as np
 from tqdm import tqdm
 
-# Parent directory for config
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import config
 
 
 def load_data(filepath):
     try:
-        # Using weights_only=False to bypass PyTorch 2.6 block
         data = torch.load(filepath, map_location="cpu", weights_only=False)
         return data
     except Exception as e:
@@ -47,8 +45,6 @@ def parse_filename(filename):
     # 3. LoRA Status
     lora = "Yes" if "lora" in name else "No"
 
-    # 4. Extract Extras (Chunking, Pooling, Run numbers, Sub-5)
-    # Remove the known parts to leave only the unique config tags
     extras = name
     for term in ["e5_small", "e5_large", "llama2", "llama3", "reuters", "darkreddit", "lora"]:
         extras = extras.replace(term, "")
@@ -143,7 +139,7 @@ def main():
             "MRR": mrr
         })
 
-    # Sort results so the table is grouped logically (Model -> Dataset -> Config)
+    # Sort results so the table is grouped logically
     results_sorted = sorted(results, key=lambda x: (x['Model'], x['Dataset'], x['Config']))
 
     # Print Huge Table

@@ -3,7 +3,6 @@ import sys
 import json
 from tqdm import tqdm
 
-# Fix path to access root config.py
 current_dir = os.path.dirname(os.path.abspath(__file__))
 parent_dir = os.path.dirname(current_dir)
 root_dir = os.path.dirname(parent_dir)

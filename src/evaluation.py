@@ -1,3 +1,5 @@
+# Be aware - u_evaluate evaluates more
+
 import os
 import sys
 import datetime
@@ -43,10 +45,7 @@ def calculate_centroids(train_vecs, train_labels, unique_authors, device):
 
             # Standard Mean Pooling for Centroid
             centroid = torch.mean(author_vecs, dim=0)
-
-            # --- FIX: Handle potential NaNs/Infs before Normalization ---
             centroid = torch.nan_to_num(centroid, nan=0.0, posinf=0.0, neginf=0.0)
-
             # Normalization
             centroid = F.normalize(centroid, p=2, dim=0)
 
@@ -65,7 +64,7 @@ def run_evaluation(
         extra_info="",
         pooling="mean",
         chunking=False,
-        subset_size=None  # <--- NEW ARGUMENT
+        subset_size=None
 ):
     ensure_directories()
     timestamp = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
@@ -75,7 +74,6 @@ def run_evaluation(
     print(
         f"   [Eval] Calculating metrics for {model_name} (Pool: {pooling}, Mode: {mode_str}{subset_str}) on {dataset_name}...")
 
-    # --- FIX: Sanitize Inputs immediately ---
     if torch.isnan(train_vecs).any() or torch.isinf(train_vecs).any():
         print("   [Warn] Train vectors contain NaNs/Infs! Cleaning...")
         train_vecs = torch.nan_to_num(train_vecs, nan=0.0)
@@ -83,7 +81,6 @@ def run_evaluation(
     if torch.isnan(test_vecs).any() or torch.isinf(test_vecs).any():
         print("   [Warn] Test vectors contain NaNs/Infs! Cleaning...")
         test_vecs = torch.nan_to_num(test_vecs, nan=0.0)
-    # ----------------------------------------
 
     # Setup
     unique_authors = sorted(list(set(train_labels)))

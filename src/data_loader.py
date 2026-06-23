@@ -40,11 +40,9 @@ def _load_reuters_folders(directory, subset_size=None):
         # Get all valid text files
         filenames = [f for f in os.listdir(author_path) if f.endswith(".txt")]
 
-        # --- SUBSET LOGIC ---
         if subset_size is not None:
-            random.shuffle(filenames)  # Shuffle to ensure randomness
-            filenames = filenames[:subset_size]  # Take only N
-        # --------------------
+            random.shuffle(filenames)
+            filenames = filenames[:subset_size]
 
         for filename in filenames:
             try:
@@ -55,7 +53,6 @@ def _load_reuters_folders(directory, subset_size=None):
                 pass
     return texts, labels
 
-
 def _load_darkreddit_jsonl(filepath, subset_size=None):
     texts, labels = [], []
     if not os.path.exists(filepath):
@@ -65,14 +62,12 @@ def _load_darkreddit_jsonl(filepath, subset_size=None):
     info_str = f" (Subset: {subset_size}/author)" if subset_size else ""
     print(f"   [Data] Loading DarkReddit ({os.path.basename(filepath)}){info_str}...")
 
-    # --- AUTO-DETECT KEYS ---
     text_key = None
     author_key = None
     possible_text_keys = ['comment', 'body', 'text', 'content', 'selftext']
     possible_author_keys = ['author', 'author_id', 'user_id', 'username']
 
     with open(filepath, 'r', encoding='utf-8') as f:
-        # Inspect first line for keys
         for line in f:
             try:
                 sample = json.loads(line)
@@ -109,7 +104,6 @@ def _load_darkreddit_jsonl(filepath, subset_size=None):
             except:
                 continue
 
-    # --- SUBSET LOGIC (Post-Processing) ---
     if subset_size is not None:
         print(f"   [Data] Subsampling to {subset_size} random texts per author...")
 
@@ -130,6 +124,5 @@ def _load_darkreddit_jsonl(filepath, subset_size=None):
             labels.extend([author] * len(selected))
 
         print(f"   [Data] Final size after subsampling: {len(texts)}")
-    # --------------------------------------
 
     return texts, labels

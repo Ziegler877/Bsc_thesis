@@ -7,12 +7,10 @@ import pandas as pd
 import numpy as np
 from sklearn.metrics import accuracy_score, f1_score, log_loss, top_k_accuracy_score
 
-# Hardcoded path to your exact local directory
 TARGET_DIR = r"C:\Users\maxid\Universität\12._Semester\BSC\Programm\results\embeddings\dynamic"
 
 MODEL_ORDER = ["SOTA", "E5-Small", "E5-Large", "Llama-2", "Llama-3"]
 
-# Aligned SOTA Data rows with the new comprehensive layout
 SOTA_DATA = {
     "reuters": [
         {"Model": "SOTA", "Variant": "SVM (N-Gram)",
@@ -94,9 +92,7 @@ def evaluate_pt_file(file_path):
         y_true = [label_to_index[l] for l in test_labels if l in label_to_index]
         if not y_true: return None
 
-        # ----------------------------------------------------
         # METHODOLOGY 1: CENTROID BASE CALCULATIONS
-        # ----------------------------------------------------
         centroids = []
         for label in unique_classes:
             indices = [i for i, x in enumerate(train_labels) if x == label]
@@ -126,9 +122,7 @@ def evaluate_pt_file(file_path):
         except:
             ll = -1.0
 
-        # ----------------------------------------------------
         # METHODOLOGY 2: DOCUMENT-TO-DOCUMENT RETRIEVAL
-        # ----------------------------------------------------
         sim_matrix = torch.mm(test_vecs, train_vecs.transpose(0, 1)).numpy()
         train_labels_np = np.array(train_labels)
 
@@ -206,7 +200,7 @@ def main():
 
             # Step 2: Separate into Baseline (Non-LoRA) and Fine-tuned (LoRA) Arrays
             non_lora_records = []
-            lora_groups = {}  # Dict grouping structural configs: { base_variant: [run_metrics_dicts] }
+            lora_groups = {}
 
             for f in model_files:
                 f_model, is_lora, base_variant, run_id = parse_file_details(f)
@@ -247,7 +241,7 @@ def main():
         if not final_rows: continue
         df = pd.DataFrame(final_rows)
 
-        # Print Consolidated Layout
+        # Print Layout
         print("-" * 155)
         print(
             f"{'Model':<12} {'Variant / Configuration Structure':<32} | {'C-Acc':<6} {'C-F1':<6} {'C-T3':<6} {'C-T5':<6} {'C-MRR':<6} | {'R-Top1':<6} {'R-F1':<6} {'R-Top3':<6} {'R-Top5':<6} {'R-MAP':<6} | {'LogLoss':<6}")

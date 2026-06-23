@@ -47,7 +47,6 @@ def calculate_similarity_logits(train_vecs, train_labels, test_vecs, device="cpu
     test_vecs = test_vecs.to(device)
 
     # 2. Ähnlichkeit berechnen (Cosine Similarity)
-    # Das sind unsere "Logits" vor dem Scaling
     logits = torch.mm(test_vecs, centroid_matrix.transpose(0, 1))
     return logits, unique_authors
 
@@ -67,9 +66,6 @@ def find_optimal_t(logits, y_true_indices, n_classes):
         scaled_logits = logits_np / t
 
         # Softmax & LogLoss berechnen
-        # Wir nutzen hier sklearn log_loss, das erwartet Wahrscheinlichkeiten
-        # Aber um numerisch stabil zu bleiben, nutzen wir LogSoftmax eigentlich lieber.
-        # Für das Skript hier reicht Softmax + LogLoss von sklearn.
         exp_vals = np.exp(scaled_logits - np.max(scaled_logits, axis=1, keepdims=True))
         probs = exp_vals / np.sum(exp_vals, axis=1, keepdims=True)
 
@@ -111,7 +107,7 @@ def main():
         label_to_index = {name: i for i, name in enumerate(unique_authors)}
         y_true = [label_to_index[l] for l in test_lbl if l in label_to_index]
 
-        # Logits berechnen (CPU reicht meistens, sonst 'cuda')
+        # Logits berechnen
         logits, _ = calculate_similarity_logits(train_vecs, train_lbl, test_vecs)
 
         # Nur valide Testdaten nutzen
