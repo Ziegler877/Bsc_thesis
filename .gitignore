@@ -9,12 +9,14 @@ __pycache__/
 # Excludes the raw Reuter_50_50 and MiniDarkReddit files [cite: 53, 55]
 data/
 data/raw/
+*.jsonl
 data/Reuter_50_50/
 data/MiniDarkReddit/
 *.csv
 *.json
 *.txt
 !README_data.md
+
 
 # --- Large Model Weights ---
 # Excludes Llama-2 7B and other foundational model checkpoints [cite: 46, 75]
